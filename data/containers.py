@@ -7,7 +7,12 @@ class ReadContainer (object):
     ''' Contains all the reads loaded from an 
         alignment file. Can be queried by read id.
     '''
-    
+    _instance = None
+    def __new__ (cls):
+        if not cls._instance:
+            cls._instance = super (ReadContainer, cls).__new__(cls)
+        return cls._instance
+
     def __init__(self):
         self.read_repository = {}
         
@@ -44,9 +49,15 @@ class CdsAlnContainer (object):
         (record_id, location)
     '''
 
+    _instance = None
+    def __new__ (cls):
+        if not cls._instance:
+            cls._instance = super (CdsAlnContainer, cls).__new__(cls)
+        return cls._instance
+
     def __init__(self):
         self.cds_repository = {}
-        self.record_repository = RecordRepository.Instance()
+        self.record_repository = RecordRepository()
 
         
     def add_cds_alns (self, cds_alignment):
@@ -80,6 +91,13 @@ class RecordContainer (object):
         fetched from the database, it can be fetched localy
         from the record repository.
     '''
+
+    _instance = None
+    def __new__ (cls):
+        if not cls._instance:
+            cls._instance = super (RecordContainer, cls).__new__(cls)
+        return cls._instance
+
     def __init__ (self, db_query):
         self.record_repository  = {}
         self.db_query = db_query
