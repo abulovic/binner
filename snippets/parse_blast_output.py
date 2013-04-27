@@ -16,4 +16,4 @@ if __name__ == '__main__':
 	print "Alignment file format:   {0}".format(blast_outfmt)
 
 	parser = BLASTParser(blast_outfmt)
-	parser.convert_file(alignment_fname, output_fname)
+	parser.convert_file (alignment_fname, output_fname)
