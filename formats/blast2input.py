@@ -29,7 +29,7 @@ class BLASTParser (object):
             i += 1
          
     ############ ############ ##############
-    def parse_file (self, blast_output_fname, output_fname):
+    def convert_file (self, blast_output_fname, output_fname):
         blast_output_file = open(blast_output_fname)
         output_file       = open(output_fname, 'w')
         lines       = iter(blast_output_file.readlines())
