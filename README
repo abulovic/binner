@@ -1,0 +1,5 @@
+
+ncbidb/		:	Access to local version of NCBI database.
+utils/		: 	Parts of application needed everywhere.
+formats/	: 	Format parsing. (blast ecc)
+snippets/	:	Examples of running parts of the app.
