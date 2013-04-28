@@ -51,8 +51,7 @@ class CdsAlnContainer (object):
         self.record_repository = RecordContainer.Instance()
 
     
-    def populate (readCont)
-        
+    def populate (readCont):
         # Iterate through reads
         pass
 
