@@ -50,7 +50,12 @@ class CdsAlnContainer (object):
         self.cds_repository = {}
         self.record_repository = RecordContainer.Instance()
 
-        
+    
+    def populate (readCont):
+        # Iterate through reads
+        pass
+
+    
     def add_cds_alns (self, cds_alignment):
         cds = cds_alignment.cds
         self.cds_repository[(cds.record_id, cds.location)] = cds_alignment
