@@ -51,8 +51,24 @@ class CdsAlnContainer (object):
         self.record_repository = RecordContainer.Instance()
 
     
-    def populate (readCont):
+    def populate (self, readCont):
+
         # Iterate through reads
+        num = 0;
+        for read in readCont.read_repository.values():
+
+            # Iterate through read alignments
+            for readAln in read.alignment_locations:
+                num += 1;
+
+                # Get CDSs for alignment
+
+
+
+            
+
+        print "pogledao sam alignova: %d " % num
+
         pass
 
     
@@ -125,6 +141,7 @@ def fill_containers (alignment_file):
     # --------------------------- Populate cdsAlnCont ---------------------------------- #
 
     # Populate cdsAlnCont using readCont
+    cdsAlnCont.populate(readCont);
 
     return (readCont, recordCont, cdsAlnCont)
 
