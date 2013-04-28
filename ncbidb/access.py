@@ -4,12 +4,13 @@ from sqlalchemy.orm.session import sessionmaker
 from sqlalchemy.ext.declarative.api import declarative_base, DeferredReflection
 
 from ncbidb.data import Record
+from ncbidb.data import Base
 
 class DbQuery(object):
 	'''Serves as a database query utility.'''
 	def __init__(self, db_url=None):
 		if not db_url:
-			 db_url = "mysql+mysqldb://root@localhost/genome"
+			 db_url = "mysql+mysqldb://root:root@localhost/genome"
 		self.db_url = db_url
 		self._create_session()
 
@@ -39,8 +40,8 @@ class DbQuery(object):
 		''' Creates database session '''
 		engine = create_engine (self.db_url, echo=False, 
 								convert_unicode=True, encoding='utf-8')
-		session = scoped_session(sessionmaker(autocommit=False, autoflush=False))
-		Base = declarative_base(cls=DeferredReflection)
+		session = scoped_session(sessionmaker(bind = engine, autocommit=False, autoflush=False))
+		# Base = declarative_base(cls=DeferredReflection)
 		Base.prepare(engine)
 		self.session = session()
 

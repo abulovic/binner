@@ -13,7 +13,7 @@ if __name__ == '__main__':
 	complement = True
 
 	record = dbquery.get_record(record_id)
-	print record
+	print record.name
 
 	# first way to get the cdss that queries
 	# the record itself
