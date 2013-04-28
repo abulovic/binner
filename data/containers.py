@@ -95,7 +95,8 @@ class RecordContainer (object):
     def _add_record (self, record_id):
         ''' Adds the record from database if not already present
         '''
-        pass
+        if not self.record_repository.has_key[record_id]:
+            self.record_repository[record_id] = self.db_query.get_record(record_id)
 
 
 def fill_containers (alignment_file):
