@@ -1,4 +1,4 @@
-from data.read          import Read
+from data.read		import Read
 from ncbidb.access      import DbQuery
 from utils.singleton    import Singleton
 
@@ -115,9 +115,17 @@ class RecordContainer (object):
         
     def _add_record (self, record_id):
         ''' Adds the record from database if not already present
+	   If unable to find entry in database, stores None instead.
         '''
-        pass
-
+	
+        if not self.record_repository.has_key(record_id):
+	    record = self.db_query.get_record(record_id)
+	    try :
+		getattr(record, 'name')
+		self.record_repository[record_id] = record
+	    except AttributeError:
+		print "No record with ID {0}".format(record_id)
+		self.record_repository[record_id] = None
 
 def fill_containers (alignment_file):
 

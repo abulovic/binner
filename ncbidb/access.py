@@ -23,7 +23,7 @@ class DbQuery(object):
 		@return Record object with specified id,
 				None if no object with that id is present in database
 		'''
-		r = self.session.query(Record).filter(Record.name=='AB000181').first()
+		r = self.session.query(Record).filter(Record.name==record_id).first()
 		return r
 
 
