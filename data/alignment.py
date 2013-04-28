@@ -3,15 +3,16 @@ class ReadAlnLocation (object):
         an NT nucleotide string
     """
     
-    def __init__ (self, read_id, nucleotide_accession, db_source, genome_index, location_span, complement):
+    def __init__ (self, read_id, nucleotide_accession, db_source, genome_index, score, location_span, complement):
         self.read_id                = read_id
         self.nucleotide_accession   = nucleotide_accession
         self.db_source              = db_source
         self.genome_index           = genome_index
+        self.score                  = score
         self.location_span          = location_span
         self.complement             = complement
         
-        self.record                 = ReadAlnLocation.fetch_record(nucleotide_accession)
+        # self.record                 = ReadAlnLocation.fetch_record(nucleotide_accession)
         self.determine_coding_seqs()
     
     @staticmethod
@@ -22,8 +23,9 @@ class ReadAlnLocation (object):
         ''' All the coding sequences should be stored in the 
             CDS alignment repository
         '''
-        self.cdss = self.record.find_cds (self.location_span.to_location_tuple(), 
-                                          self.complement)
+        # self.cdss = self.record.find_cds (self.location_span.to_location_tuple(), 
+        #                                  self.complement)
+        pass
 
         
     def set_type (self):

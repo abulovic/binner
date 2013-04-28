@@ -34,8 +34,8 @@ class ReadContainer (object):
     def _add_read_from_str (self, read_str):
         read = Read.from_read_str(read_str)
         # read identifier must be unique
-        assert (not self.read_repository.has_key(read.id))
-        self.read_repository[read.id] = read
+        # assert (not self.read_repository.has_key(read.id))
+        # self.read_repository[read.id] = read
         
     def add_read (self, read):
         pass
@@ -57,7 +57,7 @@ class CdsAlnContainer (object):
 
     def __init__(self):
         self.cds_repository = {}
-        self.record_repository = RecordRepository()
+        # self.record_repository = RecordContainer() # Zeza pa sam zakomentirao za sad
 
         
     def add_cds_alns (self, cds_alignment):
