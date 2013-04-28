@@ -5,6 +5,7 @@ from data.containers import fill_containers
 from data.containers import ReadContainer
 from data.containers import RecordContainer
 from data.containers import CdsAlnContainer
+from data.alignment import ReadAlnLocation
 
 # input file: E:\\Projects\\Metagenomics\\data\\microbial\\6input_format.txt
 

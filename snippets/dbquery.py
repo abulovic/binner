@@ -1,5 +1,8 @@
-import db.access
-import db.data
+import sys, os
+sys.path.append(os.getcwd())
+from  ncbidb.access import DbQuery
+import ncbidb.data
+
 
 if __name__ == '__main__':
 
