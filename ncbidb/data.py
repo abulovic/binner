@@ -7,6 +7,13 @@ from utils.location             import Location
 
 Base = declarative_base(cls=DeferredReflection)
 class Record(Base):
+    ''' Attributes:
+        accession:  nucleotide accession
+        cdss:       list of coding sequences in the record
+        gi:         genome index
+        name:       same as accession? 
+        version:    contains accession.version (example AB000181.1)
+    '''
     __tablename__ = 'record'
     
     def find_cds(self, location, complement=False, tolerance=0):
@@ -23,6 +30,15 @@ class Record(Base):
 
     
 class Cds(Base):
+    ''' db_xref:    GI:genome_index (string)
+        gene:       gene name
+        id:         database id
+        location:   location string (can be parsed with Location.from_location_str)
+        locus_tag:  locus tag
+        product:    protein product
+        record:     record object (which contains this cds)
+        record_id:  record id
+    '''
     __tablename__ = 'cds'
     
     record_id = Column(BigInteger, ForeignKey('record.id'))
@@ -32,6 +48,8 @@ class Cds(Base):
         primaryjoin='Cds.record_id==Record.id',
         backref='cdss'
     )
+
+
     
     def matches(self, location, complement, tolerance):
         l1 = Location.from_location_str(self.location, tolerance)
