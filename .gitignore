@@ -33,3 +33,6 @@ nosetests.xml
 # Mr Developer
 .project
 .pydevproject
+
+# vim swap files
+*.swp
