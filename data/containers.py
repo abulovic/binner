@@ -34,8 +34,8 @@ class ReadContainer (object):
     def _add_read_from_str (self, read_str):
         read = Read.from_read_str(read_str)
         # read identifier must be unique
-        # assert (not self.read_repository.has_key(read.id))
-        # self.read_repository[read.id] = read
+        assert (not self.read_repository.has_key(read.id))
+        self.read_repository[read.id] = read
         
     def add_read (self, read):
         pass
@@ -121,8 +121,16 @@ def fill_containers (alignment_file):
     readCont   = ReadContainer()
     cdsAlnCont = CdsAlnContainer()
 
-    # populate from the read container
+    # --------------------------- Populate readCont ---------------------------------- #
+
+    # Populate from the read container
     readCont.populate_from_aln_file(alignment_file)
+
+    # Debugging output
+    print "readCont populated!"
+    print ( "len(readCont): %d" % len(readCont.read_repository) )
+
+    # --------------------------- Populate cdsAlnCont ---------------------------------- #
 
     # Populate cdsAlnCont using readCont
 

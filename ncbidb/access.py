@@ -22,7 +22,7 @@ class DbQuery(object):
 		@return Record object with specified id,
 				None if no object with that id is present in database
 		'''
-		r = session.query(Record).filter(Record.name=='AB000181').first()
+		r = self.session.query(Record).filter(Record.name=='AB000181').first()
 		return r
 
 
@@ -42,6 +42,6 @@ class DbQuery(object):
 		session = scoped_session(sessionmaker(autocommit=False, autoflush=False))
 		Base = declarative_base(cls=DeferredReflection)
 		Base.prepare(engine)
-		self.session = db.session()
+		self.session = session()
 
 		
