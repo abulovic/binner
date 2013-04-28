@@ -93,9 +93,9 @@ class RecordContainer (object):
     '''
 
     _instance = None
-    def __new__ (cls):
+    def __new__ (cls, db_query):
         if not cls._instance:
-            cls._instance = super (RecordContainer, cls).__new__(cls)
+            cls._instance = super (RecordContainer, cls).__new__(cls, db_query)
         return cls._instance
 
     def __init__ (self, db_query):
