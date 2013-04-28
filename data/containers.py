@@ -1,18 +1,14 @@
-from data.read import Read
-from ncbidb.access import DbQuery
+from data.read          import Read
+from ncbidb.access      import DbQuery
+from utils.singleton    import Singleton
 
 # TIP: Implement all containers as singletons
 
+@Singleton
 class ReadContainer (object):
     ''' Contains all the reads loaded from an 
         alignment file. Can be queried by read id.
     '''
-    _instance = None
-    def __new__ (cls):
-        if not cls._instance:
-            cls._instance = super (ReadContainer, cls).__new__(cls)
-        return cls._instance
-
     def __init__(self):
         self.read_repository = {}
         
@@ -41,6 +37,7 @@ class ReadContainer (object):
         pass
 
 
+@Singleton
 class CdsAlnContainer (object):
     ''' CDS Alignment Repository serves as the storage for all 
         CDSs reported in the read alignments. 
@@ -49,15 +46,9 @@ class CdsAlnContainer (object):
         (record_id, location)
     '''
 
-    _instance = None
-    def __new__ (cls):
-        if not cls._instance:
-            cls._instance = super (CdsAlnContainer, cls).__new__(cls)
-        return cls._instance
-
     def __init__(self):
         self.cds_repository = {}
-        # self.record_repository = RecordContainer() # Zeza pa sam zakomentirao za sad
+        self.record_repository = RecordContainer.Instance()
 
         
     def add_cds_alns (self, cds_alignment):
@@ -84,24 +75,19 @@ class CdsAlnContainer (object):
     def get_key(self, cds):
         return (cds.record_id, cds.location)
 
-
+@Singleton
 class RecordContainer (object):
     ''' Serves as a local Record Repository.
         If a GenBank/EMBL/DDBJ record has already been 
         fetched from the database, it can be fetched localy
         from the record repository.
     '''
-
-    _instance = None
-    def __new__ (cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super (RecordContainer, cls).__new__(cls,*args, **kwargs)
-        return cls._instance
-
-    def __init__ (self, db_query):
+    def __init__ (self):
         self.record_repository  = {}
-        self.db_query = db_query
         
+    def set_db_access(self, db_query):
+        self.db_query = db_query
+
     def fetch_record (self, record_id):
         self._add_record(record_id)
         return self.record_repository[record_id]
@@ -117,9 +103,10 @@ def fill_containers (alignment_file):
     # enable database access
     dbQuery = DbQuery()
     # create containers
-    recordCont = RecordContainer(dbQuery)
-    readCont   = ReadContainer()
-    cdsAlnCont = CdsAlnContainer()
+    recordCont = RecordContainer.Instance()
+    recordCont.set_db_access(dbQuery)
+    readCont   = ReadContainer.Instance()
+    cdsAlnCont = CdsAlnContainer.Instance()
 
     # --------------------------- Populate readCont ---------------------------------- #
 
