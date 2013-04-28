@@ -124,6 +124,8 @@ def fill_containers (alignment_file):
     # populate from the read container
     readCont.populate_from_aln_file(alignment_file)
 
+    # Populate cdsAlnCont using readCont
+
     return (readCont, recordCont, cdsAlnCont)
 
 
