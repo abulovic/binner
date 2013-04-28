@@ -3,6 +3,8 @@ from sqlalchemy.orm.scoping import scoped_session
 from sqlalchemy.orm.session import sessionmaker
 from sqlalchemy.ext.declarative.api import declarative_base, DeferredReflection
 
+from ncbidb.data import Record
+
 class DbQuery(object):
 	'''Serves as a database query utility.'''
 	def __init__(self, db_url=None):
@@ -20,7 +22,9 @@ class DbQuery(object):
 		@return Record object with specified id,
 				None if no object with that id is present in database
 		'''
-		pass
+		r = session.query(Record).filter(Record.name=='AB000181').first()
+		return r
+
 
 	def get_cdss   (self, record_id, location, complement=False, db_source='gb'):
 		''' 
@@ -33,6 +37,11 @@ class DbQuery(object):
 
 	def _create_session (self):
 		''' Creates database session '''
-		pass
+		engine = create_engine (self.db_url, echo=False, 
+								convert_unicode=True, encoding='utf-8')
+		session = scoped_session(sessionmaker(autocommit=False, autoflush=False))
+		Base = declarative_base(cls=DeferredReflection)
+		Base.prepare(engine)
+		self.session = db.session()
 
 		
