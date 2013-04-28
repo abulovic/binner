@@ -1,11 +1,17 @@
 
-
 class Location(object):
-    def __init__(self):
-        self.complement=False
-        self.sublocations = []
+    def __init__(self, sublocations=None, complement=None):
+        if complement:
+            self.complement = complement
+        else:
+            self.complement=False
+        if sublocations:
+            self.sublocations = sublocations
+        else:
+            self.sublocations = []
     
     def intersects(self, location):
+        
         if location.complement != self.complement:
             return False
         for sl in self.sublocations:
@@ -68,9 +74,65 @@ class Location(object):
         return loc
             
     
-    def find_intersection (self, location_tuple):
-        loc = Location()
-        loc.complement = self.complement
-        if not self.intersects(Location.from_location(location_tuple, self.complement)):
-            return loc
-        ''' Find intersection with all the sublocations '''
+    def find_intersection (self, location_tuple, complement):
+        ''' Computes intersection region between the
+            supplied location and itself
+            @param location Location
+            @return None if the supplied locations don't intersect,
+                    otherwise returns the location object with 
+                    locations of intersection
+        '''
+        le  = lambda x,y: True if x <= y else False  # less of equal
+        ge  = lambda x,y: True if x >= y else False  # greater or equal
+
+        test_loc = Location()
+        test_loc.complement = complement
+        test_loc.sublocations.append(location_tuple)
+
+        if not self.intersects(test_loc):
+            return None
+
+        loc = Location (complement=complement)
+
+        (target_start,target_stop) = location_tuple
+        for (sub_start, sub_stop) in self.sublocations:
+            
+            #T:                  |----------
+            #S: ------|
+
+            if ge (target_start, sub_stop):
+                continue
+            #T: ------|
+            #S:                  |----------
+
+            if ge (sub_start, target_stop):
+                continue
+            #T: |--------------------------|
+            #S:        |----------|
+
+            if ge (sub_start, target_start) and le (sub_stop, target_stop):
+                loc.sublocations.append((sub_start, sub_stop))
+                continue
+            #T:        |----------|
+            #S: |--------------------------|
+
+            if le (sub_start, target_start) and ge(sub_stop, target_stop):
+                loc.sublocations.append((target_start, target_stop))
+                continue
+            #T:        |-------------------|
+            #S: |-----------------|
+            if le (sub_start, target_start) and le(sub_stop, target_stop):
+                loc.sublocations.append((target_start, sub_stop))
+                continue
+            #T: |-----------------|
+            #S:        |-------------------|
+
+            if ge(sub_start, target_start) and ge(sub_stop, target_stop):
+                loc.sublocations.append ((sub_start, target_stop))
+
+        # found no intersection
+        if len(loc.sublocations) == 0:
+            return None
+        return loc
+
+        
