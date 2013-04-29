@@ -21,5 +21,5 @@ if __name__ == '__main__':
 	print "Found {0} cdss directly from record.".format(len(cdss))
 	# second way to get the cdss that surpasses
 	# the record query and need to store records
-	cdss = dbquery.get_cdss(record_id, location, complement)
+	# cdss = dbquery.get_cdss(record_id, location, complement)
 	print "Found {0} cdss using dbquery.".format(len(cdss))

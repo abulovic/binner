@@ -20,6 +20,9 @@ class ReadAlnLocation (object):
     def parse_location (nucleotide_location_str):
         pass
     
+    def getCDSs(self):
+        pass
+
     def determine_coding_seqs (self):
         ''' Determines which of the CDSs in the record aligned_regions
             aligned to the read.
@@ -57,7 +60,7 @@ class CdsAlignment (object):
     '''
     
     def __init__ (self, cds):
-        self.cds = cds
+        self.cds = cds              # CDS object (from Mladen)
         self.aligned_regions = {}
         self.coverage = None
         pass

@@ -61,15 +61,17 @@ class CdsAlnContainer (object):
             for readAln in read.alignment_locations:
                 num += 1;
 
-                # Get CDSs for alignment
+                # Ask each alignment to get its colliding cdss - get array of (CDS, Location) tuples
 
 
+                # Iterate over CDSs
+                    
+                    # Create / update CDSalignment in container
 
-            
+
 
         print "pogledao sam alignova: %d " % num
 
-        pass
 
     
     def add_cds_alns (self, cds_alignment):
@@ -145,6 +147,11 @@ def fill_containers (alignment_file):
     # Debugging output
     print "readCont populated!"
     print ( "len(readCont): %d" % len(readCont.read_repository) )
+
+    firstRead       = readCont.read_repository.itervalues().next();
+    firstReadAln    = firstRead.alignment_locations[0];
+
+    print "Broj CDSova je: %d" % len(firstReadAln.aligned_cdss)
 
     # --------------------------- Populate cdsAlnCont ---------------------------------- #
 
