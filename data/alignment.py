@@ -1,8 +1,11 @@
+from data.containers import RecordContainer
+
 class ReadAlnLocation (object):
     """ Contains information on alignment location on 
         an NT nucleotide string
     """
     
+    record_container                = RecordContainer.Instance()
     def __init__ (self, read_id, nucleotide_accession, db_source, genome_index, score, location_span, complement):
         self.read_id                = read_id
         self.nucleotide_accession   = nucleotide_accession
@@ -11,8 +14,6 @@ class ReadAlnLocation (object):
         self.score                  = score
         self.location_span          = location_span
         self.complement             = complement
-        
-        # self.record                 = ReadAlnLocation.fetch_record(nucleotide_accession)
         self.determine_coding_seqs()
     
     @staticmethod
@@ -20,12 +21,26 @@ class ReadAlnLocation (object):
         pass
     
     def determine_coding_seqs (self):
-        ''' All the coding sequences should be stored in the 
-            CDS alignment repository
+        ''' Determines which of the CDSs in the record aligned_regions
+            aligned to the read.
+            @return list of tuples (cds, intersecting_location) if such exist, 
+            None if record is not available from the database
         '''
-        # self.cdss = self.record.find_cds (self.location_span.to_location_tuple(), 
-        #                                  self.complement)
-        pass
+        record = ReadAlnLocation.record_container.fetch_record (self.nucleotide_accession)
+        # if not possible to fetch a record from the db, return None
+        if not record:
+            return None
+
+        self.aligned_cdss = []
+        for cds in record.cdss:
+            location_intersection = cds.location.find_intersection (
+                                                                    self.location_span, 
+                                                                    self.complement
+                                                                    )
+            if location_intersection is not None:
+                self.aligned_cdss.append ((cds, location_intersection))
+        
+        return self.aligned_cdss
 
         
     def set_type (self):
