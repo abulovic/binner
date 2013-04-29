@@ -43,8 +43,10 @@ class Read (object):
             stop        = data[5]
             strand      = data[6]
 
+            complement = False if strand=='+' else True
+
             # Create and store new ReadAlnLocation object
-            newAlignInfo = ReadAlnLocation(newRead_id, nucl_acc, db_source, GI, score, (start, stop), strand);
+            newAlignInfo = ReadAlnLocation(newRead_id, nucl_acc, db_source, GI, score, (start, stop), complement);
             newRead_aln_locs.append(newAlignInfo);
 
         return Read(newRead_id, newRead_length, newRead_aln_locs)
