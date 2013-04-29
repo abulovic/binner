@@ -68,17 +68,25 @@ class CdsAlignment (object):
         self.coverage = None
         pass
     
-    def add_aligned_sublocation (self, read_id, location, score):
+    def add_aligned_sublocation (self, read_id, aligned_location, score):
         ''' Adds an aligned region to the cds unless it comes 
             from the read already present in the aligned regions
+            @param read_id read id 
+            @param aligned_location intersection between the CDS and the 
+                    alignment location
+            @param score alignment score for this read
         '''
         
+        # if the CDS has already been covered by the same read in the past,
+        # discard this one. 
+        # TODO: choose the one with the highest score or ensure that
+        # the highest score first be added in the CdsAlignment
         if self.aligned_regions.has_key(read_id):
             return
-        aligned_location = self.cds.find_intersection(location)
         
         aligned_sublocation             = CdsAlnSublocation (read_id, aligned_location, score)
         self.aligned_regions[read_id]   = aligned_sublocation
+        self._recalculate_coverage()
         
     def get_coverage (self, update_coverage = False):
         ''' Get the coverage of a CDS calculated based on 
@@ -96,6 +104,13 @@ class CdsAlignment (object):
             the aligned regions and quality of the alignments. '''
         pass
 
+    def __lt__ (self, other):
+        ''' Compares two CDS alignments based on their coverage.
+            Higher coverage means 'larger' CdsAlignment
+        '''
+        assert (type(other) == type(self))
+        return True if self.get_coverage() < other.get_coverage() else False
+
     
 class CdsAlnSublocation (object):
     ''' Represents the sublocation of a CDS covered
@@ -103,5 +118,7 @@ class CdsAlnSublocation (object):
     '''
         
     def __init__ (self, read_id, location, score):
-        pass
+        self.read_id    = read_id
+        self.location   = location
+        self.score      = score
 
