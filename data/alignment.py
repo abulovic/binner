@@ -30,12 +30,11 @@ class ReadAlnLocation (object):
             @return list of tuples (cds, intersecting_location) if such exist, 
             None if record is not available from the database
         '''
+        self.aligned_cdss = []
         record = ReadAlnLocation.record_container.fetch_record (self.nucleotide_accession)
         # if not possible to fetch a record from the db, return None
         if not record:
-            return None
-
-        self.aligned_cdss = []
+            return self.aligned_cdss        
         for cds in record.cdss:
             cds_location = Location.from_location_str(cds.location)
             location_intersection = cds_location.find_intersection (
