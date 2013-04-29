@@ -36,7 +36,8 @@ class ReadAlnLocation (object):
 
         self.aligned_cdss = []
         for cds in record.cdss:
-            location_intersection = cds.location.find_intersection (
+            cds_location = Location.from_location_str(cds.location)
+            location_intersection = cds_location.find_intersection (
                                                                     self.location_span, 
                                                                     self.complement
                                                                     )
