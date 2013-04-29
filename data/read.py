@@ -39,8 +39,8 @@ class Read (object):
             db_source   = data[1]
             GI          = data[2]
             score       = data[3]
-            start       = data[4]
-            stop        = data[5]
+            start       = int (data[4])
+            stop        = int (data[5])
             strand      = data[6]
 
             complement = False if strand=='+' else True
