@@ -19,6 +19,9 @@ class ReadAlnLocation (object):
     def parse_location (nucleotide_location_str):
         pass
     
+    def getCDSs(self):
+        pass
+
     def determine_coding_seqs (self):
         ''' All the coding sequences should be stored in the 
             CDS alignment repository
@@ -42,7 +45,7 @@ class CdsAlignment (object):
     '''
     
     def __init__ (self, cds):
-        self.cds = cds
+        self.cds = cds              # CDS object (from Mladen)
         self.aligned_regions = {}
         self.coverage = None
         pass

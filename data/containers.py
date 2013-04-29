@@ -61,15 +61,17 @@ class CdsAlnContainer (object):
             for readAln in read.alignment_locations:
                 num += 1;
 
-                # Get CDSs for alignment
+                # Ask each alignment to get its colliding cdss - get array of (CDS, Location) tuples
 
 
+                # Iterate over CDSs
+                    
+                    # Create / update CDSalignment in container
 
-            
+
 
         print "pogledao sam alignova: %d " % num
 
-        pass
 
     
     def add_cds_alns (self, cds_alignment):
