@@ -23,10 +23,11 @@ class RecordContainer (object):
         '''
         name = record_id.split('.')[0]
         if not self.record_repository.has_key(record_id):
-	    record = self.db_query.get_record(name)
-	    try :
-    		getattr(record, 'name')
-    		self.record_repository[record_id] = record
-	    except AttributeError:
-    		print "No record with ID {0}".format(record_id)
-    		self.record_repository[record_id] = None
+            record = self.db_query.get_record(name)
+            try :
+                getattr(record, 'name')
+                self.record_repository[record_id] = record
+                print "Found record", name
+            except AttributeError:
+                print "No record with ID {0}".format(record_id)
+                self.record_repository[record_id] = None
