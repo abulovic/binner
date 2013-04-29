@@ -1,5 +1,5 @@
 from utils.singleton import Singleton
-from data.containers.recordcontainer import RecordContainer
+from data.containers.record import RecordContainer
 
 @Singleton
 class CdsAlnContainer (object):
