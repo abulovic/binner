@@ -18,10 +18,17 @@ def fill_containers (alignment_file):
     # Populate from the read container
     readCont.populate_from_aln_file(alignment_file)
 
-    firstRead       = readCont.read_repository.itervalues().next();
-    firstReadAln    = firstRead.alignment_locations[0];
+    reads = readCont.read_repository.itervalues()
+    while (True):
+        read = reads.next()
+        if len(read.alignment_locations) > 0:
+            print read.id, ": Broj CDSova je: %d" % len(read.alignment_locations[0].aligned_cdss)
+            break
+    #firstRead       = readCont.read_repository.itervalues().next();
+    #firstReadAln    = firstRead.alignment_locations[0];
 
-    print "Broj CDSova je: %d" % len(firstReadAln.aligned_cdss)
+
+    #print "Broj CDSova je: %d" % len(firstReadAln.aligned_cdss)
 
     # Debugging output
     print "readCont populated!"
