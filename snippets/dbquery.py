@@ -1,7 +1,9 @@
 import sys, os
 sys.path.append(os.getcwd())
-from  ncbidb.access import DbQuery
-import ncbidb.data
+
+import ncbi.genbank.data
+from   ncbi.genbank.access import DbQuery
+
 
 
 if __name__ == '__main__':

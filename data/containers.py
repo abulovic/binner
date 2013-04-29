@@ -1,6 +1,6 @@
-from data.read		import Read
-from ncbidb.access      import DbQuery
-from utils.singleton    import Singleton
+from data.read		        import Read
+from ncbi.genbank.access    import DbQuery
+from utils.singleton        import Singleton
 
 # TIP: Implement all containers as singletons
 
