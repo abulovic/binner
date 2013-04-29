@@ -32,9 +32,11 @@ class ReadAlnLocation (object):
         '''
         self.aligned_cdss = []
         record = ReadAlnLocation.record_container.fetch_record (self.nucleotide_accession)
+
         # if not possible to fetch a record from the db, return None
         if not record:
-            return self.aligned_cdss        
+            return None
+
         for cds in record.cdss:
             cds_location = Location.from_location_str(cds.location)
             location_intersection = cds_location.find_intersection (
