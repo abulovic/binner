@@ -1,11 +1,11 @@
 
 import sys, os
 sys.path.append(os.getcwd())
-from data.containers import fill_containers
-from data.containers import ReadContainer
-from data.containers import RecordContainer
-from data.containers import CdsAlnContainer
-from data.alignment import ReadAlnLocation
+from data.containers.load import fill_containers
+#from data.containers.read import ReadContainer
+#from data.containers.record import RecordContainer
+#from data.containers.cdsaln import CdsAlnContainer
+#from data.alignment import ReadAlnLocation
 
 # input file: E:\\Projects\\Metagenomics\\data\\microbial\\6input_format.txt
 

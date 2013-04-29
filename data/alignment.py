@@ -1,4 +1,4 @@
-from data.containers import RecordContainer
+from data.containers.record import RecordContainer
 
 class ReadAlnLocation (object):
     """ Contains information on alignment location on 
