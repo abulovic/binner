@@ -148,6 +148,11 @@ def fill_containers (alignment_file):
     print "readCont populated!"
     print ( "len(readCont): %d" % len(readCont.read_repository) )
 
+    firstRead       = readCont.read_repository.itervalues().next();
+    firstReadAln    = firstRead.alignment_locations[0];
+
+    print "Broj CDSova je: %d" % len(firstReadAln.aligned_cdss)
+
     # --------------------------- Populate cdsAlnCont ---------------------------------- #
 
     # Populate cdsAlnCont using readCont
