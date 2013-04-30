@@ -37,3 +37,6 @@ nosetests.xml
 # vim swap files
 *.swp
 *.swo
+
+# git patch files
+*.patch
