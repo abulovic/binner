@@ -1,6 +1,3 @@
-import sys, os
-sys.path.append(os.getcwd())
-
 import unittest, random
 from ncbi.taxonomy.tree import TaxTree
 
@@ -8,11 +5,12 @@ class TaxTreeTest (unittest.TestCase):
 
 	def setUp(self):
 		self.tax_tree = TaxTree()
+		self.tax_tree.load()
 
-	def test_loaded (self):
+	def testLoaded (self):
 		self.assertEqual (1, self.tax_tree.root)
 
-	def test_ischild (self):
+	def testIsChild (self):
 		node1 = self.tax_tree.bacteria
 		node2 = node1
 		for i in xrange(1,5):
@@ -25,11 +23,15 @@ class TaxTreeTest (unittest.TestCase):
 		self.assertEqual (True, self.tax_tree.is_child(node2, node1))
 		self.assertEqual (False, self.tax_tree.is_child(node2, self.tax_tree.eukaryota))
 
-	def test_lca (self):
+	def testLca (self):
 		# check lca for bacteria & fungi is root
-		self.assertEqual (131567, self.tax_tree.find_lca ( [self.tax_tree.bacteria, self.tax_tree.fungi]))
+		self.assertEqual (131567, self.tax_tree.find_lca ( 
+				[self.tax_tree.bacteria, self.tax_tree.fungi])
+														 )
 		# check lca is ok for two identical child nodes (131567 - cellular organisms)
-		self.assertEqual (131567, self.tax_tree.find_lca ( [self.tax_tree.eukaryota, self.tax_tree.eukaryota]))
+		self.assertEqual (131567, self.tax_tree.find_lca ( 
+				[self.tax_tree.eukaryota, self.tax_tree.eukaryota])
+														 )
 		# check ordinary case. 
 		root = self.tax_tree.bacteria
 		lca_nodes = []
