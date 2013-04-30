@@ -1,19 +1,7 @@
-#########################################################
-################## TAXONOMY TREE ########################
-
-## \<>.<>/ ##  ~ :                                CLASS
-
-
-
-    ############ #_IMPORTS_# ##############
 from  collections       import defaultdict
 import os
 
 
-    ############ \\\\\\\\\\\ ##############
-    ############ /////////// ##############
-    ############ \\\\\\\\\\\ ##############
-    ############ /////////// ##############
 class TaxTree ():
     ''' Loads the NCBI taxonomy tree, creates both
         parent-child and child-parent relations,
@@ -21,24 +9,22 @@ class TaxTree ():
         finding the least common ancestor.
     '''
 
-    ############ ############ ##############
     def __init__ (self, nodes_file=None):
+        ''' Locates the ncbi taxonomy file and sets the important
+            taxonomy assignments (such as animalia, bacteria ecc)
+            @param location of the ncbi taxonomy tree file
+        '''
         
         if not nodes_file:
             nodes_file = self._h_find_taxnode_file()
-        self.parent_nodes   = self._h_get_tax_nodes(nodes_file)
-        self.child_nodes    = self._h_populate_child_nodes()  
         
         #--------- RELEVANT TAXONOMY ASSIGNMENTS ----------#
-        self.bacteria      = 2
-        self.eukaryota     = 2759
-        self.fungi         = 4751
-        self.archea        = 2157
-        self.viroids       = 12884
-        self.viruses       = 10239
-        
-        
-    ############ ############ ##############
+        self._h_relevant_taxonomy_assignments()   
+
+    def load (self):
+        self.parent_nodes   = self._h_get_tax_nodes
+        self.child_nodes    = self._h_populate_child_nodes
+    
     def is_child (self, child_taxid, parent_taxid):
         ''' Test if child_taxid is child node of parent_taxid
             Node is not the child of itself
@@ -106,34 +92,24 @@ class TaxTree ():
             # refresh current nodes
             current_taxids = parent_nodes
         
-        
-    ############ ############ ##############
-    def filter_lca_tree (self):
-        ''' Performs lca tree filtering that returns the
-            new root node determined by parameters
-            of the pruning algorithm
-        '''
-        pass
 
-    ############ ############ ##############
     def _h_get_tax_nodes        (self, nodes_file):
         '''Loads the taxonomy nodes in a dictionary
            mapping the child to parent node.
         '''
         # file format per line: child_taxid parent_taxid
         with open(nodes_file) as fd:    
-            d = dict(self._h_get_pair(line) for line in fd)
+            d = dict(self._h_from_parent_child_str (line) for line in fd)
         return d
     
-    ############ ############ ##############
-    def _h_get_pair              (self, line):
+    def _h_from_parent_child_str (self, line):
         '''Loads two integers (taxids) from a line
         '''
         key, sep, value = line.strip().partition(" ")
         if key == value: self.root = int(key)
         return int(key), int(value)
     
-    ############ ############ ##############
+
     def _h_set_visited_nodes (self):
         ''' Creates class for all the taxids of the nodes visited
             in the LCA tree
@@ -141,7 +117,7 @@ class TaxTree ():
         self.visited_nodes = {}
         for taxid in self.num_visited:
             print self.num_visited[taxid]
-            self.visited_nodes[taxid] = LCANode (
+            self.visited_nodes[taxid] = TaxNode (
                                                  taxid, 
                                                  self.num_visited[taxid]
                                                  )
@@ -154,9 +130,7 @@ class TaxTree ():
             if 'ncbi_tax_tree' in files:
                 return root + ''.join(dirs) + '/ncbi_tax_tree'
             
-            
-    
-    ############ ############ ##############
+
     def _h_populate_child_nodes (self):
         ''' Populates child nodes from parent to child 
             mapping dictionary
@@ -166,8 +140,22 @@ class TaxTree ():
             child_nodes[parent].append(child)
         return child_nodes
 
+    def _h_relevant_taxonomy_assignments (self):
+        ''' Sets some of the more important taxonomy 
+            assignments which can help in checking which kingdom
+            an organism belongs to.
+        '''
 
-class LCANode (object):
+        self.bacteria      = 2
+        self.eukaryota     = 2759
+        self.fungi         = 4751
+        self.archea        = 2157
+        self.viroids       = 12884
+        self.viruses       = 10239
+        self.animalia      = 33208 
+
+
+class TaxNode (object):
     '''
     Contains information relevant to LCA
     taxonomy tree traversal. 
