@@ -17,13 +17,24 @@ class Location(object):
         for sl in self.sublocations:
             for ll in location.sublocations:
                 if sl[0] <= ll[0] and sl[1] >= ll[0]:
+                    #sl: |-------------------|
+                    #ll:         |-----------------|
+                    # or
+                    #sl: |-------------------|
+                    #ll:         |--------|
                     return True
                 elif sl[0] <= ll[1] and sl[1] >= ll[1]:
+                    #sl:       |-------------------|
+                    #ll: |-----------------|
+                    # or
+                    #sl:       |-------------------|
+                    #ll:         |---------|
                     return True
                 elif ll[0] <= sl[0] and ll[1] >= sl[1]:
+                    #sl:     |-----------|
+                    #ll: |----------------------|
                     return True
-                else:
-                    return False
+        return False
     
     @classmethod
     def _parse_sublocation(self, location, tolerance):
