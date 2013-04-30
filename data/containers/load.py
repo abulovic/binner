@@ -1,7 +1,7 @@
 from data.containers.read 	import ReadContainer
 from data.containers.record import RecordContainer
 from data.containers.cdsaln import CdsAlnContainer
-from ncbi.genbank.access 	import DbQuery
+from ncbi.db.access   	    import DbQuery
 
 def fill_containers (alignment_file):
 
