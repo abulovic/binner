@@ -62,6 +62,10 @@ class CdsAlnContainer (object):
                 num += 1;
 
                 # Ask each alignment to get its colliding cdss - get array of (CDS, Location) tuples
+                alnCDSs = readAln.aligned_cdss
+                for cds in alnCDSs:
+                    pass
+                    
 
 
                 # Iterate over CDSs
