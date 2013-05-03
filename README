@@ -1,5 +1,11 @@
 
-ncbidb/		:	Access to local version of NCBI database.
-utils/		: 	Parts of application needed everywhere.
-formats/	: 	Format parsing. (blast ecc)
-snippets/	:	Examples of running parts of the app.
+data/			: Data model for the alignments (read, read alignment, cds alignment...)
+|__ containers/ : Containers which hold all the loaded data (records, reads and cdss)
+formats/		: 	Format parsing. (blast ecc)
+ncbi/			
+|__ .data/		: Holds NCBI taxonomy tree data
+|__ db/			: MySQL data model and access to GenBank, EMBL and NCBI taxonomy 
+|__ taxonomy	: Taxonomy tree structure 
+snippets/		:	Examples of running parts of the app.
+tests/			: 	Unit tests for some parts of the application
+utils/			: 	Parts of application needed everywhere.
