@@ -68,6 +68,12 @@ class CdsAlignment (object):
         self.coverage = None
         pass
     
+    def __hash__ (self):
+        return hash ((self.cds.record_id, self.cds.location))
+
+    def __eq__ (self, other):
+        return (self.cds.record_id, self.cds.location) == (other.cds.record_id, other.cds.location)
+
     def add_aligned_sublocation (self, read_id, aligned_location, score):
         ''' Adds an aligned region to the cds unless it comes 
             from the read already present in the aligned regions
@@ -87,6 +93,9 @@ class CdsAlignment (object):
         aligned_sublocation             = CdsAlnSublocation (read_id, aligned_location, score)
         self.aligned_regions[read_id]   = aligned_sublocation
         self._recalculate_coverage()
+
+    def get_key (self):
+        pass
         
     def get_coverage (self, update_coverage = False):
         ''' Get the coverage of a CDS calculated based on 
@@ -109,6 +118,12 @@ class CdsAlignment (object):
         if update:
             self._recalculate_coverage()
         return True
+
+    def contains_read (self, read_id):
+        ''' Determines whether this CDS alignment contains 
+            a subalignment mapped to the specified read.
+        '''
+        return True if self.aligned_regions.has_key(read_id) else False
 
         
 
