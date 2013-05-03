@@ -5,13 +5,8 @@ from ncbi.db.access   	    import DbQuery
 
 def fill_containers (alignment_file):
 
-    # enable database access
-    dbQuery = DbQuery()
-    # create containers
-    recordCont = RecordContainer.Instance()
-    recordCont.set_db_access(dbQuery)
-    readCont   = ReadContainer.Instance()
-    cdsAlnCont = CdsAlnContainer.Instance()
+    # initialization (sets up database access)
+    (readCont, recordCont, cdsAlnCont) = initialize_containers()
 
     # --------------------------- Populate readCont ---------------------------------- #
 
@@ -37,5 +32,18 @@ def fill_containers (alignment_file):
     # Populate cdsAlnCont using readCont
     cdsAlnCont.populate(readCont)
     print len(cdsAlnCont.cds_repository)
+
+    return (readCont, recordCont, cdsAlnCont)
+
+
+def initialize_containers ():
+
+    # enable database access
+    dbQuery = DbQuery()
+    # create containers
+    recordCont = RecordContainer.Instance()
+    recordCont.set_db_access(dbQuery)
+    readCont   = ReadContainer.Instance()
+    cdsAlnCont = CdsAlnContainer.Instance()
 
     return (readCont, recordCont, cdsAlnCont)
