@@ -67,7 +67,7 @@ class Solver (object):
     #   
     # @return   List of products (objects, strings or sth)
     #
-    def determineProducts();
+    def determineProducts():
 
         # Implementation idea:
         #
