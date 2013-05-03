@@ -15,8 +15,8 @@ class Test(unittest.TestCase):
 
     def setUp(self):
         self.dbQuery = DbQuery(
-            genbank_db_url='mysql+mysqldb://root@localhost/genbank',
-            embl_db_url='mysql+mysqldb://root@localhost/embl')
+            genbank_db_url='mysql+mysqldb://root:root@localhost/genbank',
+            embl_db_url='mysql+mysqldb://root:root@localhost/embl')
 
 
     def tearDown(self):
