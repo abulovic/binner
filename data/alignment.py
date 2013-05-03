@@ -90,19 +90,38 @@ class CdsAlignment (object):
         
     def get_coverage (self, update_coverage = False):
         ''' Get the coverage of a CDS calculated based on 
-            the aligned regions and quality of the alignments. '''
+            the aligned regions and quality of the alignments. 
+        '''
         if not self.coverage or update_coverage:
             self.coverage = self._recalculate_coverage()
         return self.coverage
     
-    def remove_read (self, read_id):
-        # _recalculate_coverage
-        pass
+    def remove_read (self, read_id, update=True):
+        ''' Removes aligned sublocation mapped to the 
+            specified read ID. Recalculates coverage.
+            @param read_id  ID of the read to be removed from the 
+                    overall coverage calculation
+            @return True if read was removed, False if not
+        '''
+        if not self.aligned_regions.has_key(read_id):
+            return False
+        self.aligned_regions[read_id].active = False
+        if update:
+            self._recalculate_coverage()
+        return True
+
+        
 
     def _recalculate_coverage (self):
         ''' Calculate the coverage of a CDS based on 
-            the aligned regions and quality of the alignments. '''
-        pass
+            the aligned regions and quality of the alignments. 
+            Only 'active' sublocations are considered.
+        '''
+        # ultra-primitive solution: CHANGE QUICK!
+        self.coverage = 0.
+        for alnsubloc in self.aligned_regions:
+            if not alnsubloc.active: continue
+            self.coverage += alnsubloc.score
 
     def __lt__ (self, other):
         ''' Compares two CDS alignments based on their coverage.
@@ -117,8 +136,15 @@ class CdsAlnSublocation (object):
         by a single read.
     '''
         
-    def __init__ (self, read_id, location, score):
+    def __init__ (self, read_id, location, score, active=True):
+        ''' @param read_id read ID 
+            @param location intersection location 
+            @param score alignment score
+            @param active (boolean) if active, it contributes to the overall
+                   CDS coverage
+        '''
         self.read_id    = read_id
         self.location   = location
         self.score      = score
+        self.active     = active
 
