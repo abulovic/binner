@@ -50,7 +50,7 @@ class BLASTParser (object):
                 alignment_list = []
             else:
                 alignment_list.append(aln_data)
-                    
+        print >> output_file, self.get_input_line(read_id, alignment_list)            
         blast_output_file.close()
     
     def get_input_line (self, read_id, alignment_data):
