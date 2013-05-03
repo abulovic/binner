@@ -35,6 +35,7 @@ def fill_containers (alignment_file):
     # --------------------------- Populate cdsAlnCont ---------------------------------- #
 
     # Populate cdsAlnCont using readCont
-    cdsAlnCont.populate(readCont);
+    cdsAlnCont.populate(readCont)
+    print len(cdsAlnCont.cds_repository)
 
     return (readCont, recordCont, cdsAlnCont)
