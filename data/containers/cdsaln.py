@@ -41,7 +41,7 @@ class CdsAlnContainer (object):
                     else:
                         cds_alignment = self.cds_repository[cds]
                         # CDS already contains subalignment with this read, pass 
-                        if cds_alignment.contain_read (read.id):
+                        if cds_alignment.contains_read (read.id):
                             continue
                         else:
                             cds_alignment.add_aligned_sublocation (read.id, alignment_location, readAln.score)
