@@ -1,5 +1,7 @@
-import sys
+# Transform BLAST output to input format specification.
 
+import sys, os
+sys.path.append(os.getcwd())
 from formats.blast2input import BLASTParser
 
 if __name__ == '__main__':
