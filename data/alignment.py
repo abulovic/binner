@@ -134,7 +134,7 @@ class CdsAlignment (object):
         '''
         # ultra-primitive solution: CHANGE QUICK!
         self.coverage = 0.
-        for alnsubloc in self.aligned_regions:
+        for alnsubloc in self.aligned_regions.values():
             if not alnsubloc.active: continue
             self.coverage += alnsubloc.score
 
