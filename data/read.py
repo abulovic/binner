@@ -38,12 +38,12 @@ class Read (object):
             nucl_acc    = data[0]
             db_source   = data[1]
             GI          = data[2]
-            score       = data[3]
-            start       = int (data[4])
-            stop        = int (data[5])
+            score       = float (data[3])
+            start       = int   (data[4])
+            stop        = int   (data[5])
             strand      = data[6]
 
-            complement = False if strand=='+' else True
+            complement  = False if strand=='+' else True
 
             # Create and store new ReadAlnLocation object
             newAlignInfo = ReadAlnLocation(newRead_id, nucl_acc, db_source, GI, score, (start, stop), complement);
