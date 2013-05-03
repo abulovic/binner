@@ -4,6 +4,9 @@ Created on Apr 30, 2013
 
 @author: marin
 '''
+import sys, os
+sys.path.append(os.getcwd())
+
 import unittest
 from ncbi.db.access import DbQuery 
 

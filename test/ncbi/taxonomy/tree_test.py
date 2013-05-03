@@ -1,3 +1,6 @@
+import sys, os
+sys.path.append(os.getcwd())
+
 import unittest, random
 from ncbi.taxonomy.tree import TaxTree
 
