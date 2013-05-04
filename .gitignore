@@ -40,3 +40,7 @@ nosetests.xml
 
 # git patch files
 *.patch
+
+# sublime project
+.sublime
+*.sublime-project
