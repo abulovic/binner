@@ -2,21 +2,21 @@
 class Solver (object):
 
     """ Solver uses other components (determineHost,
-    ProductsSolver, TaxonomySolver) to solve whole problem.
+    Read2CDSSolver, TaxonomySolver) to solve whole problem.
     """
 
-    def __init__ (self, read_container, cds_aln_container, host_identification, products_solver, taxonomy_solver):
+    def __init__ (self, read_container, cds_aln_container, host_identification, read2cds_solver, taxonomy_solver):
         """
         @param (ReadContainer) read_container Singleton instance
         @param (CdsAlnContainer) cds_aln_container Singleton instance
         @param (function) determine_host (to be specified yet)
-        @param (ProductsSolver) products_solver
-        @param (TaxonomySolver) taxonomySolver
+        @param (Read2CDSSolver) read2cds_solver
+        @param (TaxonomySolver) taxonomy_solver
         """
         self.read_container = read_container
         self.cds_aln_container = cds_aln_container
         self.determine_host = determine_host
-        self.products_solver = products_solver
+        self.read2cds_solver = read2cds_solver
         self.taxonomy_solver = taxonomy_solver
         
         # Populate readContainer
