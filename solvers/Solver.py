@@ -1,26 +1,23 @@
 
 class Solver (object):
 
-    """ Class which implements algorithm to determine host
-        and products of non-host CDSs.
-
-        Idea:   This class could be abstract - defines only methods 
-                which should be implemented.
-
-                This way we could implement multiple different algorithms
-                and try them out easily.
+    """ Solver uses other components (determineHost,
+    ProductsSolver, TaxonomySolver) to solve whole problem.
     """
 
-    # Constructor
-    # 
-    # @param readContainer      ReadContainer instance
-    # @param cdsAlnContainer    CdsAlnContainer instacnce
-    #
-    #   NOTE: Although these are singletons, I added them just for the clarity
-    #
-    def __init__ (self, readContainer, cdsAlnContainer):
-        self.readContainer = readContainer
-        self.cdsAlnContainer = cdsAlnContainer
+    def __init__ (self, read_container, cds_aln_container, host_identification, products_solver, taxonomy_solver):
+        """
+        @param (ReadContainer) read_container Singleton instance
+        @param (CdsAlnContainer) cds_aln_container Singleton instance
+        @param (function) determine_host (to be specified yet)
+        @param (ProductsSolver) products_solver
+        @param (TaxonomySolver) taxonomySolver
+        """
+        self.read_container = read_container
+        self.cds_aln_container = cds_aln_container
+        self.determine_host = determine_host
+        self.products_solver = products_solver
+        self.taxonomy_solver = taxonomy_solver
         
         # Populate readContainer
 
