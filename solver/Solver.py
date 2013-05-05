@@ -5,7 +5,7 @@ class Solver (object):
     Read2CDSSolver, TaxonomySolver) to solve whole problem.
     """
 
-    def __init__ (self, read_container, cds_aln_container, host_identification, read2cds_solver, taxonomy_solver):
+    def __init__ (self, read_container, cds_aln_container, determine_host, read2cds_solver, taxonomy_solver):
         """
         @param (ReadContainer) read_container Singleton instance
         @param (CdsAlnContainer) cds_aln_container Singleton instance
