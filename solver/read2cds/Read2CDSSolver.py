@@ -27,7 +27,7 @@ class Read2CDSSolver (object):
         if (self._cds_aln_container == None):
             raise Exception("CDS alignment container not registered!")
             
-    def remap_reads_from_cds(self, cdsAlignment): #Sto ona prima kao argument? Neki id cds-a ili sto?
+    def remap_reads_from_cds(self, cds_aln): #Sto ona prima kao argument? Neki id cds-a ili sto?
         """ Called after map_reads_2_cdss. It takes reads from given cds and maps them to other cdss.
         No reads remain mapped to given cds.
         """
@@ -36,7 +36,7 @@ class Read2CDSSolver (object):
 
     
     # Should be overrided -> Does this even need to be in base class?
-    def _calcCoverage(self, cdsAlignment):
+    def _calcCoverage(self, cds_aln):
         """
         @param (CdsAlignment) cdsAlignment Calculates coverage of given cdsAlignment.
         """
