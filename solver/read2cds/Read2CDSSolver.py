@@ -44,8 +44,8 @@ class Read2CDSSolver (object):
         """
         aln_reg.active = False
 
-    def _is_read_activated(self, aln_reg):
-        """ Returns true if read is activated, otherwise false.
+    def _is_read_active(self, aln_reg):
+        """ Returns true if read is active, otherwise false.
         @param (CdsAlnSublocation) aln_reg Representation of read with accordance to specific cds.
         """
         return aln_reg.active
