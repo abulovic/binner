@@ -70,8 +70,7 @@ def determine_host(read_container):
     # filter read container. Read container iterator no longer valid
     # after filtering
     reads = None
-    (read_container, host_read_cnt) = 
-            remove_host_reads (read_container, tax_tree, gi2taxid)
+    (read_container, host_read_cnt) =  remove_host_reads (read_container, tax_tree, gi2taxid)
     
 
     for (gi, taxid) in gi2taxid.items():

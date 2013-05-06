@@ -84,14 +84,14 @@ class XMLOutput(object):
 
         tab = " " * level * 2
 
-        print(tab + "<datasetName>" + self.dataset.name + "</datasetName>")
-        print(tab + "<hostGenus>" + self.dataset.host_genus + "</hostGenus>")
-        print(tab + "<hostSpecies>" + self.dataset.host_species + "</hostSpecies>")
-        print(tab + "<commonName>" + self.dataset.common_name + "</commonName>")
-        print(tab + "<taxonomy taxon_id=\"" + self.dataset.taxon_id  + "\">" + self.dataset.taxonomy + "</taxonomy>")
-        print(tab + "<sampleSource>" + self.dataset.sample_source + "</samleSource>")
-        print(tab + "<sampleType>" + self.dataset.sample_type + "</sampleType>")
-        print(tab + "<sequencer method=\"" + self.dataset.seq_method + "\">" + self.dataset.sequencer + "</sequencer>")
+        print(tab + "<datasetName>" + str(self.dataset.name) + "</datasetName>")
+        print(tab + "<hostGenus>" + str(self.dataset.host_genus) + "</hostGenus>")
+        print(tab + "<hostSpecies>" + str(self.dataset.host_species) + "</hostSpecies>")
+        print(tab + "<commonName>" + str(self.dataset.common_name) + "</commonName>")
+        print(tab + "<taxonomy taxon_id=\"" + str(self.dataset.taxon_id)  + "\">" + str(self.dataset.taxonomy) + "</taxonomy>")
+        print(tab + "<sampleSource>" + str(self.dataset.sample_source) + "</samleSource>")
+        print(tab + "<sampleType>" + str(self.dataset.sample_type) + "</sampleType>")
+        print(tab + "<sequencer method=\"" + str(self.dataset.seq_method) + "\">" + str(self.dataset.sequencer) + "</sequencer>")
 
     def _dataset_output(self, level):
         
@@ -105,14 +105,14 @@ class XMLOutput(object):
 
         tab = " " * level * 2
 
-        print(tab + "<gene protein_id=\"" + gene.protein_id + "\" locus_tag=\"" + gene.locus_tag + "\" product=\"" + gene.product + "\">" + gene.name + "</gene>" )
+        print(tab + "<gene protein_id=\"" + str(gene.protein_id) + "\" locus_tag=\"" + str(gene.locus_tag) + "\" product=\"" + str(gene.product) + "\">" + str(gene.name) + "</gene>" )
 
     def _variant_details(self, level, variant):
 
         tab = " " * level * 2
 
-        print(tab + "<variant ref_name=\"" + variant.ref_name + "\" ref_start=\"" + variant.ref_start + "\" ref_seq=\"" + variant.ref_seq + "\">" + variant.name + "</variant>")
-        print(tab + "<context offset=\"" + variant.offset + "\">" + variant.context + "</context>")
+        print(tab + "<variant ref_name=\"" + str(variant.ref_name) + "\" ref_start=\"" + str(variant.ref_start) + "\" ref_seq=\"" + str(variant.ref_seq) + "\">" + str(variant.name) + "</variant>")
+        print(tab + "<context offset=\"" + str(variant.offset) + "\">" + str(variant.context) + "</context>")
 
     def _variant_output(self, level, variant):
 
@@ -126,22 +126,22 @@ class XMLOutput(object):
 
         tab = " " * level * 2
 
-        print(tab + "<sequence>" + read.sequence + "</sequence>")
+        print(tab + "<sequence>" + str(read.sequence) + "</sequence>")
 
     def _organism_details_output(self, level, organism):
 
         tab = " " * level * 2
 
-        print(tab + "<relativeAmount count=\">" + organism.amount_count + "\">" + organism.amount_relative + "</relativeAmount>")
-        print(tab + "<taxonomy taxon_id=\"" + organism.taxon_id  + "\">" + organism.taxonomy + "</taxonomy>")
-        print(tab + "<organsimName>" + organism.name + "</organismName>")
+        print(tab + "<relativeAmount count=\">" + str(organism.amount_count) + "\">" + str(organism.amount_relative) + "</relativeAmount>")
+        print(tab + "<taxonomy taxon_id=\"" + str(organism.taxon_id) + "\">" + str(organism.taxonomy) + "</taxonomy>")
+        print(tab + "<organsimName>" + str(organism.name) + "</organismName>")
 
         if organism.is_host:
             # rest of data not needed in this case
             return
 
-        print(tab + "<genus>" + organism.genus + "</genus>")
-        print(tab + "<species>" + organism.species + "</species>")
+        print(tab + "<genus>" + str(organism.genus) + "</genus>")
+        print(tab + "<species>" + str(organism.species) + "</species>")
 
         print(tab + "<genes>")
         for gene in organism.genes:

@@ -28,7 +28,7 @@ class TaxTreeTest (unittest.TestCase):
 
 	def testTaxonomyLineage (self):
 		db_query = DbQuery()
-		print self.tax_tree.get_taxonomy_lineage (9606, db_query):
+		print self.tax_tree.get_taxonomy_lineage (9606, db_query)
 
 	def testLca (self):
 		# check lca for bacteria & fungi is root
