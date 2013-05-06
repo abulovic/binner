@@ -58,3 +58,17 @@ class Read2CDSSolver (object):
         @param (CdsAlnSublocation) aln_reg Representation of read with accordance to specific cds.
         """
         return aln_reg.active
+
+    def test_cds_alignment_container_consistency(self):
+        """ This function is intended to be used for testing purposes. 
+        It should be run after execution of map_reads_2_cdss() or
+        after execution of remove_cds_and_remap_reads in order to test
+        cds alignment container for consistency.
+        Cds alignment container is considered to be consistent (after execution
+        of map_reads_2_cdss()) if each read is active in (mapped to) at most
+        one cds alignment. Also, if cds alignment contains read (active or not),
+        that cds must be element of read2cds for that read and vice versa.
+        @return (boolean) True if test passed, False otherwise.
+        """
+        # TODO: implement
+        pass  
