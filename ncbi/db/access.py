@@ -58,7 +58,8 @@ class DbQuery(object):
         @param gis (list) list of integers representing GIs
         @param format (object type) list or dict.
         @return based on format parameter, returns either list of 
-        tax IDs or a dictionary mapping gis to tax ids.
+        tax IDs or a dictionary mapping gis to tax ids. List can 
+        contain duplicates.
         '''
         self.ncbitax_db.query('SELECT * FROM gi_taxid_nuc WHERE gi IN %s' % str(tuple(gis)))
         result = self.ncbitax_db.use_result()

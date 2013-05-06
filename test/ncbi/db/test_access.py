@@ -39,7 +39,7 @@ class Test(unittest.TestCase):
         gi2taxid = self.dbQuery.get_taxids([574262, 574273], format=dict)
         self.assertEqual (gi2taxid, {574262:9606, 574273:9606})
         taxid_list = self.dbQuery.get_taxids ([574262, 574273], format=list)
-        self.assertEqual (taxid_list, [9606])
+        self.assertEqual (taxid_list, [9606, 9606])
 
 
 
