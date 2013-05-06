@@ -99,7 +99,7 @@ class CdsAlignment (object):
         If all the CDSAlnSublocations are inactive, then the whole CdsAlignment
         is inactive.
         '''
-        for cds_aln_subloc in self.aligned_regions:
+        for cds_aln_subloc in self.aligned_regions.values():
             if cds_aln_subloc.active:
                 return True
         return False
