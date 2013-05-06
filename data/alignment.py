@@ -104,6 +104,18 @@ class CdsAlignment (object):
                 return True
         return False
 
+    def get_active_alignment_cnt (self):
+        '''
+        Counts the number of CdsAlnSublocations which
+        have been marked as active
+        @return (int) number of active alignments
+        '''
+        active_sublocations = 0
+        for cds_aln_subloc in self.aligned_regions.values():
+            if cds_aln_subloc.active:
+                active_sublocations += 1
+        return active_sublocations
+
     def get_key (self):
         pass
         

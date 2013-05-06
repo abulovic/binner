@@ -3,6 +3,7 @@ sys.path.append(os.getcwd())
 
 import unittest, random
 from ncbi.taxonomy.tree import TaxTree
+from ncbi.db.access import DbQuery
 
 class TaxTreeTest (unittest.TestCase):
 
@@ -24,6 +25,10 @@ class TaxTreeTest (unittest.TestCase):
 
 		self.assertEqual (True, self.tax_tree.is_child(node2, node1))
 		self.assertEqual (False, self.tax_tree.is_child(node2, self.tax_tree.eukaryota))
+
+	def testTaxonomyLineage (self):
+		db_query = DbQuery()
+		print self.tax_tree.get_taxonomy_lineage (9606, db_query)
 
 	def testLca (self):
 		# check lca for bacteria & fungi is root
