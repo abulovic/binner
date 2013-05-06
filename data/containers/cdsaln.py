@@ -48,12 +48,21 @@ class CdsAlnContainer (object):
                         else:
                             cds_alignment.add_aligned_sublocation (read.id, alignment_location, readAln.score)
 
+    def __str__(self):
+        tab = " " * 2
+        ret = "CdsAlignmentContainer\n"
+        ret += tab + "cds_repository:\n"
+        for (key, cds_aln) in self.cds_repository.items():
+            ret += tab * 2 + "(key) " + str(key).replace("\n", "\n"+(tab*2)) + ":\n"
+            ret += tab * 3 + str(cds_aln).replace("\n", "\n"+(tab*3)) + "\n"
+        ret += tab + "read2cds:\n"
+        for (read_id, cds_alns) in self.read2cds.items():
+            ret += tab * 2 + "(key) " + str(read_id) + ":\n"
+            for cds_aln in cds_alns:
+                ret += tab * 3 + "CdsAlignmentContainer:\n"
+                ret += tab * 4 + "cds: " + str(cds_aln.cds) + "\n"
+        return ret
 
-    def printSelf(self):
-        for cds_aln in self.cds_repository.values():
-            print str(cds_aln.cds.record_id) + " " + str(cds_aln.cds.location)
-            for aln_reg in cds_aln.aligned_regions.values():
-                print "    " + str(aln_reg.active) + " " + str(aln_reg.location.sublocations) + " " + str(aln_reg.read_id)
 
     def fetch_all_cds_alns (self):
         '''

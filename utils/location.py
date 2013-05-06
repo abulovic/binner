@@ -99,6 +99,8 @@ class Location(object):
             return None
         return loc
 
+    def __str__(self):
+        return str(self.complement) + " " + str(self.sublocations)
 
     def length(self):
         """

@@ -65,6 +65,8 @@ class Cds(Base):
         if (other == None): return False
         return (self.record_id, self.location) == (other.record_id, other.location)
 
+    def __str__(self):
+        return "Cds (record_id:" + str(self.record_id) + ", location:" + str(self.location) + ")"
     
 class CdsAdditionalDbXref(Base):
     ''' cds:        crd reference
