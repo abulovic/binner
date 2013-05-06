@@ -1,7 +1,7 @@
 class Read2CDSSolver (object):
     """ Class that decides for each read to which CDS does it belong (to which CDS does it map).
     It operates on CdsAlnContainer -> it uses data from it and modifies it.
-    Method register_cds_aln_container(...) must be called first.
+    Method map_reads_2_cdss() must be called first.
     """
 
     def __init__(self):
@@ -10,34 +10,42 @@ class Read2CDSSolver (object):
         """
         self._cds_aln_container = None
 
-    def register_cds_aln_container(self, cds_aln_container):
-        """ Register cds alignment container to work with.
-        This method must be called before any other methods.
-        @param (CdsAlnContainer) cdsAlnContainer Singleton instance.
-        """ 
-        self._cds_aln_container = cds_aln_container
-
 
     # Should be overrided and called with super() at the beginning of overriding method.
-    def map_reads_2_cdss(self):
+    def map_reads_2_cdss(self, cds_aln_container):
         """ Main method of solver: it decides for each read to which cds does it belong(map).
         When method is finished CDS alignment container will be modified in such way that 
         there will not be two CDSs that have same read assigned (each read will be assigned to exactly one CDS).
+        Read is considered to be assigned to CDS if it is activated (attribute active) in cds alignment of that CDS.
+        @param (CdsAlnContainer) cdsAlnContainer Reference to container is stored in object to be used for possible updating.
         """
-        if (self._cds_aln_container == None):
-            raise Exception("CDS alignment container not registered!")
-            
-    def remap_reads_from_cds(self, cds_aln): #Sto ona prima kao argument? Neki id cds-a ili sto?
+        self._cds_aln_container = cds_aln_container
+
+    # Should be overrided and called with super() at the beginning of overriding method.
+    def remap_reads_from_cds(self, cds_aln): 
         """ Called after map_reads_2_cdss. It takes reads from given cds and maps them to other cdss.
         No reads remain mapped to given cds.
+        Works upon cds alignment container that was given in map_reads_2_cdss().
+        @param (CdsAlignment) cds_aln
         """
-        # Should it throw an exception if map_reads_2_cdss has not been executed before?
-        pass
+        if (self._cds_aln_container == None):
+            raise Exception ("Cds alignment container was not specified! Have you executed map_reads_2_cdss?")
 
-    
-    # Should be overrided -> Does this even need to be in base class?
-    def _calcCoverage(self, cds_aln):
+
+    def _activate_read(self, aln_reg):
+        """ Activates read.
+        @param (CdsAlnSublocation) aln_reg Representation of read with accordance to specific cds.
         """
-        @param (CdsAlignment) cdsAlignment Calculates coverage of given cdsAlignment.
+        aln_reg.active = True
+
+    def _deactivate_read(self, aln_reg):
+        """ Deactivates read.
+        @param (CdsAlnSublocation) aln_reg Representation of read with accordance to specific cds.
         """
-        pass
+        aln_reg.active = False
+
+    def _is_read_active(self, aln_reg):
+        """ Returns true if read is active, otherwise false.
+        @param (CdsAlnSublocation) aln_reg Representation of read with accordance to specific cds.
+        """
+        return aln_reg.active
