@@ -45,6 +45,11 @@ if __name__ == '__main__':
         solver = Solver(readCont, cdsAlnCont,
                         determine_host, greedySolver, taxonomySolver)
                         
+
+        # ---------------------- Run Solver --------------------- #
+
+        solver.generateSolutionXML()
+
         print "Successfully initialized solver!"
         
 	# fill_containers (aln_file)
