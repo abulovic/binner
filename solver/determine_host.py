@@ -29,13 +29,13 @@ def determine_host(read_container):
 
     # find gi <-> taxid mapping using ncbi database
     gi2taxid = dbquery.get_taxids (gis_cnt.keys(), format=dict)
-    for (gi, taxid) in gi2taxid:
+    for (gi, taxid) in gi2taxid.items():
         taxids_cnt[taxid] += gis_cnt[gi]
 
     # find the taxid that has been reported the most
     max_cnt = 0
     max_taxid = None
-    for (taxid, cnt) in taxids_cnt:
+    for (taxid, cnt) in taxids_cnt.items():
         if cnt > max_cnt:
             max_cnt = cnt
             max_taxid = taxid
