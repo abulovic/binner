@@ -1,4 +1,4 @@
-from data.containers.read 	import ReadContainer
+from data.containers.read   import ReadContainer
 from data.containers.record import RecordContainer
 from data.containers.cdsaln import CdsAlnContainer
 from ncbi.db.access   	    import DbQuery
@@ -13,6 +13,7 @@ def fill_containers (alignment_file):
     # Populate from the read container
     readCont.populate_from_aln_file(alignment_file)
 
+    # For testing
     for read in readCont.read_repository.values():
         if len(read.alignment_locations) > 0:
             print read.id, ": Broj CDSova je: %d" % len(read.alignment_locations[0].aligned_cdss)

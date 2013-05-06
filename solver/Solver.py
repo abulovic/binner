@@ -1,26 +1,24 @@
 
 class Solver (object):
 
-    """ Class which implements algorithm to determine host
-        and products of non-host CDSs.
-
-        Idea:   This class could be abstract - defines only methods 
-                which should be implemented.
-
-                This way we could implement multiple different algorithms
-                and try them out easily.
+    """ Solver uses other components (determineHost,
+    Read2CDSSolver, TaxonomySolver) to solve whole problem.
     """
 
-    # Constructor
-    # 
-    # @param readContainer      ReadContainer instance
-    # @param cdsAlnContainer    CdsAlnContainer instacnce
-    #
-    #   NOTE: Although these are singletons, I added them just for the clarity
-    #
-    def __init__ (self, readContainer, cdsAlnContainer):
-        self.readContainer = readContainer
-        self.cdsAlnContainer = cdsAlnContainer
+    def __init__ (self, read_container, cds_aln_container,
+                  determine_host, read2cds_solver, taxonomy_solver):
+        """
+        @param (ReadContainer)      read_container Singleton instance
+        @param (CdsAlnContainer)    cds_aln_container Singleton instance
+        @param (function)           determine_host (to be specified yet)
+        @param (Read2CDSSolver)     read2cds_solver
+        @param (TaxonomySolver)     taxonomy_solver
+        """
+        self.read_container = read_container
+        self.cds_aln_container = cds_aln_container
+        self.determine_host = determine_host
+        self.read2cds_solver = read2cds_solver
+        self.taxonomy_solver = taxonomy_solver
         
         # Populate readContainer
 
@@ -28,6 +26,31 @@ class Solver (object):
             # We do not want to do unneccessary job!
         
         pass # Should be implemented
+
+    # Here should go some User Interface methods like getXML(), solve() and similar
+
+    def generateXML():
+        ''' Main UI method.
+            Generates XML file containing solution.
+        '''
+
+        # Populate read container
+
+        # Determine host - updates read container (remove/mark host alignments etc.)
+
+        # Populate CDS container 
+
+        # Map each read to one CDS (greedy)
+
+        # Determine species
+
+        # Generate XML file
+
+        print "Proba 0: funkcija generateXML prosla!"
+
+        pass
+
+    # -------------------------------------------- The following code will not be here ------------------------------------------ #
     
     # Determines reads which belong to the host and identifies it.
     # Removes host reads from the ReadContainer - they are not needed in the

@@ -146,4 +146,12 @@ class Location(object):
             return None
         return loc
 
-        
+
+    def length(self):
+        """
+        @return Number of bases covered (Sum of lengths of all sublocations).
+        """
+        ret = 0
+        for subloc in self.sublocations:
+            ret += subloc[1] - subloc[0] + 1
+        return ret

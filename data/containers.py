@@ -1,4 +1,4 @@
-from data.read		        import Read
+from data.read		    import Read
 from ncbi.genbank.access    import DbQuery
 from utils.singleton        import Singleton
 

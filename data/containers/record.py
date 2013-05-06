@@ -27,7 +27,6 @@ class RecordContainer (object):
             try :
                 getattr(record, 'name')
                 self.record_repository[record_id] = record
-                print "Found record", name
             except AttributeError:
                 print "No record with ID {0}".format(record_id)
                 self.record_repository[record_id] = None
