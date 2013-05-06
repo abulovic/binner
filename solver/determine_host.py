@@ -13,8 +13,10 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
     @param read_container (ReadContainer)
     @param tax_tree (TaxTree)
     @param gi2taxid (dict) key: gi (int), value: taxid (int) 
-    @return read_container (ReadContainer)
+    @return (read_container, host_read_cnt) (ReadContainer, int)
     '''
+
+    host_read_cnt = 0
 
     for read in read_container.read_repository.values():
         # sort alignments by alignment score
@@ -24,6 +26,7 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
         best_aln_taxid = gi2taxid [best_aln.genome_index]
         if (tax_tree.is_child (best_aln_taxid, tax_tree.animalia)):
             del read_container.read_repository[read_id]
+            host_read_cnt += 1
         # set all host alignments inactive
         for read_aln in read.alignment_locations:
      	    if not gi2taxid.has_key(read_aln.genome_index):
@@ -35,7 +38,7 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
             if tax_tree.is_child (taxid, tax_tree.animalia):
                 read_aln.set_active(False)
 
-        return read_container
+        return (read_container, host_read_cnt)
 
 
 def determine_host(read_container):
@@ -46,7 +49,7 @@ def determine_host(read_container):
         Potential host is anything from animalia kingdom.
         ! Precondition: All the alignments have been loaded into read container.
         @param (ReadContainer) read container (loaded with read data)
-        @return (HostData)
+        @return (host_taxid, host_read_cnt) (int, int)
     '''
     dbquery = DbQuery()
     tax_tree = TaxTree()
@@ -67,7 +70,7 @@ def determine_host(read_container):
     # filter read container. Read container iterator no longer valid
     # after filtering
     reads = None
-    read_container = remove_host_reads (read_container, tax_tree, gi2taxid)
+    (read_container, host_read_cnt) =  remove_host_reads (read_container, tax_tree, gi2taxid)
     
 
     for (gi, taxid) in gi2taxid.items():
@@ -82,4 +85,4 @@ def determine_host(read_container):
             host_taxid = taxid
             break
 
-    return host_taxid
+    return (host_taxid, host_read_cnt)
