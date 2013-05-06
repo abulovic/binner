@@ -77,8 +77,6 @@ class GreedySolver (Read2CDSSolver):
         # If coverage was not calculated before, calculate it and remember it for later.
         if not (cds_aln in self._coverages):
             self._coverages[cds_aln] = self._calc_coverage(cds_aln)
-
-        print self._coverages[cds_aln]
         return self._coverages[cds_aln]
             
 
