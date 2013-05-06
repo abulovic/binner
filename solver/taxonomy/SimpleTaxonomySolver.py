@@ -1,4 +1,5 @@
 from TaxonomySolver import TaxonomySolver
+from collections    import defaultdict
 
 class SimpleTaxonomySolver (TaxonomySolver):
     '''
@@ -8,9 +9,14 @@ class SimpleTaxonomySolver (TaxonomySolver):
     '''
 
     def map_cdss_2_species (self, db_access, read_container, cds_aln_container):
-
-
-        assigned_taxids = {} # cds : assigned_taxid
+        '''
+        Determines species for each CDS. 
+        @param db_access (DbQuery) 
+        @param read_container (ReadContainer)
+        @param cds_aln_container (CdsAlnContainer)
+        @return assigned_taxids (dict, key: taxid, value: cds list)
+        '''
+        assigned_taxids = defaultdict(list)
         cds_alns        = cds_aln_container.fetch_all_cds_alns()
 
         for cds_aln in cds_alns:
@@ -30,7 +36,8 @@ class SimpleTaxonomySolver (TaxonomySolver):
                     # could not find GI in the database:
                     print "Cannot find taxid for GI {0}. (SimpleTaxonomySolver)".format(gi)
                     continue
-                assigned_taxids[cds] = taxid
+
+                assigned_taxids[taxid].append(cds_aln)
                 
         return assigned_taxids
 

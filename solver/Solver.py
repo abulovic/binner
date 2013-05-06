@@ -2,6 +2,8 @@ from data.containers.load   import initialize_containers
 from ncbi.db.access         import DbQuery
 from ncbi.db.taxonomy.tree  import TaxTree
 from formats.xml_output     import *
+from collections            import defaultdict
+
 
 class Solver (object):
 
@@ -51,22 +53,23 @@ class Solver (object):
         self.read2cds_solver.map_reads_2_cdss(cds_aln_container)
 
         # Determine species
-        cds2taxid = self.taxonomy_solver.map_cdss_2_species (db_access, read_container, cds_aln_container)
+        taxid2cdss = self.taxonomy_solver.map_cdss_2_species (db_access, read_container, cds_aln_container)
 
         # Generate XML file
-        self.generateXML (host_taxid, host_read_cnt, cds2taxid, cds_aln_container, db_access)
+        self.generateXML (host_taxid, host_read_cnt, taxid2cdss, cds_aln_container, db_access)
 
         print "Proba 0: funkcija generateXML prosla!"
 
         pass
 
-    def generateXML (self, host_taxid, host_read_cnt, cds2taxid, cds_aln_container,  db_access):
+    def generateXML (self, host_taxid, host_read_cnt, taxid2cdss, cds_aln_container,  db_access):
 
         tax_tree     = TaxTree()
 
         #-------------------------------DATASET-------------------------------#
         dataset = Dataset("Example2.fq", "Homo2", "sapiens", "human2", "9696", 
                   "eukaryota, ...; Homo", "Whole Blood2", "DNA", "single-end", "Roche 454")
+        all_organisms = []
 
         #-------------------------------- HOST -------------------------------#
         host_name    = db_access.get_organism_name(host_taxid)
@@ -75,8 +78,36 @@ class Solver (object):
 
         host = Organism (host_read_cnt, 0., str(host_taxid), host_lineage, host_name,
                  genus, species, [], [], [], is_host=True)
+        all_organisms.append(host)
 
-        xml = XMLOutput(dataset, [host]) 
+        #--------------------------- ORGANISMS ------------------------------#
+        for (taxid, cdss) in taxid2cdss.items():
+            organism_name    = db_access.get_organism_name (taxid)
+            organism_lineage = tax_tree.get_taxonomy_lineage (taxid, db_access)
+            org_name_details = organism_name.split()
+            organism_count   = 0
+            organism_reads   = []
+            organism_genes   = []
+
+            for cds_aln in cdss:
+                # Increment organism count
+                organism_count += cds_aln.get_active_alignment_cnt()
+                # Find all reads mapped to organism
+                for (read_id, cds_aln_subloc) in cds_aln.aligned_regions:
+                    if cds_aln_subloc.active:
+                        organism_reads.append (Read(read_id))
+                # Append genes (protein_id, locus_tag, product, name)
+                cds = cds_aln.cds
+                organism_genes.append (Gene(cds.protein_id, cds.locus_tag, cds.product, cds.gene))
+
+            organism = Organism (organism_count, 0., taxid, organism_lineage, organism_name,
+                 org_name_details[0], org_name_details[1], organism_genes, [], organism_reads, is_host=False)
+            all_organisms.append(organism)
+
+
+
+
+        xml = XMLOutput(dataset, all_organisms) 
         xml.xml_output();
 
 
