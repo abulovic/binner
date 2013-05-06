@@ -37,7 +37,7 @@ class Read (object):
 
             nucl_acc    = data[0]
             db_source   = data[1]
-            GI          = data[2]
+            GI          = int   (data[2])
             score       = float (data[3])
             start       = int   (data[4])
             stop        = int   (data[5])
