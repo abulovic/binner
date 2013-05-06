@@ -24,6 +24,9 @@ class ReadContainer (object):
             return self.read_repository[read_id]
         else:
             raise KeyError("Read repository doesn't contain read associated with read ID: {0}".format(read_id))
+
+    def fetch_all_reads (self):
+        return self.read_repository.values()
     
     def _add_read_from_str (self, read_str):
         read = Read.from_read_str(read_str)
