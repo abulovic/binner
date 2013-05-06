@@ -1,3 +1,4 @@
+# @author: Martin Sosic, sosic.martin@gmail.com
 from Read2CDSSolver import Read2CDSSolver
 
 class GreedySolver (Read2CDSSolver):
@@ -74,7 +75,6 @@ class GreedySolver (Read2CDSSolver):
         @param (CdsAlignment) cds_aln
         @return (float) coverage
         """
-        # If coverage was not calculated before, calculate it and remember it for later.
         if not (cds_aln in self._coverages):
             self._coverages[cds_aln] = self._calc_coverage(cds_aln)
         return self._coverages[cds_aln]

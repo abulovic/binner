@@ -56,5 +56,5 @@ class CdsAlnContainer (object):
         for cds_aln in self.cds_repository.values():
             print str(cds_aln.cds.record_id) + " " + str(cds_aln.cds.location)
             for aln_reg in cds_aln.aligned_regions.values():
-                print "    " + str(aln_reg.read_id) + " " + str(aln_reg.active) + " " + str(aln_reg.location.sublocations) 
+                print "    " + str(aln_reg.active) + " " + str(aln_reg.location.sublocations) + " " + str(aln_reg.read_id)
 
