@@ -115,12 +115,12 @@ class CdsAlignment (object):
         
     def __str__(self):
         tab = " " * 2
-        ret = "CdsAlignment:\n"
-        ret += tab + str(self.cds) + "\n"
+        ret = "CdsAlignment\n"
+        ret += tab + "cds: " + str(self.cds) + "\n"
         ret += tab + "aligned_regions:\n"
         for (key, aln_reg) in self.aligned_regions.items():
-            ret += tab*2 + key + ":\n"
-            ret += tab*3 + str(aln_reg)
+            ret += tab*2 + "(key) " + key + ":\n"
+            ret += tab*3 + str(aln_reg).replace("\n", "\n"+(tab*3)) + "\n"
         return ret
 
     
@@ -139,4 +139,13 @@ class CdsAlnSublocation (object):
         self.location   = location
         self.score      = score
         self.active     = active
+
+    def __str__(self):
+        tab = " "*2
+        ret = "CdsAlnSublocation\n"
+        ret += tab + "read_id:  " + str(self.read_id) + "\n"
+        ret += tab + "location: " + str(self.location) + "\n"
+        ret += tab + "score:    " + str(self.score) + "\n"
+        ret += tab + "active:   " + str(self.active)
+        return ret
 

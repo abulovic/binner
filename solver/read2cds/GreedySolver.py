@@ -92,6 +92,9 @@ class GreedySolver (Read2CDSSolver):
 
         # Delete original cds alignment
         del self._cds_aln_container.cds_repository[cds_aln.cds]
+        # Remove original cds alignment from read2cds
+        for cds_alns in self._cds_aln_container.read2cds.values():
+            if cds_aln in cds_alns: cds_alns.remove(cds_aln)
 
         # Force recalculation of coverage for updated cds alignments by forgeting coverage
         for updated_cds_aln in set(filter(lambda x: x != None, new_read_mappings.values())):
