@@ -83,6 +83,21 @@ class DbQuery(object):
         else:
             return None
 
+    def get_organism_name (self, taxid, name_class='scientific name'):
+        ''' 
+        Fetches organism name for the speficied taxonomy ID.
+        @param taxid (int)  taxonomy ID
+        @param name_class (str) scientific name, common name, genbank common
+        name, authority
+        @return organism name (str)
+        '''
+        self.ncbitax_db.query('SELECT name_txt FROM ncbi_names WHERE tax_id=%d and name_class=%s'
+                                % (taxid, name_class))
+        result = self.ncbitax_db.use_result()
+        ((org_name),) = result.fetch_row()
+        return org_name
+
+
     def _create_sessions(self):
         ''' Creates database sessions '''
         genbank_engine = create_engine (self.genbank_db_url, echo=False, 
