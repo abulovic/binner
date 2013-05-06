@@ -1,5 +1,7 @@
 from data.containers.load   import initialize_containers
 from ncbi.db.access         import DbQuery
+from ncbi.db.taxonomy.tree  import TaxTree
+from formats.xml_output     import *
 
 class Solver (object):
 
@@ -40,7 +42,7 @@ class Solver (object):
 
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
-        self.determine_host(read_container)
+        (host_taxid, host_read_cnt) = self.determine_host(read_container)
 
         # Populate CDS container 
         cds_aln_container.populate(read_container)
@@ -52,10 +54,34 @@ class Solver (object):
         cds2taxid = self.taxonomy_solver.map_cdss_2_species (db_access, read_container, cds_aln_container)
 
         # Generate XML file
+        self.generateXML (host_taxid, host_read_cnt, cds2taxid, cds_aln_container, db_access)
 
         print "Proba 0: funkcija generateXML prosla!"
 
         pass
+
+    def generateXML (self, host_taxid, host_read_cnt, cds2taxid, cds_aln_container,  db_access):
+
+        tax_tree     = TaxTree()
+
+        #-------------------------------DATASET-------------------------------#
+        dataset = Dataset("Example2.fq", "Homo2", "sapiens", "human2", "9696", 
+                  "eukaryota, ...; Homo", "Whole Blood2", "DNA", "single-end", "Roche 454")
+
+        #-------------------------------- HOST -------------------------------#
+        host_name    = db_access.get_organism_name(host_taxid)
+        host_lineage = tax_tree.get_taxonomy_lineage(host_taxid, db_access)
+        (genus, species) = host_name.split()
+
+        host = Organism (host_read_cnt, 0., str(host_taxid), host_lineage, host_name,
+                 genus, species, [], [], [], is_host=True)
+
+        xml = XMLOutput(dataset, [host]) 
+        xml.xml_output();
+
+
+
+
 
     def cds_to_species(cds):
         """ Map given cds to the species it belongs to.
