@@ -1,6 +1,6 @@
 from data.containers.load   import initialize_containers
 from ncbi.db.access         import DbQuery
-from ncbi.db.taxonomy.tree  import TaxTree
+from ncbi.taxonomy.tree  import TaxTree
 from formats.xml_output     import *
 
 class Solver (object):
@@ -69,6 +69,8 @@ class Solver (object):
                   "eukaryota, ...; Homo", "Whole Blood2", "DNA", "single-end", "Roche 454")
 
         #-------------------------------- HOST -------------------------------#
+        host_taxid = 9606
+        host_read_cnt = 0
         host_name    = db_access.get_organism_name(host_taxid)
         host_lineage = tax_tree.get_taxonomy_lineage(host_taxid, db_access)
         (genus, species) = host_name.split()
