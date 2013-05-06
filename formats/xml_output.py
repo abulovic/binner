@@ -118,13 +118,13 @@ class XMLOutput(object):
         tab = " " * level * 2
 
         print(tab + "<organism>")
-
         self.organism_details_output(level+1, True)
+        print(tab + "</organism>")
 
+        print(tab + "<organism>")
         # ovdje sad idu paraziti, znaci for petlja
         # za svaki parazit ispisi njegov xml
         self.organism_details_output(level+1)
-
         print(tab + "</organism>")
 
     def organisms_output(self, level):
