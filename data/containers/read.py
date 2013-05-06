@@ -29,7 +29,10 @@ class ReadContainer (object):
         return iter(self.read_repository.values())
     
     def _add_read_from_str (self, read_str):
-        read = Read.from_read_str(read_str)
+        try:
+            read = Read.from_read_str(read_str)
+        except IndexError:
+            return
         # read identifier must be unique
         assert (not self.read_repository.has_key(read.id))
         self.read_repository[read.id] = read

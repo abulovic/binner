@@ -17,13 +17,14 @@ class TaxTree ():
         
         if not nodes_file:
             nodes_file = self._h_find_taxnode_file()
+        self.load(nodes_file) 
         
         #--------- RELEVANT TAXONOMY ASSIGNMENTS ----------#
         self._h_relevant_taxonomy_assignments()   
 
-    def load (self):
-        self.parent_nodes   = self._h_get_tax_nodes
-        self.child_nodes    = self._h_populate_child_nodes
+    def load (self, nodes_file):
+        self.parent_nodes   = self._h_get_tax_nodes(nodes_file)
+        self.child_nodes    = self._h_populate_child_nodes()
     
     def is_child (self, child_taxid, parent_taxid):
         ''' Test if child_taxid is child node of parent_taxid

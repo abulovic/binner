@@ -48,6 +48,8 @@ class Read (object):
             # Create and store new ReadAlnLocation object
             newAlignInfo = ReadAlnLocation(newRead_id, nucl_acc, db_source, GI, score,
                                            (start, stop), complement);
+            # temporary fix
+            if db_source == 'dbj': continue
             newRead_aln_locs.append(newAlignInfo);
 
         return Read(newRead_id, newRead_length, newRead_aln_locs)
