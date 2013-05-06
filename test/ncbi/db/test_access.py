@@ -35,6 +35,13 @@ class Test(unittest.TestCase):
         call = lambda x,y: self.dbQuery.get_record(record_id=x, db_source=y)
         self.assertRaises(ValueError, call, x='AB015437', y='xxx')
         
+    def testNcbitaxQuery (self):
+        gi2taxid = self.dbQuery.get_taxids([574262, 574273], format=dict)
+        self.assertEqual (gi2taxid, {574262:9606, 574273:9606})
+        taxid_list = self.dbQuery.get_taxids ([574262, 574273], format=list)
+        self.assertEqual (taxid_list, [9606])
+
+
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
