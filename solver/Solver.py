@@ -29,18 +29,21 @@ class Solver (object):
 
     # Here should go some User Interface methods like getXML(), solve() and similar
 
-    def generateXML():
+    def generateSolutionXML(self):
         ''' Main UI method.
             Generates XML file containing solution.
         '''
 
-        # Populate read container
+        # Populate read container - NOT NOW NEEDED
 
-        # Determine host - updates read container (remove/mark host alignments etc.)
+        # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
+        # EXIST YET
 
         # Populate CDS container 
+        self.cds_aln_container.populate(self.read_container)
 
         # Map each read to one CDS (greedy)
+        self.read2cds_solver.map_reads_2_cdss(self.cds_aln_container)
 
         # Determine species
 
@@ -49,6 +52,24 @@ class Solver (object):
         print "Proba 0: funkcija generateXML prosla!"
 
         pass
+
+    def cds_to_species(cds):
+        """ Map given cds to the species it belongs to.
+
+            Each cds has the record_id of record it belongs to, and each record
+            has gi which leads us to taxid (ncbitax database). 
+            By knowing taxid we can easily determine species by looking into
+            ncbitax database.
+            
+            Conclusion procedure:
+                CDS -> record_id -> RECORD -> gi -> taxid -> 
+                
+
+            @param (cds)cds     input CDS
+            @return (string)    the species to which given cds belongs to.
+
+
+        """
 
     # -------------------------------------------- The following code will not be here ------------------------------------------ #
     
