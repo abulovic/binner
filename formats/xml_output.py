@@ -1,6 +1,3 @@
-import sys, os
-sys.path.append(os.getcwd())
-
 from utils.autoassign import autoassign
 
 class Dataset(object):
