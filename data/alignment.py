@@ -8,7 +8,7 @@ class ReadAlnLocation (object):
     
     record_container                = RecordContainer.Instance()
     def __init__ (self, read_id, nucleotide_accession, db_source, genome_index, score, 
-                  location_span, complement):
+                  location_span, complement, active=True):
         self.read_id                = read_id
         self.nucleotide_accession   = nucleotide_accession
         self.db_source              = db_source
@@ -16,14 +16,15 @@ class ReadAlnLocation (object):
         self.score                  = score
         self.location_span          = location_span
         self.complement             = complement
+        self.active                 = active
         self.determine_coding_seqs()
     
-    @staticmethod
-    def parse_location (nucleotide_location_str):
-        pass
-    
-    def getCDSs(self):
-        pass
+    def set_active (self, active):
+        '''
+        Sets active status for the read alignment.
+        Inactive reads do not go into CDS alignments.
+        '''
+        self.active = active
 
     def determine_coding_seqs (self):
         ''' Determines which of the CDSs in the record aligned_regions

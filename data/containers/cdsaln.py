@@ -19,15 +19,17 @@ class CdsAlnContainer (object):
         self.record_repository = RecordContainer.Instance()
 
     
-    def populate (self, readCont):
+    def populate (self, read_cont):
 
         # Iterate through reads
         num = 0;
-        for read in readCont.read_repository.values():
+        for read in read_cont.read_repository.values():
 
             # Iterate through read alignments
             for readAln in read.alignment_locations:
-                num += 1;
+
+                if not readAln.active:
+                    continue
                 
                 # Iterate through aligned CDSs for each read alignment
                 for (cds, alignment_location) in readAln.aligned_cdss:
