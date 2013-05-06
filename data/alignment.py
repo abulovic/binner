@@ -92,6 +92,17 @@ class CdsAlignment (object):
         aligned_sublocation             = CdsAlnSublocation (read_id, aligned_location, score)
         self.aligned_regions[read_id]   = aligned_sublocation
 
+    def is_active(self):
+        '''
+        Checks whether CDS alignment is active. 
+        If all the CDSAlnSublocations are inactive, then the whole CdsAlignment
+        is inactive.
+        '''
+        for cds_aln_subloc in self.aligned_regions:
+            if cds_aln_subloc.active:
+                return True
+        return False
+
     def get_key (self):
         pass
         
