@@ -1,35 +1,58 @@
+import sys, os
+sys.path.append(os.getcwd())
+
+from utils.autoassign import autoassign
+
+class Dataset(object):
+
+    @autoassign
+    def __init__(self, name, host_genus, host_species, common_name, taxon_id, 
+                 taxonomy, sample_source, sample_type, seq_method, sequencer):
+        pass
+
+class Gene(object):
+
+    @autoassign
+    def __init__(self, protein_id, locus_tag, product, name):
+        pass
+        
+class Variant(object) :
+
+    @autoassign
+    def __init__(self, ref_name, ref_start, ref_seq, name, offset, context):
+        pass
+
+class Organism(object):
+
+    @autoassign
+    def __init__(self, amount_count, amount_relative, taxon_id, taxonomy, name,
+                 genus, species, genes, variants, reads, is_host=False):
+        pass
+
+class Read(object):
+
+    @autoassign
+    def __init__(self, sequence):
+        pass
 
 class XMLOutput(object):
 
-    def __init__(self, dataset_name, host_genus, host_species):
-        self.dataset_name = dataset_name
-        self.host_genus = host_genus
-        self.host_species = host_species
-        #itd. tu dodati koji sve ce vec ici, ne znam kako cemo tocno ove readove i organizme koji su iterativni, to vidjet s ostalima, mozda jos jednu strukturu dodat
-        #potrebno je jos ove sve instance varijable spojiti u funkcijama da dobijemo odgovorajuci ispis
+    def __init__(self, dataset, organisms):
+        self.dataset = dataset
+        self.organisms = organisms
 
     def dataset_details_output(self, level):
 
         tab = " " * level * 2
-        dataSetName = "Example1.fq"
-        hostGenus = "Homo"
-        hostSpecies = "sapiens"
-        commonName = "human"
-        taxon_id = "9606"
-        taxonomy = "Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae; Homo."
-        sampleSource = "Whole Blood"
-        sampleType = "DNA"
-        seq_method = "single-end"
-        sequencer = "Roche 454"
 
-        print(tab + "<datasetName>" + dataSetName + "</datasetName>")
-        print(tab + "<hostGenus>" + hostGenus + "</hostGenus>")
-        print(tab + "<hostSpecies>" + hostSpecies + "</hostSpecies>")
-        print(tab + "<commonName>" + commonName + "</commonName>")
-        print(tab + "<taxonomy taxon_id=\"" + taxon_id  + "\">" + taxonomy + "</taxonomy>")
-        print(tab + "<sampleSource>" + sampleSource + "</samleSource>")
-        print(tab + "<sampleType>" + sampleType + "</sampleType>")
-        print(tab + "<sequencer method=\"" + seq_method + "\">" + sequencer + "</sequencer>")
+        print(tab + "<datasetName>" + self.dataset.name + "</datasetName>")
+        print(tab + "<hostGenus>" + self.dataset.host_genus + "</hostGenus>")
+        print(tab + "<hostSpecies>" + self.dataset.host_species + "</hostSpecies>")
+        print(tab + "<commonName>" + self.dataset.common_name + "</commonName>")
+        print(tab + "<taxonomy taxon_id=\"" + self.dataset.taxon_id  + "\">" + self.dataset.taxonomy + "</taxonomy>")
+        print(tab + "<sampleSource>" + self.dataset.sample_source + "</samleSource>")
+        print(tab + "<sampleType>" + self.dataset.sample_type + "</sampleType>")
+        print(tab + "<sequencer method=\"" + self.dataset.seq_method + "\">" + self.dataset.sequencer + "</sequencer>")
 
     def dataset_output(self, level):
         
@@ -39,93 +62,71 @@ class XMLOutput(object):
         self.dataset_details_output(level+1)
         print(tab + "</dataset>")
 
-    def gene_output(self, level):
+    def gene_output(self, level, gene):
 
         tab = " " * level * 2
-        protein_id = "AAS638912.1"
-        locus_tag = "YP_3766"
-        product = "carbohidrati neke vrste"
-        gene = "xy567"
 
-        print(tab + "<gene protein_id=\"" + protein_id + "\" locus_tag=\"" + locus_tag + "\" product=\"" + product + "\">" + gene + "</gene>" )
+        print(tab + "<gene protein_id=\"" + gene.protein_id + "\" locus_tag=\"" + gene.locus_tag + "\" product=\"" + gene.product + "\">" + gene.name + "</gene>" )
 
-    def variant_details(self, level):
+    def variant_details(self, level, variant):
 
         tab = " " * level * 2
-        ref_name = "CAB78909.1"
-        ref_start = "31"
-        ref_seq = "-"
-        variant = "A"
-        offset = "28"
-        genome_sequence = "ACTGATTTTTGGGGATAGTAGATGATGATCCAGTGATAG"
 
-        print(tab + "<variant ref_name=\"" + ref_name + "\" ref_start=\"" + ref_start + "\" ref_seq=\"" + ref_seq + "\">" + variant + "</variant>")
-        print(tab + "<context offset=\"" + offset + "\">" + genome_sequence + "</context>")
+        print(tab + "<variant ref_name=\"" + variant.ref_name + "\" ref_start=\"" + variant.ref_start + "\" ref_seq=\"" + variant.ref_seq + "\">" + variant.name + "</variant>")
+        print(tab + "<context offset=\"" + variant.offset + "\">" + variant.context + "</context>")
 
-    def variant_output(self, level):
+    def variant_output(self, level, variant):
 
         tab = " " * level * 2
 
         print(tab + "<sequenceDifference>")
-        self.variant_details(level+1)
+        self.variant_details(level+1, variant)
         print(tab + "</sequenceDifference>")
 
-    def sequence_output(self, level):
+    def sequence_output(self, level, read):
 
         tab = " " * level * 2
-        sequence = "HT8943589J"
 
-        print(tab + "<sequence>" + sequence + "</sequence>")
+        print(tab + "<sequence>" + read.sequence + "</sequence>")
 
-    def organism_details_output(self, level, is_host=False):
+    def organism_details_output(self, level, organism):
 
         tab = " " * level * 2
-        count = "1332476"
-        rel_amount = "97.482"
-        taxon_id = "9606"
-        taxonomy = "Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae; Homo."
-        organism_name = "Host"
 
-        print(tab + "<relativeAmount count=\">" + count + "\">" + rel_amount + "</relativeAmount>")
-        print(tab + "<taxonomy taxon_id=\"" + taxon_id  + "\">" + taxonomy + "</taxonomy>")
-        print(tab + "<organsimName>" + organism_name + "</organismName>")
+        print(tab + "<relativeAmount count=\">" + organism.amount_count + "\">" + organism.amount_relative + "</relativeAmount>")
+        print(tab + "<taxonomy taxon_id=\"" + organism.taxon_id  + "\">" + organism.taxonomy + "</taxonomy>")
+        print(tab + "<organsimName>" + organism.name + "</organismName>")
 
-        if is_host:
+        if organism.is_host:
+            # rest of data not needed in this case
             return
 
-        genus = "Yersinia"
-        species = "pseudotuberculosis"
-
-        print(tab + "<genus>" + genus + "</genus>")
-        print(tab + "<species>" + species + "</species>")
+        print(tab + "<genus>" + organism.genus + "</genus>")
+        print(tab + "<species>" + organism.species + "</species>")
 
         print(tab + "<genes>")
-        # za svaki gen ispis ga, for petlja treba biti
-        self.gene_output(level+1)
+        for gene in organism.genes:
+            self.gene_output(level+1, gene)
         print(tab + "<genes>")
 
         print(tab + "<variants>")
-        # za svaku varijantu ispis, for petlja treba bit
-        self.variant_output(level+1)
+        for variant in organism.variants:
+            self.variant_output(level+1, variant)
         print(tab + "</variants>")
 
         print(tab + "<reads>")
-        self.sequence_output(level + 1)
+        for read in organism.reads:
+            self.sequence_output(level + 1, read)
         print(tab + "</reads>")
 
     def organism_output(self, level):
 
         tab = " " * level * 2
 
-        print(tab + "<organism>")
-        self.organism_details_output(level+1, True)
-        print(tab + "</organism>")
-
-        print(tab + "<organism>")
-        # ovdje sad idu paraziti, znaci for petlja
-        # za svaki parazit ispisi njegov xml
-        self.organism_details_output(level+1)
-        print(tab + "</organism>")
+        for organism in self.organisms:
+            print(tab + "<organism>")
+            self.organism_details_output(level+1, organism)
+            print(tab + "</organism>")
 
     def organisms_output(self, level):
 
@@ -139,11 +140,27 @@ class XMLOutput(object):
 
         print("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>")
         print("<organismsReport>")
-
         self.dataset_output(level+1);
         self.organisms_output(level+1);
-
         print("</organismsReport>")
 
-xml = XMLOutput("Example1.fq", "Homo", "sapiens") 
+#################################################################################
+# example of usage
+# initing structures and outputing xml
+################################################################################
+dataset = Dataset("Example2.fq", "Homo2", "sapiens", "human2", "9696", 
+                  "eukaryota, ...; Homo", "Whole Blood2", "DNA", "single-end", "Roche 454")
+
+genes = [Gene("AA898989.1", "YP_67676", "neke pizdarije karbohidrati i to", "naziv gena")]*3
+
+variants = [Variant("CAB789879", "31", "-", "A", "28", "GGGGGGGGGGGGGGG" )]*7
+
+reads = [Read("HT89898989")]*11
+
+lista1 = [Organism("8888888", "95.7878", "9606", "eukaritoi ... tralala", "host", "", "", "", "", "", True)]
+
+organisms = lista1 + [Organism("1336767", "0.3234", "9606", "eukarioti .... homo2", "Host2", "Kuga",
+                      "tuberkuloza", genes, variants, reads)] * 5
+
+xml = XMLOutput(dataset, organisms) 
 xml.xml_output(0);
