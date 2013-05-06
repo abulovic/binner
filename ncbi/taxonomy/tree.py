@@ -70,15 +70,10 @@ class TaxTree ():
         while (True):
 
             parent_nodes = []
-
             for taxid in current_taxids:
-
                 # root node must not add itself to parent list
                 if   taxid != self.root:    parent_taxid = self.parent_nodes[taxid]
                 else:                        parent_taxid = None
-                
-                
-                
                 # if parent exists, append him to parent list
                 # duplicates ensure that every traversal will count
                 if parent_taxid:            parent_nodes.append(parent_taxid)
@@ -89,7 +84,6 @@ class TaxTree ():
                     self.lca_root = taxid
                     self._h_set_visited_nodes() 
                     return taxid
-
             # refresh current nodes
             current_taxids = parent_nodes
 
@@ -99,18 +93,19 @@ class TaxTree ():
         by its taxonomy ID.
         @param taxid (int) taxonomy id
         @param db_access (DbQuery)
-        @return lineage (str)
+        @return lineage (list) list of scientific names of 
+        organism that are ancestors of taxid
         '''
 
         taxonomy_lineage = []
-        current_node = taxid
+        current_node = self.parent_nodes[taxid]
         while current_node != self.root:
             organism_name = db_access.get_organism_name(current_node)
             taxonomy_lineage.append (organism_name)
             current_node = self.parent_nodes[current_node]
         taxonomy_lineage.reverse()
 
-        return "; ".join(taxonomy_lineage)
+        return taxonomy_lineage
         
 
     def _h_get_tax_nodes        (self, nodes_file):
