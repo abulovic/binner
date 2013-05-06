@@ -114,9 +114,13 @@ class CdsAlignment (object):
         return True if self.aligned_regions.has_key(read_id) else False
         
     def __str__(self):
-        ret = str(self.cds)
+        tab = " " * 2
+        ret = "CdsAlignment:\n"
+        ret += tab + str(self.cds) + "\n"
+        ret += tab + "aligned_regions:\n"
         for (key, aln_reg) in self.aligned_regions.items():
-            pass
+            ret += tab*2 + key + ":\n"
+            ret += tab*3 + str(aln_reg)
         return ret
 
     
