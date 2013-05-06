@@ -13,8 +13,8 @@ class GreedySolver (Read2CDSSolver):
         self._coverages = {}
 
         
-    def map_reads_2_cdss(self):
-        super(GreedySolver, self).map_reads_2_cdss()
+    def map_reads_2_cdss(self, cds_aln_container):
+        super(GreedySolver, self).map_reads_2_cdss(cds_aln_container)
         # Dictionary of cds alignments from cds alignment container
         cds_alns = self._cds_aln_container.cds_repository 
 
