@@ -1,3 +1,5 @@
+from data.containers.load   import initialize_containers
+from ncbi.db.access         import DbQuery
 
 class Solver (object):
 
@@ -5,17 +7,12 @@ class Solver (object):
     Read2CDSSolver, TaxonomySolver) to solve whole problem.
     """
 
-    def __init__ (self, read_container, cds_aln_container,
-                  determine_host, read2cds_solver, taxonomy_solver):
+    def __init__ (self, determine_host, read2cds_solver, taxonomy_solver):
         """
-        @param (ReadContainer)      read_container Singleton instance
-        @param (CdsAlnContainer)    cds_aln_container Singleton instance
         @param (function)           determine_host (to be specified yet)
         @param (Read2CDSSolver)     read2cds_solver
         @param (TaxonomySolver)     taxonomy_solver
         """
-        self.read_container = read_container
-        self.cds_aln_container = cds_aln_container
         self.determine_host = determine_host
         self.read2cds_solver = read2cds_solver
         self.taxonomy_solver = taxonomy_solver
@@ -33,21 +30,26 @@ class Solver (object):
         ''' Main UI method.
             Generates XML file containing solution.
         '''
+        # Initialize containers
+        (read_container, record_container, cds_aln_container) = initialize_containers()
+        # Create database access
+        db_access = DbQuery()
 
         # Populate read container - NOT NOW NEEDED
-        self.read_container.populate_from_aln_file (alignment_file)
+        read_container.populate_from_aln_file (alignment_file)
 
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
-        self.determine_host(self.read_container)
+        self.determine_host(read_container)
 
         # Populate CDS container 
-        self.cds_aln_container.populate(self.read_container)
+        cds_aln_container.populate(read_container)
 
         # Map each read to one CDS (greedy)
-        self.read2cds_solver.map_reads_2_cdss(self.cds_aln_container)
+        self.read2cds_solver.map_reads_2_cdss(cds_aln_container)
 
         # Determine species
+        cds2taxid = self.taxonomy_solver.map_cdss_2_species (db_access, read_container, cds_aln_container)
 
         # Generate XML file
 
