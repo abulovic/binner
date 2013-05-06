@@ -2,7 +2,7 @@ import sys, os
 sys.path.append(os.getcwd())
 
 import unittest, random
-from ncbi.taxonomy.tree import TaxTreež
+from ncbi.taxonomy.tree import TaxTree
 from ncbi.db.access import DbQuery
 
 class TaxTreeTest (unittest.TestCase):
