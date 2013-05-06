@@ -16,5 +16,7 @@ if __name__ == '__main__':
     read_cont.populate_from_aln_file(alignment_file)
 
     host_taxid = determine_host(read_cont)
-
-    print "Host taxid estimated to be: %d" % (host_taxid)
+    if host_taxid:
+	print "Host taxid estimated to be: %d" % (host_taxid)
+    else:
+        print "No non-microbial organisms detected."

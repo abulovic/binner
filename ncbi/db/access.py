@@ -61,6 +61,8 @@ class DbQuery(object):
         tax IDs or a dictionary mapping gis to tax ids. List can 
         contain duplicates.
         '''
+	if not gis:
+            return format()
         self.ncbitax_db.query('SELECT * FROM gi_taxid_nuc WHERE gi IN %s' % str(tuple(gis)))
         result = self.ncbitax_db.use_result()
 

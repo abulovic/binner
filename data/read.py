@@ -54,7 +54,5 @@ class Read (object):
 
         return Read(newRead_id, newRead_length, newRead_aln_locs)
     
-    def set_type (self):
-        """ Read can be aligned or unaligned
-        """
-        pass
+    def has_alignments (self):
+        return len(self.alignment_locations) > 0
