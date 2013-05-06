@@ -1,19 +1,23 @@
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm.scoping import scoped_session
 from sqlalchemy.orm.session import sessionmaker
+import _mysql
 
 import ncbi.db.genbank as gb
 import ncbi.db.embl as embl
 
 class DbQuery(object):
     '''Serves as a database query utility.'''
-    def __init__(self, genbank_db_url=None, embl_db_url=None):
+    def __init__(self, genbank_db_url=None, embl_db_url=None, ncbitax_db_url=None):
         if not genbank_db_url:
             genbank_db_url = "mysql+mysqldb://root:root@localhost/genbank"
         self.genbank_db_url = genbank_db_url
         if not embl_db_url:
             embl_db_url = "mysql+mysqldb://root:root@localhost/embl"
         self.embl_db_url = embl_db_url
+        if not ncbitax_db_url:
+            ncbitax_db_url = "mysql+mysqldb://root:root@localhost/ncbitax"
+        self.ncbitax_db_url = ncbitax_db_url
         self._create_sessions()
 
 
@@ -48,6 +52,22 @@ class DbQuery(object):
         else:
             return []
 
+    def get_taxids (self, gis):
+        '''
+        Fetches taxonomy ID for each of the GIs.
+        @param gis (list) list of integers representing GIs
+        @return dictinary with GIs mapped to tax_ids.
+        '''
+        self.ncbitax_db.query('SELECT * FROM gi_taxid_nuc WHERE gi IN %s' % str(tuple(gis)))
+        result = self.ncbitax_db.use_result()
+
+        gi2taxid_list = result.fetch_row(maxrows=0)
+        gi2taxid_dict = {}
+        for (gi, taxid) in gi2taxid_list:
+            gi2taxid_dict[int(gi)] = int(taxid)
+
+        return gi2taxid_dict
+
     def _create_sessions(self):
         ''' Creates database sessions '''
         genbank_engine = create_engine (self.genbank_db_url, echo=False, 
@@ -63,5 +83,7 @@ class DbQuery(object):
         
         embl.init_db(embl_engine)
         self.embl_session = embl_session()
+
+        self.ncbitax_db = _mysql.connect('localhost', 'root', 'root', 'ncbitax')
 
         
