@@ -26,5 +26,3 @@ r2c_solver.map_reads_2_cdss(cds_aln_container)
 
 print "------------------------------------------------"
 cds_aln_container.printSelf()
-
-print "gotov"
