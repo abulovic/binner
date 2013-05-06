@@ -23,7 +23,6 @@ class CdsAlnContainer (object):
     def populate (self, read_cont):
 
         # Iterate through reads
-        num = 0;
         for read in read_cont.read_repository.values():
 
             # Iterate through read alignments
@@ -49,7 +48,6 @@ class CdsAlnContainer (object):
                         else:
                             cds_alignment.add_aligned_sublocation (read.id, alignment_location, readAln.score)
 
-        print "pogledao sam alignova: %d " % num
 
 
     def printSelf(self):
