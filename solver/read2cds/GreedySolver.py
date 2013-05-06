@@ -18,7 +18,7 @@ class GreedySolver (Read2CDSSolver):
         """ @overrides
         """
         super(GreedySolver, self).map_reads_2_cdss(cds_aln_container)
-        # Dictionary of cds alignments from cds alignment container
+        # Dictionary of cds alignments from cds alignment container (key is cds)
         cds_alns = self._cds_aln_container.cds_repository 
 
         # Create set that contains read_id for each active read.
@@ -72,7 +72,7 @@ class GreedySolver (Read2CDSSolver):
         Coverage for modified cds alignments is then recalculated.
         Given cds alignment is deleted from container.
         """
-        super(GreedySolver, self).remap_reads_from_cds(cds_aln)
+        super(GreedySolver, self).remove_cds_and_remap_reads(cds_aln)
         # Dictionary where key is read_id and value is cds alignment to which it maps.
         # If it does not map to any cds alignment then value is None.
         new_read_mappings = {}
@@ -91,7 +91,7 @@ class GreedySolver (Read2CDSSolver):
                 new_read_mappings[aln_reg.read_id] = best_alt_cds_aln
 
         # Delete original cds alignment
-        del self._cds_aln_container.cds_repository[cds_aln]
+        del self._cds_aln_container.cds_repository[cds_aln.cds]
 
         # Force recalculation of coverage for updated cds alignments by forgeting coverage
         for updated_cds_aln in set(filter(lambda x: x != None, new_read_mappings.values())):

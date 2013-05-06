@@ -62,6 +62,7 @@ class Cds(Base):
         return hash ((self.record_id, self.location))
 
     def __eq__ (self, other):
+        if (other == None): return False
         return (self.record_id, self.location) == (other.record_id, other.location)
 
     

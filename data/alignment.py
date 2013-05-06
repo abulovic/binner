@@ -73,6 +73,7 @@ class CdsAlignment (object):
         return hash ((self.cds.record_id, self.cds.location))
 
     def __eq__ (self, other):
+        if (other == None): return False
         return (self.cds.record_id, self.cds.location) == (other.cds.record_id, other.cds.location)
 
     def add_aligned_sublocation (self, read_id, aligned_location, score):
@@ -112,7 +113,11 @@ class CdsAlignment (object):
         '''
         return True if self.aligned_regions.has_key(read_id) else False
         
-
+    def __str__(self):
+        ret = str(self.cds)
+        for (key, aln_reg) in self.aligned_regions.items():
+            pass
+        return ret
 
     
 class CdsAlnSublocation (object):
