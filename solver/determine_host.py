@@ -5,6 +5,16 @@ from ncbi.db.access     import DbQuery
 
 
 def remove_host_reads (read_container, tax_tree, gi2taxid):
+    '''
+    Removes host reads from the read container.
+    Host reads are considered to be all the reads which
+    have the best alignment mapped to potential host. 
+    Potential host is any organism from animalia kingdom.
+    @param read_container (ReadContainer)
+    @param tax_tree (TaxTree)
+    @param gi2taxid (dict) key: gi (int), value: taxid (int) 
+    @return read_container (ReadContainer)
+    '''
 
     for read in read_container.read_repository.values():
         # sort alignments by alignment score
@@ -16,10 +26,10 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
             del read_container.read_repository[read_id]
         # set all host alignments inactive
         for read_aln in read.alignment_locations:
- 	    if not gi2taxid.has_key(read_aln.genome_index):
-		print "NOT IN NCBITAX: %d" % read_aln.genome_index
-		read_aln.set_active(False)
-		continue
+     	    if not gi2taxid.has_key(read_aln.genome_index):
+                print "NOT IN NCBITAX: %d" % read_aln.genome_index
+                read_aln.set_active(False)
+                continue
 
             taxid = gi2taxid [read_aln.genome_index]
             if tax_tree.is_child (taxid, tax_tree.animalia):
@@ -63,12 +73,13 @@ def determine_host(read_container):
     for (gi, taxid) in gi2taxid.items():
         taxids_cnt[taxid] += gis_cnt[gi]
 
-    # find the taxid that has been reported the most
-    max_cnt = 0
-    max_taxid = None
+    # find the most frequent taxid from animalia kingdom
+    host_taxid = None
+    # sort taxids by occurence 
     sorted_taxid_cnt = sorted (taxids_cnt.items(), key= lambda x: x[1])
     for taxid in sorted_taxid_cnt:
-	if tax_tree.is_child(taxid, tax_tree.animalia):
-	    max_taxid = taxid
+    	if tax_tree.is_child(taxid, tax_tree.animalia):
+            host_taxid = taxid
+            break
 
-    return max_taxid
+    return host_taxid
