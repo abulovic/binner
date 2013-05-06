@@ -1,3 +1,5 @@
+# @author: Martin Sosic, sosic.martin@gmail.com
+
 class Read2CDSSolver (object):
     """ Class that decides for each read to which CDS does it belong (to which CDS does it map).
     It operates on CdsAlnContainer -> it uses data from it and modifies it.
