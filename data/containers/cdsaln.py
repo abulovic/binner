@@ -20,7 +20,6 @@ class CdsAlnContainer (object):
 
     
     def populate (self, readCont):
-
         # Iterate through reads
         num = 0;
         for read in readCont.read_repository.values():
@@ -46,28 +45,8 @@ class CdsAlnContainer (object):
                         else:
                             cds_alignment.add_aligned_sublocation (read.id, alignment_location, readAln.score)
 
-
-
-
-
-
-                # Get CDSs for alignment: 
-                # Fetch record (by readAln.nucleotide_accession)
-                # Load intersection
-
-
-
-            
-
         print "pogledao sam alignova: %d " % num
 
-        pass
-
-    def addAlignment (self, alignment, update_coverage=False):
-        pass
-
-    def remove (self, read_id):
-        pass
 
     def printSelf(self):
         for cds_aln in self.cds_repository.values():

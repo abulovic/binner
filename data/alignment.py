@@ -65,8 +65,7 @@ class CdsAlignment (object):
     
     def __init__ (self, cds):
         self.cds = cds              # CDS object (from Mladen)
-        self.aligned_regions = {}
-#        self.coverage = None
+        self.aligned_regions = {}   # dictionary of CdsAlnSublocation
         pass
     
     def __hash__ (self):
@@ -86,65 +85,22 @@ class CdsAlignment (object):
         
         # if the CDS has already been covered by the same read in the past,
         # discard this one. 
-        # TODO: choose the one with the highest score or ensure that
-        # the highest score first be added in the CdsAlignment
         if self.aligned_regions.has_key(read_id):
             return
         
         aligned_sublocation             = CdsAlnSublocation (read_id, aligned_location, score)
         self.aligned_regions[read_id]   = aligned_sublocation
-#       self._recalculate_coverage()
 
     def get_key (self):
         pass
         
-#    def get_coverage (self, update_coverage = False):
-#        ''' Get the coverage of a CDS calculated based on 
-#            the aligned regions and quality of the alignments. 
-#        '''
-#        if not self.coverage or update_coverage:
-#            self.coverage = self._recalculate_coverage()
-#        return self.coverage
-    
-    # def remove_read (self, read_id, update=True):
-    #     ''' Removes aligned sublocation mapped to the 
-    #         specified read ID. Recalculates coverage.
-    #         @param read_id  ID of the read to be removed from the 
-    #                 overall coverage calculation
-    #         @return True if read was removed, False if not
-    #     '''
-    #     if not self.aligned_regions.has_key(read_id):
-    #         return False
-    #     self.aligned_regions[read_id].active = False
-    #     if update:
-    #         self._recalculate_coverage()
-    #     return True
-
     def contains_read (self, read_id):
         ''' Determines whether this CDS alignment contains 
             a subalignment mapped to the specified read.
         '''
         return True if self.aligned_regions.has_key(read_id) else False
-
         
 
-    # def _recalculate_coverage (self):
-    #     ''' Calculate the coverage of a CDS based on 
-    #         the aligned regions and quality of the alignments. 
-    #         Only 'active' sublocations are considered.
-    #     '''
-    #     # ultra-primitive solution: CHANGE QUICK!
-    #     self.coverage = 0.
-    #     for alnsubloc in self.aligned_regions.values():
-    #         if not alnsubloc.active: continue
-    #         self.coverage += alnsubloc.score
-
-    # def __lt__ (self, other):
-    #     ''' Compares two CDS alignments based on their coverage.
-    #         Higher coverage means 'larger' CdsAlignment
-    #     '''
-    #     assert (type(other) == type(self))
-    #     return True if self.get_coverage() < other.get_coverage() else False
 
     
 class CdsAlnSublocation (object):
