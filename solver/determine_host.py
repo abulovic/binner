@@ -1,15 +1,14 @@
 from collections import defaultdict
 
 from ncbi.taxonomy.tree import TaxTree
-from ncbi.db.access     import DbQuery
-from data.containers.load import 
+from ncbi.db.access     import DbQuery 
 
 
 def remove_host_reads (read_container, tax_tree, gi2taxid):
 
-    for (read_id, read) in read_container.read_repository:
+    for read in read_container.read_repository.values():
         # sort alignments by alignment score
-        sorted_alignments = sorted (read.alignment_locations, key=location.score)
+        sorted_alignments = sorted (read.alignment_locations, key=lambda location: location.score)
         # if best alignment is host alignment, remove it
         best_aln = sorted_alignments[0]
         best_aln_taxid = gi2taxid [best_aln.genome_index]
@@ -53,7 +52,7 @@ def determine_host(read_container):
     # filter read container. Read container iterator no longer valid
     # after filtering
     reads = None
-    read_container = filter_read_container (read_container, tax_tree, gi2taxid)
+    read_container = remove_host_reads (read_container, tax_tree, gi2taxid)
     
 
     for (gi, taxid) in gi2taxid.items():

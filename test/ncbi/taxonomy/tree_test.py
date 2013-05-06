@@ -8,7 +8,6 @@ class TaxTreeTest (unittest.TestCase):
 
 	def setUp(self):
 		self.tax_tree = TaxTree()
-		self.tax_tree.load()
 
 	def testLoaded (self):
 		self.assertEqual (1, self.tax_tree.root)
