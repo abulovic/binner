@@ -44,25 +44,15 @@ class XMLOutput(object):
     def dataset_details_output(self, level):
 
         tab = " " * level * 2
-        dataSetName = self.dataset.name
-        hostGenus = self.dataset.host_genus
-        hostSpecies = self.dataset.host_species
-        commonName = self.dataset.common_name
-        taxon_id = self.dataset.taxon_id
-        taxonomy = self.dataset.taxonomy
-        sampleSource = self.dataset.sample_source
-        sampleType = self.dataset.sample_type
-        seq_method = self.dataset.seq_method
-        sequencer = self.dataset.sequencer
 
-        print(tab + "<datasetName>" + dataSetName + "</datasetName>")
-        print(tab + "<hostGenus>" + hostGenus + "</hostGenus>")
-        print(tab + "<hostSpecies>" + hostSpecies + "</hostSpecies>")
-        print(tab + "<commonName>" + commonName + "</commonName>")
-        print(tab + "<taxonomy taxon_id=\"" + taxon_id  + "\">" + taxonomy + "</taxonomy>")
-        print(tab + "<sampleSource>" + sampleSource + "</samleSource>")
-        print(tab + "<sampleType>" + sampleType + "</sampleType>")
-        print(tab + "<sequencer method=\"" + seq_method + "\">" + sequencer + "</sequencer>")
+        print(tab + "<datasetName>" + self.dataset.name + "</datasetName>")
+        print(tab + "<hostGenus>" + self.dataset.host_genus + "</hostGenus>")
+        print(tab + "<hostSpecies>" + self.dataset.host_species + "</hostSpecies>")
+        print(tab + "<commonName>" + self.dataset.common_name + "</commonName>")
+        print(tab + "<taxonomy taxon_id=\"" + self.dataset.taxon_id  + "\">" + self.dataset.taxonomy + "</taxonomy>")
+        print(tab + "<sampleSource>" + self.dataset.sample_source + "</samleSource>")
+        print(tab + "<sampleType>" + self.dataset.sample_type + "</sampleType>")
+        print(tab + "<sequencer method=\"" + self.dataset.seq_method + "\">" + self.dataset.sequencer + "</sequencer>")
 
     def dataset_output(self, level):
         
@@ -99,27 +89,20 @@ class XMLOutput(object):
 
         print(tab + "<sequence>" + read.sequence + "</sequence>")
 
-    def organism_details_output(self, level, organism, is_host=False):
+    def organism_details_output(self, level, organism):
 
         tab = " " * level * 2
-        count = organism.amount_count
-        rel_amount = organism.amount_relative
-        taxon_id = organism.taxon_id
-        taxonomy = organism.taxonomy
-        organism_name = organism.name
 
-        print(tab + "<relativeAmount count=\">" + count + "\">" + rel_amount + "</relativeAmount>")
-        print(tab + "<taxonomy taxon_id=\"" + taxon_id  + "\">" + taxonomy + "</taxonomy>")
-        print(tab + "<organsimName>" + organism_name + "</organismName>")
+        print(tab + "<relativeAmount count=\">" + organism.amount_count + "\">" + organism.amount_relative + "</relativeAmount>")
+        print(tab + "<taxonomy taxon_id=\"" + organism.taxon_id  + "\">" + organism.taxonomy + "</taxonomy>")
+        print(tab + "<organsimName>" + organism.name + "</organismName>")
 
-        if is_host:
+        if organism.is_host:
+            # rest of data not needed in this case
             return
 
-        genus = organism.genus
-        species = organism.species
-
-        print(tab + "<genus>" + genus + "</genus>")
-        print(tab + "<species>" + species + "</species>")
+        print(tab + "<genus>" + organism.genus + "</genus>")
+        print(tab + "<species>" + organism.species + "</species>")
 
         print(tab + "<genes>")
         for gene in organism.genes:
@@ -161,6 +144,10 @@ class XMLOutput(object):
         self.organisms_output(level+1);
         print("</organismsReport>")
 
+#################################################################################
+# example of usage
+# initing structures and outputing xml
+################################################################################
 dataset = Dataset("Example2.fq", "Homo2", "sapiens", "human2", "9696", 
                   "eukaryota, ...; Homo", "Whole Blood2", "DNA", "single-end", "Roche 454")
 
@@ -170,7 +157,9 @@ variants = [Variant("CAB789879", "31", "-", "A", "28", "GGGGGGGGGGGGGGG" )]*7
 
 reads = [Read("HT89898989")]*11
 
-organisms = [Organism("1336767", "95.678", "9606", "eukarioti .... homo2", "Host2", "Kuga",
+lista1 = [Organism("8888888", "95.7878", "9606", "eukaritoi ... tralala", "host", "", "", "", "", "", True)]
+
+organisms = lista1 + [Organism("1336767", "0.3234", "9606", "eukarioti .... homo2", "Host2", "Kuga",
                       "tuberkuloza", genes, variants, reads)] * 5
 
 xml = XMLOutput(dataset, organisms) 
