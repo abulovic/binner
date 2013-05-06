@@ -27,7 +27,7 @@ class GreedySolver (Read2CDSSolver):
                     active_reads.add(aln_reg.read_id)
         # Number of unprocessed active reads.                    
         num_unproc_active_reads = len(active_reads)
-        
+
         # Dictionary that contains entryes from cds alignment container which have been processed.
         processed_cds_alns = {}
         
@@ -52,12 +52,13 @@ class GreedySolver (Read2CDSSolver):
             # For all reads in best cds alignment that are active:
             #    Deactivate them in all other cdss (and update/recalculate coverage for those cdss)
             for aln_reg in best_cds_aln.aligned_regions.values():
-                if (self._is_read_active(aln_reg)):
+                if self._is_read_active(aln_reg):
                     num_unproc_active_reads -= 1
                     for cds_aln in self._cds_aln_container.read2cds[aln_reg.read_id]:
-                        self._deactivate_read(cds_aln.aligned_regions[aln_reg.read_id])
-                        self._coverages.pop(cds_aln, None) # removes coverage which forces recalculation
-
+                        if not(cds_aln is best_cds_aln):
+                            self._deactivate_read(cds_aln.aligned_regions[aln_reg.read_id])
+                            self._coverages.pop(cds_aln, None) # removes coverage which forces recalculation
+                            
         # Move proccesed cds alignments back to cds alignment container
         cds_alns.update(processed_cds_alns)
 
@@ -77,6 +78,7 @@ class GreedySolver (Read2CDSSolver):
         if not (cds_aln in self._coverages):
             self._coverages[cds_aln] = self._calc_coverage(cds_aln)
 
+        print self._coverages[cds_aln]
         return self._coverages[cds_aln]
             
 

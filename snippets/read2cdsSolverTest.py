@@ -19,7 +19,12 @@ read_container.populate_from_aln_file("example_data/2reads.in")
 cds_aln_container = CdsAlnContainer.Instance()
 cds_aln_container.populate(read_container)
 
+cds_aln_container.printSelf()
+
 r2c_solver = GreedySolver()
 r2c_solver.map_reads_2_cdss(cds_aln_container)
+
+print "------------------------------------------------"
+cds_aln_container.printSelf()
 
 print "gotov"
