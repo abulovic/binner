@@ -8,18 +8,44 @@ class Dataset(object):
     @autoassign
     def __init__(self, name, host_genus, host_species, common_name, taxon_id, 
                  taxonomy, sample_source, sample_type, seq_method, sequencer):
+        ''' Dataset init
+            @param name input file name
+            @param host_genus host genus name
+            @param host_species host species name
+            @param common_name common name
+            @param taxon_id host taxon id
+            @param taxonomy host taxonomy
+            @param sample_source e.g. Whole Blood
+            @param sample_type e.g. DNA
+            @param seq_method e.g. single-end
+            @param sequncer Roche 454, Illumina, PacBio or IonTorrent
+        '''
         pass
 
 class Gene(object):
 
     @autoassign
     def __init__(self, protein_id, locus_tag, product, name):
+        ''' Gene init
+            @param protein_id protein id e.g. AAS63914.1
+            @param locus_tag e.g. YP_3766
+            @param product e.g. putative carbohydrate kinase
+            @param name gene name e.g. xylB3
+        '''
         pass
         
 class Variant(object) :
 
     @autoassign
     def __init__(self, ref_name, ref_start, ref_seq, name, offset, context):
+        ''' Variant init
+            @param ref_name e.g. CAB54900.1
+            @param ref_start e.g. 31
+            @param ref_seq e.g. -
+            @param name variant name e.g. A
+            @param offset e.g. 28
+            @param context e.g. ACTGGGGAGAGAGGAGCTTTTATATATATATTATAAGGCCC  
+        '''
         pass
 
 class Organism(object):
@@ -27,6 +53,18 @@ class Organism(object):
     @autoassign
     def __init__(self, amount_count, amount_relative, taxon_id, taxonomy, name,
                  genus, species, genes, variants, reads, is_host=False):
+        ''' Organism init
+            @param amount_count amount of reads e.g. 2156
+            @param amount_relative relative to all others e.g. 0.158
+            @param taxon_id e.g. 9606 for human
+            @param taxonomy organism taxonomy
+            @param name organism name e.g. Yersinia
+            @param species organism species
+            @param ([Gene]) genes list of genes
+            @param ([Variant]) variants list of variants
+            @param ([Read]) reads list of reads
+            @param is_host a bool defining whether the organism is host or not
+        '''
         pass
 
 class Read(object):
@@ -38,10 +76,14 @@ class Read(object):
 class XMLOutput(object):
 
     def __init__(self, dataset, organisms):
+        ''' XMLOutpu init
+            @param (Dataset) dataset structure with info about the dataset
+            @param ([Organism]) organisms a list of all organims and coresponding data
+        '''
         self.dataset = dataset
         self.organisms = organisms
 
-    def dataset_details_output(self, level):
+    def _dataset_details_output(self, level):
 
         tab = " " * level * 2
 
@@ -54,42 +96,42 @@ class XMLOutput(object):
         print(tab + "<sampleType>" + self.dataset.sample_type + "</sampleType>")
         print(tab + "<sequencer method=\"" + self.dataset.seq_method + "\">" + self.dataset.sequencer + "</sequencer>")
 
-    def dataset_output(self, level):
+    def _dataset_output(self, level):
         
         tab = " " * level * 2
 
         print(tab + "<dataset>")
-        self.dataset_details_output(level+1)
+        self._dataset_details_output(level+1)
         print(tab + "</dataset>")
 
-    def gene_output(self, level, gene):
+    def _gene_output(self, level, gene):
 
         tab = " " * level * 2
 
         print(tab + "<gene protein_id=\"" + gene.protein_id + "\" locus_tag=\"" + gene.locus_tag + "\" product=\"" + gene.product + "\">" + gene.name + "</gene>" )
 
-    def variant_details(self, level, variant):
+    def _variant_details(self, level, variant):
 
         tab = " " * level * 2
 
         print(tab + "<variant ref_name=\"" + variant.ref_name + "\" ref_start=\"" + variant.ref_start + "\" ref_seq=\"" + variant.ref_seq + "\">" + variant.name + "</variant>")
         print(tab + "<context offset=\"" + variant.offset + "\">" + variant.context + "</context>")
 
-    def variant_output(self, level, variant):
+    def _variant_output(self, level, variant):
 
         tab = " " * level * 2
 
         print(tab + "<sequenceDifference>")
-        self.variant_details(level+1, variant)
+        self._variant_details(level+1, variant)
         print(tab + "</sequenceDifference>")
 
-    def sequence_output(self, level, read):
+    def _sequence_output(self, level, read):
 
         tab = " " * level * 2
 
         print(tab + "<sequence>" + read.sequence + "</sequence>")
 
-    def organism_details_output(self, level, organism):
+    def _organism_details_output(self, level, organism):
 
         tab = " " * level * 2
 
@@ -106,61 +148,44 @@ class XMLOutput(object):
 
         print(tab + "<genes>")
         for gene in organism.genes:
-            self.gene_output(level+1, gene)
+            self._gene_output(level+1, gene)
         print(tab + "<genes>")
 
         print(tab + "<variants>")
         for variant in organism.variants:
-            self.variant_output(level+1, variant)
+            self._variant_output(level+1, variant)
         print(tab + "</variants>")
 
         print(tab + "<reads>")
         for read in organism.reads:
-            self.sequence_output(level + 1, read)
+            self._sequence_output(level + 1, read)
         print(tab + "</reads>")
 
-    def organism_output(self, level):
+    def _organism_output(self, level):
 
         tab = " " * level * 2
 
         for organism in self.organisms:
             print(tab + "<organism>")
-            self.organism_details_output(level+1, organism)
+            self._organism_details_output(level+1, organism)
             print(tab + "</organism>")
 
-    def organisms_output(self, level):
+    def _organisms_output(self, level):
 
         tab = " " * level * 2
 
         print(tab + "<organisms>")
-        self.organism_output(level+1)
+        self._organism_output(level+1)
         print(tab + "</organisms>")
 
-    def xml_output(self, level):
+    def xml_output(self, level=0):
+        ''' Generates the xml from data already present in dataset and organisms
+            to stdout
+            @param level default 0, start offset for level zero xml tags
+        '''
 
         print("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>")
         print("<organismsReport>")
-        self.dataset_output(level+1);
-        self.organisms_output(level+1);
+        self._dataset_output(level+1);
+        self._organisms_output(level+1);
         print("</organismsReport>")
-
-#################################################################################
-# example of usage
-# initing structures and outputing xml
-################################################################################
-dataset = Dataset("Example2.fq", "Homo2", "sapiens", "human2", "9696", 
-                  "eukaryota, ...; Homo", "Whole Blood2", "DNA", "single-end", "Roche 454")
-
-genes = [Gene("AA898989.1", "YP_67676", "neke pizdarije karbohidrati i to", "naziv gena")]*3
-
-variants = [Variant("CAB789879", "31", "-", "A", "28", "GGGGGGGGGGGGGGG" )]*7
-
-reads = [Read("HT89898989")]*11
-
-lista1 = [Organism("8888888", "95.7878", "9606", "eukaritoi ... tralala", "host", "", "", "", "", "", True)]
-
-organisms = lista1 + [Organism("1336767", "0.3234", "9606", "eukarioti .... homo2", "Host2", "Kuga",
-                      "tuberkuloza", genes, variants, reads)] * 5
-
-xml = XMLOutput(dataset, organisms) 
-xml.xml_output(0);
