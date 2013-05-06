@@ -52,21 +52,36 @@ class DbQuery(object):
         else:
             return []
 
-    def get_taxids (self, gis):
+    def get_taxids (self, gis, format=dict):
         '''
         Fetches taxonomy ID for each of the GIs.
         @param gis (list) list of integers representing GIs
-        @return dictinary with GIs mapped to tax_ids.
+        @param format (object type) list or dict.
+        @return based on format parameter, returns either list of 
+        tax IDs or a dictionary mapping gis to tax ids. List can 
+        contain duplicates.
         '''
         self.ncbitax_db.query('SELECT * FROM gi_taxid_nuc WHERE gi IN %s' % str(tuple(gis)))
         result = self.ncbitax_db.use_result()
 
         gi2taxid_list = result.fetch_row(maxrows=0)
-        gi2taxid_dict = {}
-        for (gi, taxid) in gi2taxid_list:
-            gi2taxid_dict[int(gi)] = int(taxid)
 
-        return gi2taxid_dict
+        if format == dict:
+            gi2taxid_dict = {}
+            for (gi, taxid) in gi2taxid_list:
+                gi2taxid_dict[int(gi)] = int(taxid)
+
+            return gi2taxid_dict
+
+        elif format == list:
+            taxid_list = []
+            for (gi, taxid) in gi2taxid_list:
+                taxid_list.append (int(taxid))
+
+            return taxid_list
+
+        else:
+            return None
 
     def _create_sessions(self):
         ''' Creates database sessions '''
