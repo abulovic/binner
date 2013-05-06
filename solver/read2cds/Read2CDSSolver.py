@@ -70,5 +70,24 @@ class Read2CDSSolver (object):
         that cds must be element of read2cds for that read and vice versa.
         @return (boolean) True if test passed, False otherwise.
         """
-        # TODO: implement
-        pass  
+        active_read_ids = set()
+        for cds_aln in self._cds_aln_container.cds_repository.values():
+            for aln_reg in cds_aln.aligned_regions.values():
+                if self._is_read_active(aln_reg):
+                    # Check if it is active in some other cds.
+                    if aln_reg.read_id in active_read_ids: return False
+                    else: active_read_ids.add(aln_reg.read_id)
+                # Check if there is mapping in read2cds.
+                if not(cds_aln in self._cds_aln_container.read2cds[aln_reg.read_id]):
+                    return False
+        # For each mapping in read2cds check if there is mapping in cds_repository.
+        for (read_id, cds_alns) in self._cds_aln_container.read2cds.items():
+            for cds_aln in cds_alns:
+                try:
+                    if not(read_id in self._cds_aln_container.cds_repository[cds_aln.cds].aligned_regions.keys()):
+                        return False
+                except KeyError:
+                    return False
+
+        return True
+
