@@ -73,6 +73,7 @@ class CdsAlignment (object):
         return hash ((self.cds.record_id, self.cds.location))
 
     def __eq__ (self, other):
+        if (other == None): return False
         return (self.cds.record_id, self.cds.location) == (other.cds.record_id, other.cds.location)
 
     def add_aligned_sublocation (self, read_id, aligned_location, score):
@@ -92,6 +93,17 @@ class CdsAlignment (object):
         aligned_sublocation             = CdsAlnSublocation (read_id, aligned_location, score)
         self.aligned_regions[read_id]   = aligned_sublocation
 
+    def is_active(self):
+        '''
+        Checks whether CDS alignment is active. 
+        If all the CDSAlnSublocations are inactive, then the whole CdsAlignment
+        is inactive.
+        '''
+        for cds_aln_subloc in self.aligned_regions.values():
+            if cds_aln_subloc.active:
+                return True
+        return False
+
     def get_key (self):
         pass
         
@@ -101,7 +113,11 @@ class CdsAlignment (object):
         '''
         return True if self.aligned_regions.has_key(read_id) else False
         
-
+    def __str__(self):
+        ret = str(self.cds)
+        for (key, aln_reg) in self.aligned_regions.items():
+            pass
+        return ret
 
     
 class CdsAlnSublocation (object):

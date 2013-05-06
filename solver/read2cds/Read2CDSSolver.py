@@ -24,11 +24,18 @@ class Read2CDSSolver (object):
         self._cds_aln_container = cds_aln_container
 
     # Should be overrided and called with super() at the beginning of overriding method.
-    def remap_reads_from_cds(self, cds_aln): 
-        """ Called after map_reads_2_cdss. It takes reads from given cds and maps them to other cdss.
-        No reads remain mapped to given cds.
-        Works upon cds alignment container that was given in map_reads_2_cdss().
+    def remove_cds_and_remap_reads(self, cds_aln): 
+        """ Called after map_reads_2_cdss.
+        It remaps active reads from given cds alignment to alternative cds alignments.
+        After that it deletes given cds alignment from cds alignment container.
+        Each read is activated in some alternative cds alignment (if there is one).
+        If read has no alternative cds alignments then it will not be maped anywhere. 
+        Works upon cds alignment container that was given in map_reads_2_cdss(),
+        which will be modified.
         @param (CdsAlignment) cds_aln
+        @return ({read_id:CdsAlignment}) Dictionary where key is read_id and value is
+                                         cds alignment to which it maps. 
+                                         If it does not map anywhere then value is None.
         """
         if (self._cds_aln_container == None):
             raise Exception ("Cds alignment container was not specified! Have you executed map_reads_2_cdss?")

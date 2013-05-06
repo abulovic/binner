@@ -8,7 +8,7 @@ from data.containers.cdsaln import CdsAlnContainer
 
 from solver.read2cds.Read2CDSSolver import Read2CDSSolver
 from solver.read2cds.GreedySolver import GreedySolver
-from solver.taxonomy.TaxonomySolver import TaxonomySolver
+from solver.taxonomy.SimpleTaxonomySolver import SimpleTaxonomySolver
 from solver.Solver import Solver
 
 from solver.determine_host import determine_host
@@ -22,33 +22,32 @@ if __name__ == '__main__':
 
         print "I got the input file!"
 
-        # ---------------------- Initialize containers --------------------- #
+        # # ---------------------- Initialize containers --------------------- #
 
-        # Enable database access
-        dbQuery = DbQuery()
+        # # Enable database access
+        # dbQuery = DbQuery()
 
-        # Create containers
-        recordCont = RecordContainer.Instance()
-        recordCont.set_db_access(dbQuery)
+        # # Create containers
+        # recordCont = RecordContainer.Instance()
+        # recordCont.set_db_access(dbQuery)
 
-        readCont   = ReadContainer.Instance()
-        cdsAlnCont = CdsAlnContainer.Instance()
+        # readCont   = ReadContainer.Instance()
+        # cdsAlnCont = CdsAlnContainer.Instance()
 
-        readCont.populate_from_aln_file(aln_file)
+        # readCont.populate_from_aln_file(aln_file)
 
-        print "passed container initialization!"
+        # print "passed container initialization!"
         
         # ---------------------- Initialize Solver --------------------- #
 
         greedySolver    = GreedySolver()
-        taxonomySolver  = TaxonomySolver() 
-        solver = Solver(readCont, cdsAlnCont,
-                        determine_host, greedySolver, taxonomySolver)
+        taxonomySolver  = SimpleTaxonomySolver() 
+        solver = Solver(determine_host, greedySolver, taxonomySolver)
                         
 
         # ---------------------- Run Solver --------------------- #
 
-        solver.generateSolutionXML()
+        solver.generateSolutionXML(aln_file)
 
         print "Successfully initialized solver!"
         

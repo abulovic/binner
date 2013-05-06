@@ -57,6 +57,14 @@ class Cds(Base):
     def matches(self, location, complement, tolerance):
         l1 = Location.from_location_str(self.location, tolerance)
         return l1.intersects(Location.from_location(location, complement))
+
+    def __hash__ (self):
+        return hash ((self.record_id, self.location))
+
+    def __eq__ (self, other):
+        if (other == None): return False
+        return (self.record_id, self.location) == (other.record_id, other.location)
+
     
 class CdsAdditionalDbXref(Base):
     ''' cds:        crd reference

@@ -15,8 +15,10 @@ class GreedySolver (Read2CDSSolver):
 
         
     def map_reads_2_cdss(self, cds_aln_container):
+        """ @overrides
+        """
         super(GreedySolver, self).map_reads_2_cdss(cds_aln_container)
-        # Dictionary of cds alignments from cds alignment container
+        # Dictionary of cds alignments from cds alignment container (key is cds)
         cds_alns = self._cds_aln_container.cds_repository 
 
         # Create set that contains read_id for each active read.
@@ -64,9 +66,38 @@ class GreedySolver (Read2CDSSolver):
         cds_alns.update(processed_cds_alns)
 
         
-    def remap_reads_from_cds(self, cds_aln):
-        super(GreedySolver, self).remap_reads_from_cds(cds_aln)
-        raise Exception ("Not yet implemented!")
+    def remove_cds_and_remap_reads(self, cds_aln):
+        """ @overrides 
+        Each read is remaped to alternative cds alignment with highest coverage.
+        Coverage for modified cds alignments is then recalculated.
+        Given cds alignment is deleted from container.
+        """
+        super(GreedySolver, self).remove_cds_and_remap_reads(cds_aln)
+        # Dictionary where key is read_id and value is cds alignment to which it maps.
+        # If it does not map to any cds alignment then value is None.
+        new_read_mappings = {}
+
+        for aln_reg in cds_aln.aligned_regions.values():
+            if self._is_read_active(aln_reg):
+                # Find alternative cds alignment with highest coverage
+                best_alt_cds_aln = None
+                for alt_cds_aln in self._cds_aln_container.read2cds[aln_reg.read_id]:
+                    if best_alt_cds_aln == None or self._get_coverage(alt_cds_aln) > self._get_coverage(best_alt_cds_aln): 
+                        best_alt_cds_aln = alt_cds_aln
+                # Activate it in best alternative cds alignment (if there is one)
+                if (best_alt_cds_aln != None):
+                    self._activate_read(best_alt_cds_aln.aligned_regions[aln_reg.read_id])
+                # Add mapping to output dictionary
+                new_read_mappings[aln_reg.read_id] = best_alt_cds_aln
+
+        # Delete original cds alignment
+        del self._cds_aln_container.cds_repository[cds_aln.cds]
+
+        # Force recalculation of coverage for updated cds alignments by forgeting coverage
+        for updated_cds_aln in set(filter(lambda x: x != None, new_read_mappings.values())):
+            del self._coverages[updated_cds_aln]
+
+        return new_read_mappings
 
     
     def _get_coverage(self, cds_aln):
@@ -77,8 +108,7 @@ class GreedySolver (Read2CDSSolver):
         """
         if not (cds_aln in self._coverages):
             self._coverages[cds_aln] = self._calc_coverage(cds_aln)
-        return self._coverages[cds_aln]
-            
+        return self._coverages[cds_aln]            
 
     def _calc_coverage(self, cds_aln):
         """ Calculates coverage of given cds alignment.
