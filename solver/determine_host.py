@@ -16,6 +16,11 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
             del read_container.read_repository[read_id]
         # set all host alignments inactive
         for read_aln in read.alignment_locations:
+ 	    if not gi2taxid.has_key(read_aln.genome_index):
+		print "NOT IN NCBITAX: %d" % read_aln.genome_index
+		read_aln.set_active(False)
+		continue
+
             taxid = gi2taxid [read_aln.genome_index]
             if tax_tree.is_child (taxid, tax_tree.animalia):
                 read_aln.set_active(False)
@@ -61,9 +66,9 @@ def determine_host(read_container):
     # find the taxid that has been reported the most
     max_cnt = 0
     max_taxid = None
-    for (taxid, cnt) in taxids_cnt.items():
-        if cnt > max_cnt:
-            max_cnt = cnt
-            max_taxid = taxid
+    sorted_taxid_cnt = sorted (taxids_cnt.items(), key= lambda x: x[1])
+    for taxid in sorted_taxid_cnt:
+	if tax_tree.is_child(taxid, tax_tree.animalia):
+	    max_taxid = taxid
 
-    return taxid
+    return max_taxid
