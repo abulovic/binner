@@ -92,6 +92,25 @@ class TaxTree ():
 
             # refresh current nodes
             current_taxids = parent_nodes
+
+    def get_taxonomy_lineage (self, taxid, db_access):
+        '''
+        Fetches taxonomy lineage for the organism specified 
+        by its taxonomy ID.
+        @param taxid (int) taxonomy id
+        @param db_access (DbQuery)
+        @return lineage (str)
+        '''
+
+        taxonomy_lineage = []
+        current_node = taxid
+        while current_node != self.root:
+            organism_name = db_access.get_organism_name(current_node)
+            taxonomy_lineage.append (organism_name)
+            current_node = self.parent_nodes[current_node]
+        taxonomy_lineage.reverse()
+
+        return "; ".join(taxonomy_lineage)
         
 
     def _h_get_tax_nodes        (self, nodes_file):
