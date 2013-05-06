@@ -91,10 +91,12 @@ class DbQuery(object):
         name, authority
         @return organism name (str)
         '''
-        self.ncbitax_db.query('SELECT name_txt FROM ncbi_names WHERE tax_id=%d and name_class=%s'
+        self.ncbitax_db.query('SELECT name_txt FROM ncbi_names WHERE tax_id=%d and name_class="%s"'
                                 % (taxid, name_class))
         result = self.ncbitax_db.use_result()
-        ((org_name),) = result.fetch_row()
+        org_name = result.fetch_row()
+        if org_name:
+            ((org_name,),) = org_name
         return org_name
 
 
