@@ -2,7 +2,7 @@ import sys, os
 sys.path.append(os.getcwd())
 
 import unittest, random
-from ncbi.taxonomy.tree import TaxTreež
+from ncbi.taxonomy.tree import TaxTree
 from ncbi.db.access import DbQuery
 
 class TaxTreeTest (unittest.TestCase):
@@ -28,7 +28,7 @@ class TaxTreeTest (unittest.TestCase):
 
 	def testTaxonomyLineage (self):
 		db_query = DbQuery()
-		print self.tax_tree.get_taxonomy_lineage (9606, db_query):
+		print self.tax_tree.get_taxonomy_lineage (9606, db_query)
 
 	def testLca (self):
 		# check lca for bacteria & fungi is root
