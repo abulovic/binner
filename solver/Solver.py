@@ -29,15 +29,17 @@ class Solver (object):
 
     # Here should go some User Interface methods like getXML(), solve() and similar
 
-    def generateSolutionXML(self):
+    def generateSolutionXML(self, alignment_file):
         ''' Main UI method.
             Generates XML file containing solution.
         '''
 
         # Populate read container - NOT NOW NEEDED
+        self.read_container.populate_from_aln_file (alignment_file)
 
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
+        self.determine_host(self.read_container)
 
         # Populate CDS container 
         self.cds_aln_container.populate(self.read_container)
