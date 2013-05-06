@@ -18,7 +18,6 @@ class ReadContainer (object):
         aln_file = open(read_alignment_file, 'r')
         for line in aln_file.readlines():
             self._add_read_from_str(line)
-        pass
     
     def fetch_read (self, read_id):
         if self.read_repository.has_key(read_id):

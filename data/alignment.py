@@ -7,7 +7,8 @@ class ReadAlnLocation (object):
     """
     
     record_container                = RecordContainer.Instance()
-    def __init__ (self, read_id, nucleotide_accession, db_source, genome_index, score, location_span, complement):
+    def __init__ (self, read_id, nucleotide_accession, db_source, genome_index, score, 
+                  location_span, complement):
         self.read_id                = read_id
         self.nucleotide_accession   = nucleotide_accession
         self.db_source              = db_source
