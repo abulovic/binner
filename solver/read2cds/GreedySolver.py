@@ -21,9 +21,9 @@ class GreedySolver (Read2CDSSolver):
         # Create set that contains read_id for each active read.
         # Read is active if there is active aligned region for that read (there may be more then one). 
         active_reads = set()
-        for cds_aln in cds_alns:
-            for aln_reg in cds_aln.aligned_regions:
-                if self._is_active_read(aln_reg):
+        for cds_aln in cds_alns.values():
+            for aln_reg in cds_aln.aligned_regions.values():
+                if self._is_read_active(aln_reg):
                     active_reads.add(aln_reg.read_id)
         # Number of unprocessed active reads.                    
         num_unproc_active_reads = len(active_reads)
@@ -38,7 +38,7 @@ class GreedySolver (Read2CDSSolver):
         while (num_unproc_active_reads > 0):
             best_cds_aln_coverage, best_cds_aln_key = None, None # Cds alignment with highest coverage.
             # Iterate through cds alignments and find the cds alignment with highest coverage.
-            for (key, cds_aln) in cds_alns:
+            for (key, cds_aln) in cds_alns.items():
                 cds_aln_coverage = self._get_coverage(cds_aln)
                 if best_cds_aln_key == None or cds_aln_coverage > best_cds_aln_coverage:
                     best_cds_aln_coverage = cds_aln_coverage
@@ -51,7 +51,7 @@ class GreedySolver (Read2CDSSolver):
 
             # For all reads in best cds alignment that are active:
             #    Deactivate them in all other cdss (and update/recalculate coverage for those cdss)
-            for aln_reg in best_cds_aln.aligned_regions:
+            for aln_reg in best_cds_aln.aligned_regions.values():
                 if (self._is_read_active(aln_reg)):
                     num_unproc_active_reads -= 1
                     for cds_aln in self._cds_aln_container.read2cds[aln_reg.read_id]:
@@ -88,10 +88,10 @@ class GreedySolver (Read2CDSSolver):
         """
         # Aligned region is part of a read that intersects with cds.
         coverage = 0
-        for aln_reg in cds_aln.aligned_regions: # aln_reg is of type CdsAlnSublocation
+        for aln_reg in cds_aln.aligned_regions.values(): # aln_reg is of type CdsAlnSublocation
             location = aln_reg.location # location is of type Location
             coverage += location.length()
-        coverage = coverage / float(cds_aln.aligned_regions.len())
+        coverage = coverage / float(len(cds_aln.aligned_regions))
         return coverage
             
             
