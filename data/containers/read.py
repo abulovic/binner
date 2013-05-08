@@ -9,6 +9,9 @@ class ReadContainer (object):
         alignment file. Can be queried by read id.
     '''
     def __init__(self):
+        """
+        (dict) read_repository Dictionary where value is (Read)read and key is (int)read id.
+        """
         self.read_repository = {}
         
     def populate_from_aln_file (self, read_alignment_file):

@@ -89,7 +89,7 @@ class XMLOutput(object):
         print(tab + "<hostSpecies>" + str(self.dataset.host_species) + "</hostSpecies>")
         print(tab + "<commonName>" + str(self.dataset.common_name) + "</commonName>")
         print(tab + "<taxonomy taxon_id=\"" + str(self.dataset.taxon_id)  + "\">" + str(self.dataset.taxonomy) + "</taxonomy>")
-        print(tab + "<sampleSource>" + str(self.dataset.sample_source) + "</samleSource>")
+        print(tab + "<sampleSource>" + str(self.dataset.sample_source) + "</sampleSource>")
         print(tab + "<sampleType>" + str(self.dataset.sample_type) + "</sampleType>")
         print(tab + "<sequencer method=\"" + str(self.dataset.seq_method) + "\">" + str(self.dataset.sequencer) + "</sequencer>")
 
@@ -134,7 +134,7 @@ class XMLOutput(object):
 
         print(tab + "<relativeAmount count=\">" + str(organism.amount_count) + "\">" + str(organism.amount_relative) + "</relativeAmount>")
         print(tab + "<taxonomy taxon_id=\"" + str(organism.taxon_id) + "\">" + str(organism.taxonomy) + "</taxonomy>")
-        print(tab + "<organsimName>" + str(organism.name) + "</organismName>")
+        print(tab + "<organismName>" + str(organism.name) + "</organismName>")
 
         if organism.is_host:
             # rest of data not needed in this case
@@ -146,7 +146,7 @@ class XMLOutput(object):
         print(tab + "<genes>")
         for gene in organism.genes:
             self._gene_output(level+1, gene)
-        print(tab + "<genes>")
+        print(tab + "</genes>")
 
         print(tab + "<variants>")
         for variant in organism.variants:

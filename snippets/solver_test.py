@@ -13,6 +13,8 @@ from solver.Solver import Solver
 
 from solver.determine_host import determine_host
 
+import statistics.statistics as stats
+
 if __name__ == '__main__':
 
 	if (len(sys.argv) < 2):
@@ -52,3 +54,25 @@ if __name__ == '__main__':
         print "Successfully initialized solver!"
         
 	# fill_containers (aln_file)
+
+        # -------------------- Test stats methods ----------------------- #
+
+        read_container = ReadContainer.Instance()
+	cds_aln_container = CdsAlnContainer.Instance()
+	
+        no_alns = stats.num_reads_with_no_alignments(read_container)
+        print "Reads with no alignments: %d" % no_alns
+
+	print "Number of reads: %d" % stats.num_reads(read_container)
+
+	print "Number of reads with no aligned cdss: %d" % \
+	      stats.num_reads_with_no_aligned_cdss(read_container, cds_aln_container)
+
+	print "Number of reads with multiple aligned cdss: %d" % \
+	      stats.num_reads_with_multiple_aligned_cdss(cds_aln_container)
+
+	average, deviation = stats.calc_average_cds_coverage(cds_aln_container)
+	print "Average and deviation of cds coverage: %f %f" % (average, deviation)
+	
+        more_sublocs = stats.num_reads_with_multiple_mapped_cds_sublocations(read_container)
+        print "Reads aligned to more sublocs of CDS: %d" % more_sublocs

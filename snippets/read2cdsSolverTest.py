@@ -26,11 +26,14 @@ print cds_aln_container
 r2c_solver = GreedySolver()
 r2c_solver.map_reads_2_cdss(cds_aln_container)
 
+print "Consistency test result: ", r2c_solver.test_cds_alignment_container_consistency()
+
 print "------------------------------------------------"
 print cds_aln_container
 
 
 r2c_solver.remove_cds_and_remap_reads(cds_aln_container.cds_repository.values()[0])
+print "Consistency test result: ", r2c_solver.test_cds_alignment_container_consistency()
 
 print "------------------------------------------------"
 print cds_aln_container

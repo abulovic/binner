@@ -1,5 +1,6 @@
 # @author: Martin Sosic, sosic.martin@gmail.com
 from Read2CDSSolver import Read2CDSSolver
+from utils.location import Location
 
 class GreedySolver (Read2CDSSolver):
     """ Implementation of Read2CDSSolver that uses greedy algorithm to decide to which CDS does read belong.
@@ -115,7 +116,7 @@ class GreedySolver (Read2CDSSolver):
 
     def _calc_coverage(self, cds_aln):
         """ Calculates coverage of given cds alignment.
-        Coverage is calculated as sum of lengths of aligned regions divided by number of aligned regions.
+        Coverage is calculated as sum of lengths of aligned regions divided by length of cds.
         @param (CdsAlignment) cds_aln
         @return (float) coverage
         """
@@ -124,7 +125,7 @@ class GreedySolver (Read2CDSSolver):
         for aln_reg in cds_aln.aligned_regions.values(): # aln_reg is of type CdsAlnSublocation
             location = aln_reg.location # location is of type Location
             coverage += location.length()
-        coverage = coverage / float(len(cds_aln.aligned_regions))
+        coverage = coverage / float(Location.from_location_str(cds_aln.cds.location).length())
         return coverage
             
             
