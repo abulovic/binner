@@ -8,7 +8,7 @@ def num_reads(read_container):
     """
     return len(read_container.read_repository)
 
-# Matija
+
 def num_reads_with_no_alignments(read_container):
     ''' Counts reads that have no alignment.
 
@@ -23,11 +23,12 @@ def num_reads_with_no_alignments(read_container):
 
     return no_align_num
 
+
 # Cekati da Ana napravi podrsku
 def num_reads_with_host_and_parasit_alignments():
     pass
 
-# Martin
+
 def num_reads_with_no_aligned_cdss(read_container, cds_aln_container):
     """
     @param (ReadContainer) read_container
@@ -37,7 +38,7 @@ def num_reads_with_no_aligned_cdss(read_container, cds_aln_container):
     num_reads_with_aligned_cdss = len([ls for ls in cds_aln_container.read2cds.values() if len(ls) > 0])
     return num_reads(read_container) - num_reads_with_aligned_cdss
 
-# Martin
+
 def num_reads_with_multiple_aligned_cdss(cds_aln_container):
     """
     @param (CdsAlnContainer) cds_aln_container
@@ -45,7 +46,8 @@ def num_reads_with_multiple_aligned_cdss(cds_aln_container):
     """
     return len([ls for ls in cds_aln_container.read2cds.values() if len(ls) > 1])
 
-# Matija
+
+
 def num_reads_with_multiple_mapped_cds_sublocations(read_container):
     ''' Counts reads that have alignment which intersects with multiple 
         sublocations of single CDS.
@@ -88,9 +90,6 @@ def num_reads_with_multiple_mapped_cds_sublocations(read_container):
             
 
 
-
-
-
 def calc_cds_coverage(cds_aln):
     """ Calculates coverage of cds.
     Coverage is average number of reads per base of cds.
@@ -104,7 +103,7 @@ def calc_cds_coverage(cds_aln):
     coverage = coverage / float(Location.from_location_str(cds_aln.cds.location).length())
     return coverage
 
-# Martin
+
 def calc_average_cds_coverage(cds_aln_container):
     """ Calculates average cds coverage and standard deviation (uncorrected sample standard deviation).
     Cds coverage is average number of reads per base of cds.
