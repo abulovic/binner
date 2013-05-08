@@ -10,6 +10,8 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
     Host reads are considered to be all the reads which
     have the best alignment mapped to potential host. 
     Potential host is any organism from animalia kingdom.
+    Annotes all the read alignments as potential host
+    alignments or not.
     @param read_container (ReadContainer)
     @param tax_tree (TaxTree)
     @param gi2taxid (dict) key: gi (int), value: taxid (int) 
@@ -37,6 +39,8 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
             taxid = gi2taxid [read_aln.genome_index]
             if tax_tree.is_child (taxid, tax_tree.animalia):
                 read_aln.set_active(False)
+                # mark read alignment as potential host
+                read_aln.set_potential_host_status(True)
 
         return (read_container, host_read_cnt)
 
