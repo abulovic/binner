@@ -54,6 +54,31 @@ def num_reads_with_multiple_mapped_cds_sublocations(read_container):
         @return Number of reads which satisfy the above written condiion
     '''
 
+    # -------------------------------------------------------------------- #
+
+    def tuple_intersects(t1, t2):
+        return not (t1[0] > t2[1] or t2[0] > t1[1])
+
+    def is_aln_mapped_to_multiple_cds_sublocs(aln, cds_location):
+        ''' Returns true if read alignment intersects with multiple sublocations
+            of given cds location
+
+            Note: Should be called for CDSs that are on the nucl. chain of aln
+
+            @param (ReadAln) aln            Read alignment
+            @param (Location) cds_location  Location of CDS
+            @return True if intersects with multiple sublocs of cds
+        '''
+        intersected_sublocs = 0
+        for subloc in cds_location.sublocations:
+
+            if tuple_intersects(aln.location_span, subloc):
+                intersected_sublocs += 1
+
+        return (intersected_sublocs > 1)
+
+    # -------------------------------------------------------------------- #
+
     ret = 0
     for read in read_container.read_repository.values():
         count_this_read = False
@@ -69,22 +94,6 @@ def num_reads_with_multiple_mapped_cds_sublocations(read_container):
     return ret
             
 
-    def is_aln_mapped_to_multiple_cds_sublocs(aln, cds_location):
-        ''' Returns true if read alignment intersects with multiple sublocations
-            of given cds location
-
-            Note: Should be called for CDSs that are on the nucl. chain of aln
-
-            @param (ReadAln) aln            Read alignment
-            @param (Location) cds_location  Location of CDS
-            @return True if intersects with multiple sublocs of cds
-        '''
-        intersected_sublocs = 0
-        for subloc in cds_location.sublocations:
-            if aln.location_span.intersects(subloc):
-                intersected_sublocs += 1
-
-        return (intersected_sublocs > 1)
             
 
 
