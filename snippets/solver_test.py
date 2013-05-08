@@ -13,6 +13,8 @@ from solver.Solver import Solver
 
 from solver.determine_host import determine_host
 
+import statistics.statistics as stats
+
 if __name__ == '__main__':
 
 	if (len(sys.argv) < 2):
@@ -55,7 +57,10 @@ if __name__ == '__main__':
 
         # -------------------- Test stats methods ----------------------- #
 
-        # read_container = ReadContainer.Instance()
+        read_container = ReadContainer.Instance()
 
-        # no_alns = num_reads_with_no_alignments(read_container)
-        # print "Reads with no alignments: %d" % no_alns
+        no_alns = stats.num_reads_with_no_alignments(read_container)
+        print "Reads with no alignments: %d" % no_alns
+
+        more_sublocs = stats.num_reads_with_multiple_mapped_cds_sublocations(read_container)
+        print "Reads aligned to more sublocs of CDS: %d" % more_sublocs
