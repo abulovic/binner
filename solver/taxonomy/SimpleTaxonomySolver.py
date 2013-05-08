@@ -31,10 +31,13 @@ class SimpleTaxonomySolver (TaxonomySolver):
                     print "Cannot find GI for {0}. (SimpleTaxonomySolver)".format(cds_aln)
                     continue
                 try:
-                    [taxid] = db_access.get_taxids ([int(gi)])
+                    [taxid] = db_access.get_taxids ([int(gi)], format=list)
                 except TypeError:
                     # could not find GI in the database:
                     print "Cannot find taxid for GI {0}. (SimpleTaxonomySolver)".format(gi)
+                    continue
+		except ValueError:
+		    print "Cannot find taxid for GI {0}. (SimpleTaxonomySolver)".format(gi)
                     continue
 
                 assigned_taxids[taxid].append(cds_aln)

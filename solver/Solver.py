@@ -78,7 +78,7 @@ class Solver (object):
         host_lineage = tax_tree.get_taxonomy_lineage(host_taxid, db_access)
         (genus, species) = host_name.split()
 
-        host = Organism (host_read_cnt, 0., str(host_taxid), host_lineage, host_name,
+        host = Organism (host_read_cnt, 0., str(host_taxid), ", ".join(host_lineage), host_name,
                  genus, species, [], [], [], is_host=True)
         all_organisms.append(host)
 
@@ -95,14 +95,14 @@ class Solver (object):
                 # Increment organism count
                 organism_count += cds_aln.get_active_alignment_cnt()
                 # Find all reads mapped to organism
-                for (read_id, cds_aln_subloc) in cds_aln.aligned_regions:
+                for (read_id, cds_aln_subloc) in cds_aln.aligned_regions.items():
                     if cds_aln_subloc.active:
                         organism_reads.append (Read(read_id))
                 # Append genes (protein_id, locus_tag, product, name)
                 cds = cds_aln.cds
                 organism_genes.append (Gene(cds.protein_id, cds.locus_tag, cds.product, cds.gene))
 
-            organism = Organism (organism_count, 0., taxid, organism_lineage, organism_name,
+            organism = Organism (organism_count, 0., taxid, ", ".join(organism_lineage), organism_name,
                  org_name_details[0], org_name_details[1], organism_genes, [], organism_reads, is_host=False)
             all_organisms.append(organism)
 
