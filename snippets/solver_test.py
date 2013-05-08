@@ -74,5 +74,5 @@ if __name__ == '__main__':
 	average, deviation = stats.calc_average_cds_coverage(cds_aln_container)
 	print "Average and deviation of cds coverage: %f %f" % (average, deviation)
 	
-#        more_sublocs = stats.num_reads_with_multiple_mapped_cds_sublocations(read_container)
-#        print "Reads aligned to more sublocs of CDS: %d" % more_sublocs
+        more_sublocs = stats.num_reads_with_multiple_mapped_cds_sublocations(read_container)
+        print "Reads aligned to more sublocs of CDS: %d" % more_sublocs
