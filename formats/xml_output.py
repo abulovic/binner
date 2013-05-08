@@ -146,7 +146,7 @@ class XMLOutput(object):
         print(tab + "<genes>")
         for gene in organism.genes:
             self._gene_output(level+1, gene)
-        print(tab + "<genes>")
+        print(tab + "</genes>")
 
         print(tab + "<variants>")
         for variant in organism.variants:
