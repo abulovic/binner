@@ -1,5 +1,5 @@
 # @author Martin Sosic (sosic.martin@gmail.com) & Matija Sosic (matija.sosic@gmail.com)
-from utils.Location import Location
+from utils.location import Location
 
 def num_reads(read_container):
     """
@@ -16,7 +16,7 @@ def num_reads_with_no_alignments(read_container):
         @return Number of reads with 0 alignments
     '''
     no_align_num = 0
-    for read in read_container.values():
+    for read in read_container.read_repository.values():
         if not read.has_alignments():
             no_align_num += 1
 
@@ -57,7 +57,7 @@ def num_reads_with_multiple_mapped_cds_sublocations(read_container):
     '''
 
     ret = 0
-    for read in read_container.values():
+    for read in read_container.read_repository.values():
         count_this_read = False
 
         for aln in read.alignment_locations:
