@@ -95,7 +95,7 @@ class Solver (object):
                 # Increment organism count
                 organism_count += cds_aln.get_active_alignment_cnt()
                 # Find all reads mapped to organism
-                for (read_id, cds_aln_subloc) in cds_aln.aligned_regions:
+                for (read_id, cds_aln_subloc) in cds_aln.aligned_regions.items():
                     if cds_aln_subloc.active:
                         organism_reads.append (Read(read_id))
                 # Append genes (protein_id, locus_tag, product, name)
