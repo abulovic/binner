@@ -52,3 +52,10 @@ if __name__ == '__main__':
         print "Successfully initialized solver!"
         
 	# fill_containers (aln_file)
+
+        # -------------------- Test stats methods ----------------------- #
+
+        # read_container = ReadContainer.Instance()
+
+        # no_alns = num_reads_with_no_alignments(read_container)
+        # print "Reads with no alignments: %d" % no_alns
