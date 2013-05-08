@@ -1,4 +1,5 @@
 # @author Martin Sosic (sosic.martin@gmail.com) & Matija Sosic (matija.sosic@gmail.com)
+import math
 from utils.location import Location
 
 def num_reads(read_container):
@@ -105,7 +106,7 @@ def calc_cds_coverage(cds_aln):
 
 
 def calc_average_cds_coverage(cds_aln_container):
-    """ Calculates average cds coverage and standard deviation (uncorrected sample standard deviation).
+    """ Calculates average and standard deviation (uncorrected sample standard deviation) of cds coverage.
     Cds coverage is average number of reads per base of cds.
     @param (CdsAlnContainer) cds_aln_container
     @return (float, float) (average, standard deviation)
@@ -113,7 +114,7 @@ def calc_average_cds_coverage(cds_aln_container):
     # List of floats
     coverages = map(calc_cds_coverage, cds_aln_container.cds_repository.values())
     average = sum(coverages) / float(len(coverages))
-    deviation = sqrt(sum([(c-average)**2 for c in coverages]) / float(len(coverages)))
+    deviation = math.sqrt(sum([(c-average)**2 for c in coverages]) / float(len(coverages)))
     return (average, deviation)
     
 
