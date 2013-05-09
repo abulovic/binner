@@ -25,10 +25,15 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
         sorted_alignments = sorted (read.alignment_locations, key=lambda location: location.score)
         # if best alignment is host alignment, remove it
         best_aln = sorted_alignments[0]
-        best_aln_taxid = gi2taxid [best_aln.genome_index]
-        if (tax_tree.is_child (best_aln_taxid, tax_tree.animalia)):
+        try:
+            best_aln_taxid = gi2taxid [best_aln.genome_index]
+            if (tax_tree.is_child (best_aln_taxid, tax_tree.animalia)):
             del read_container.read_repository[read_id]
             host_read_cnt += 1
+        except KeyError:
+            pass
+
+        
         # set all host alignments inactive
         for read_aln in read.alignment_locations:
      	    if not gi2taxid.has_key(read_aln.genome_index):
