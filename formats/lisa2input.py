@@ -28,7 +28,7 @@ def convertLisaToInput (lisa_alignment_fname, output_fname):
             nucl_acc    = nucl_data_list[3]
 
             output_strand = '+' if strand == '0' else '-'
-            output_aln_str = "{0},{1},{2},{3},{4},{5}".format(gi, db_source, nucl_acc, start, stop, output_strand)
+            output_aln_str = "{0},{1},{2},{3},{4},{5}".format(nucl_acc, db_source, gi, start, stop, output_strand)
 
             output_fhandle.write(";%s" % output_aln_str)
         output_fhandle.write('\n')
