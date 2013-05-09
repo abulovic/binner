@@ -36,6 +36,9 @@ class SimpleTaxonomySolver (TaxonomySolver):
                     # could not find GI in the database:
                     print "Cannot find taxid for GI {0}. (SimpleTaxonomySolver)".format(gi)
                     continue
+		except ValueError:
+		    print "Cannot find taxid for GI {0}. (SimpleTaxonomySolver)".format(gi)
+                    continue
 
                 assigned_taxids[taxid].append(cds_aln)
                 
