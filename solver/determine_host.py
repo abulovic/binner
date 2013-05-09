@@ -42,7 +42,7 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
                 # mark read alignment as potential host
                 read_aln.set_potential_host_status(True)
 
-        return (read_container, host_read_cnt)
+    return (read_container, host_read_cnt)
 
 
 def determine_host(read_container):
