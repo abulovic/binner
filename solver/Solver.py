@@ -90,7 +90,6 @@ class Solver (object):
         all_organisms.append(host)
 
         #--------------------------- ORGANISMS ------------------------------#
-	print taxid2cdss.items()
         for (taxid, cdss) in taxid2cdss.items():
             organism_name    = db_access.get_organism_name (taxid)
             organism_lineage = tax_tree.get_taxonomy_lineage (taxid, db_access)
