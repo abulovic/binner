@@ -28,8 +28,8 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
         try:
             best_aln_taxid = gi2taxid [best_aln.genome_index]
             if (tax_tree.is_child (best_aln_taxid, tax_tree.animalia)):
-            del read_container.read_repository[read_id]
-            host_read_cnt += 1
+                del read_container.read_repository[read_id]
+                host_read_cnt += 1
         except KeyError:
             pass
 
