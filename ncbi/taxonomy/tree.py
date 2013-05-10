@@ -101,7 +101,8 @@ class TaxTree ():
         current_node = self.parent_nodes[taxid]
         while current_node != self.root:
             organism_name = db_access.get_organism_name(current_node)
-            taxonomy_lineage.append (organism_name)
+            if organism_name:
+                taxonomy_lineage.append (organism_name)
             current_node = self.parent_nodes[current_node]
         taxonomy_lineage.reverse()
 

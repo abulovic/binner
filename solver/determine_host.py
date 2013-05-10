@@ -28,7 +28,7 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
         try:
             best_aln_taxid = gi2taxid [best_aln.genome_index]
             if (tax_tree.is_child (best_aln_taxid, tax_tree.animalia)):
-                del read_container.read_repository[read_id]
+                del read_container.read_repository[read.id]
                 host_read_cnt += 1
         except KeyError:
             pass
@@ -88,8 +88,10 @@ def determine_host(read_container):
     # find the most frequent taxid from animalia kingdom
     host_taxid = None
     # sort taxids by occurence 
-    sorted_taxid_cnt = sorted (taxids_cnt.items(), key= lambda x: x[1])
-    for taxid in sorted_taxid_cnt:
+    sorted_taxid_cnt = sorted (taxids_cnt.items(), key= lambda x: x[1], reverse=True)
+    print sorted_taxid_cnt
+    for (taxid, cnt)  in sorted_taxid_cnt:
+	print taxid
     	if tax_tree.is_child(taxid, tax_tree.animalia):
             host_taxid = taxid
             break

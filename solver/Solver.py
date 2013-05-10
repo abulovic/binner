@@ -41,19 +41,26 @@ class Solver (object):
 
         # Populate read container - NOT NOW NEEDED
         read_container.populate_from_aln_file (alignment_file)
+	print "Read container populated!"
 
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
         (host_taxid, host_read_cnt) = self.determine_host(read_container)
+        print host_taxid, host_read_cnt
+	if host_taxid:
+  	    print "Host identified: %d!" % (int(host_taxid))
 
         # Populate CDS container 
         cds_aln_container.populate(read_container)
+	print "Cds Aln Container populated!"
 
         # Map each read to one CDS (greedy)
         self.read2cds_solver.map_reads_2_cdss(cds_aln_container)
+	print "Reads mapped to CDSS."
 
         # Determine species
         taxid2cdss = self.taxonomy_solver.map_cdss_2_species (db_access, read_container, cds_aln_container)
+	print "Taxonomy determined."
 
         # Generate XML file
         self.generateXML (host_taxid, host_read_cnt, taxid2cdss, cds_aln_container, db_access)
@@ -83,10 +90,21 @@ class Solver (object):
         all_organisms.append(host)
 
         #--------------------------- ORGANISMS ------------------------------#
+	print taxid2cdss.items()
         for (taxid, cdss) in taxid2cdss.items():
             organism_name    = db_access.get_organism_name (taxid)
             organism_lineage = tax_tree.get_taxonomy_lineage (taxid, db_access)
             org_name_details = organism_name.split()
+            org_species = org_name_details[0]
+            if (len(org_name_details) > 1):
+                org_genus = org_name_details[1]
+            else: 
+                org_genus = ""
+            if (len(org_name_details) > 2):
+                org_strain = org_name_details[2:]
+            else:
+                org_strain = ""
+
             organism_count   = 0
             organism_reads   = []
             organism_genes   = []
@@ -101,9 +119,9 @@ class Solver (object):
                 # Append genes (protein_id, locus_tag, product, name)
                 cds = cds_aln.cds
                 organism_genes.append (Gene(cds.protein_id, cds.locus_tag, cds.product, cds.gene))
-
+	
             organism = Organism (organism_count, 0., taxid, ", ".join(organism_lineage), organism_name,
-                 org_name_details[0], org_name_details[1], organism_genes, [], organism_reads, is_host=False)
+                 org_species, org_genus, organism_genes, [], organism_reads, is_host=False)
             all_organisms.append(organism)
 
 
