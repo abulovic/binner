@@ -25,9 +25,17 @@ def num_reads_with_no_alignments(read_container):
     return no_align_num
 
 
-# Cekati da Ana napravi podrsku
-def num_reads_with_host_and_parasit_alignments():
-    pass
+def num_reads_with_host_and_parasit_alignments(cds_aln_container):
+    num_reads = 0
+    for (read_id, cds_alns) in cds_aln_container.read2cds.items(): # for each read get cds_alns
+        has_host_aln = False
+        has_nonhost_aln = False # nonhost == parasit alignment
+        for cds_aln in cds_alns:
+            if cds_aln.aligned_regions[read_id].is_potential_host(): has_host_aln = True
+            else: has_nonhost_aln = True
+        if (has_host_aln and has_nonhost_aln):
+            num_reads += 1
+    return num_reads
 
 
 def num_reads_with_no_aligned_cdss(read_container, cds_aln_container):
@@ -57,7 +65,7 @@ def num_reads_with_multiple_mapped_cds_sublocations(read_container):
         @return Number of reads which satisfy the above written condiion
     '''
 
-    # -------------------------------------------------------------------- #
+    # Function definitions ----------------------------------------------- #
 
     def tuple_intersects(t1, t2):
         return not (t1[0] > t2[1] or t2[0] > t1[1])
@@ -116,12 +124,15 @@ def calc_cds_coverage(cds_aln):
 
 def calc_average_cds_coverage(cds_aln_container):
     """ Calculates average and standard deviation (uncorrected sample standard deviation) of cds coverage.
+    Average is calculated for cdss that have at least one read aligned onto them.
     Cds coverage is average number of reads per base of cds.
     @param (CdsAlnContainer) cds_aln_container
     @return (float, float) (average, standard deviation)
     """
     # List of floats
     coverages = map(calc_cds_coverage, cds_aln_container.cds_repository.values())
+    if (len(coverages) == 0): # this should never happen in real example
+        return (float('NaN'), float('NaN'))
     average = sum(coverages) / float(len(coverages))
     deviation = math.sqrt(sum([(c-average)**2 for c in coverages]) / float(len(coverages)))
     return (average, deviation)

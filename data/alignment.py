@@ -34,6 +34,13 @@ class ReadAlnLocation (object):
         '''
         self.potential_host = potential_host
 
+    def is_potential_host (self):
+        """ Returns true if organism is potential host 
+        (child of animalia kingdom), false otherwise.
+        @return (boolean)
+        """
+        return self.potential_host
+
     def determine_coding_seqs (self):
         ''' Determines which of the CDSs in the record aligned_regions
             aligned to the read.

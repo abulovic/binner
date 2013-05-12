@@ -68,6 +68,9 @@ if __name__ == '__main__':
 	print "Number of reads with no aligned cdss: %d" % \
 	      stats.num_reads_with_no_aligned_cdss(read_container, cds_aln_container)
 
+	print "Number of reads with host and parasit alignments: %d" % \
+	      stats.num_reads_with_host_and_parasit_alignments(cds_aln_container)
+
 	print "Number of reads with multiple aligned cdss: %d" % \
 	      stats.num_reads_with_multiple_aligned_cdss(cds_aln_container)
 
