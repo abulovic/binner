@@ -54,12 +54,11 @@ class ReadAlnLocation (object):
         if not record:
             return None
 
+        (start,stop) = self.location_span
+        location = Location.from_location_str("%d..%d" % (start, stop))
         for cds in record.cdss:
             cds_location = Location.from_location_str(cds.location)
-            location_intersection = cds_location.find_intersection (
-                                                                    self.location_span, 
-                                                                    self.complement
-                                                                    )
+            location_intersection = cds_location.find_intersection (location)
             if location_intersection is not None:
                 self.aligned_cdss.append ((cds, location_intersection))
         
