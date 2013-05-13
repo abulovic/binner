@@ -1,3 +1,4 @@
+import sys
 from utils.autoassign import autoassign
 
 class Dataset(object):
@@ -72,13 +73,15 @@ class Read(object):
 
 class XMLOutput(object):
 
-    def __init__(self, dataset, organisms):
+    def __init__(self, dataset, organisms, output_file_name=None):
         ''' XMLOutpu init
             @param (Dataset) dataset structure with info about the dataset
             @param ([Organism]) organisms a list of all organims and coresponding data
+            @param output_file_name path to xml output relative to binner/ e.g. 'formats/myout.xml'
         '''
         self.dataset = dataset
         self.organisms = organisms
+        self.output_file_name = output_file_name
 
     def _dataset_details_output(self, level):
 
@@ -193,8 +196,15 @@ class XMLOutput(object):
             @param level default 0, start offset for level zero xml tags
         '''
 
+        if (self.output_file_name):
+            orig_stdout = sys.stdout
+            out_file = file(self.output_file_name, 'w')
+            sys.stdout = out_file
         print("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>")
         print("<organismsReport>")
         self._dataset_output(level+1);
         self._organisms_output(level+1);
         print("</organismsReport>")
+        if (self.output_file_name):
+            sys.stdout = orig_stdout
+            out_file.close()
