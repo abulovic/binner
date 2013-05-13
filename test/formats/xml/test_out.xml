@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<organismsReport>
+  <dataset>
+    <datasetName>Example2.fq</datasetName>
+    <hostGenus>Homo2</hostGenus>
+    <hostSpecies>sapiens</hostSpecies>
+    <commonName>human2</commonName>
+    <taxonomy taxon_id="9696">eukaryota, ...; Homo</taxonomy>
+    <sampleSource>Whole Blood2</sampleSource>
+    <sampleType>DNA</sampleType>
+    <sequencer method="single-end">Roche 454</sequencer>
+  </dataset>
+  <organisms>
+    <organism>
+      <relativeAmount count=">8888888">95.7878</relativeAmount>
+      <taxonomy taxon_id="9606">eukaritoi ... tralala</taxonomy>
+      <organismName>host</organismName>
+    </organism>
+    <organism>
+      <relativeAmount count=">1336767">0.3234</relativeAmount>
+      <taxonomy taxon_id="9606">eukarioti .... homo2</taxonomy>
+      <organismName>Host2</organismName>
+      <genus>Kuga</genus>
+      <species>tuberkuloza</species>
+      <genes>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+      </genes>
+      <variants>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+      </variants>
+      <reads>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count=">1336767">0.3234</relativeAmount>
+      <taxonomy taxon_id="9606">eukarioti .... homo2</taxonomy>
+      <organismName>Host2</organismName>
+      <genus>Kuga</genus>
+      <species>tuberkuloza</species>
+      <genes>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+      </genes>
+      <variants>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+      </variants>
+      <reads>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count=">1336767">0.3234</relativeAmount>
+      <taxonomy taxon_id="9606">eukarioti .... homo2</taxonomy>
+      <organismName>Host2</organismName>
+      <genus>Kuga</genus>
+      <species>tuberkuloza</species>
+      <genes>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+      </genes>
+      <variants>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+      </variants>
+      <reads>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count=">1336767">0.3234</relativeAmount>
+      <taxonomy taxon_id="9606">eukarioti .... homo2</taxonomy>
+      <organismName>Host2</organismName>
+      <genus>Kuga</genus>
+      <species>tuberkuloza</species>
+      <genes>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+      </genes>
+      <variants>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+      </variants>
+      <reads>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count=">1336767">0.3234</relativeAmount>
+      <taxonomy taxon_id="9606">eukarioti .... homo2</taxonomy>
+      <organismName>Host2</organismName>
+      <genus>Kuga</genus>
+      <species>tuberkuloza</species>
+      <genes>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+      </genes>
+      <variants>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+      </variants>
+      <reads>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count=">1336767">0.3234</relativeAmount>
+      <taxonomy taxon_id="9606">eukarioti .... homo2</taxonomy>
+      <organismName>Host2</organismName>
+      <genus>Kuga</genus>
+      <species>tuberkuloza</species>
+      <genes>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+      </genes>
+      <variants>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+      </variants>
+      <reads>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count=">1336767">0.3234</relativeAmount>
+      <taxonomy taxon_id="9606">eukarioti .... homo2</taxonomy>
+      <organismName>Host2</organismName>
+      <genus>Kuga</genus>
+      <species>tuberkuloza</species>
+      <genes>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+        <gene protein_id="AA898989.1" locus_tag="YP_67676" product="neki karbohidrati i to">naziv gena</gene>
+      </genes>
+      <variants>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+        <sequenceDifference>
+          <variant ref_name="CAB789879" ref_start="31" ref_seq="-">A</variant>
+          <context offset="28">GGGGGGGGGGGGGGG</context>
+        </sequenceDifference>
+      </variants>
+      <reads>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+        <sequence>HT89898989</sequence>
+      </reads>
+    </organism>
+  </organisms>
+</organismsReport>
