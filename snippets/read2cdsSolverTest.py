@@ -4,6 +4,7 @@ sys.path.append(os.getcwd())
 
 from ncbi.db.access import DbQuery
 from solver.read2cds.GreedySolver import GreedySolver
+from solver.read2cds.Read2CDSSolver import Read2CDSSolver
 from data.containers.record import RecordContainer
 from data.containers.read import ReadContainer
 from data.containers.cdsaln import CdsAlnContainer
@@ -26,14 +27,14 @@ print cds_aln_container
 r2c_solver = GreedySolver()
 r2c_solver.map_reads_2_cdss(cds_aln_container)
 
-print "Consistency test result: ", r2c_solver.test_cds_alignment_container_consistency()
+print "Consistency test result: ", Read2CDSSolver.test_cds_alignment_container_consistency(cds_aln_container)
 
 print "------------------------------------------------"
 print cds_aln_container
 
 
 r2c_solver.remove_cds_and_remap_reads(cds_aln_container.cds_repository.values()[0])
-print "Consistency test result: ", r2c_solver.test_cds_alignment_container_consistency()
+print "Consistency test result: ", Read2CDSSolver.test_cds_alignment_container_consistency(cds_aln_container)
 
 print "------------------------------------------------"
 print cds_aln_container

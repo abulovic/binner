@@ -40,26 +40,8 @@ class Read2CDSSolver (object):
         if (self._cds_aln_container == None):
             raise Exception ("Cds alignment container was not specified! Have you executed map_reads_2_cdss?")
 
-
-    def _activate_read(self, aln_reg):
-        """ Activates read.
-        @param (CdsAlnSublocation) aln_reg Representation of read with accordance to specific cds.
-        """
-        aln_reg.active = True
-
-    def _deactivate_read(self, aln_reg):
-        """ Deactivates read.
-        @param (CdsAlnSublocation) aln_reg Representation of read with accordance to specific cds.
-        """
-        aln_reg.active = False
-
-    def _is_read_active(self, aln_reg):
-        """ Returns true if read is active, otherwise false.
-        @param (CdsAlnSublocation) aln_reg Representation of read with accordance to specific cds.
-        """
-        return aln_reg.active
-
-    def test_cds_alignment_container_consistency(self):
+    @staticmethod
+    def test_cds_alignment_container_consistency(cds_aln_container):
         """ This function is intended to be used for testing purposes. 
         It should be run after execution of map_reads_2_cdss() or
         after execution of remove_cds_and_remap_reads in order to test
@@ -68,23 +50,24 @@ class Read2CDSSolver (object):
         of map_reads_2_cdss()) if each read is active in (mapped to) at most
         one cds alignment. Also, if cds alignment contains read (active or not),
         that cds must be element of read2cds for that read and vice versa.
+        @param (CdsAlnContainer) cds_aln_container Container produced using map_reads_2_cdss().
         @return (boolean) True if test passed, False otherwise.
         """
         active_read_ids = set()
-        for cds_aln in self._cds_aln_container.cds_repository.values():
+        for cds_aln in cds_aln_container.cds_repository.values():
             for aln_reg in cds_aln.aligned_regions.values():
-                if self._is_read_active(aln_reg):
+                if aln_reg.active:
                     # Check if it is active in some other cds.
                     if aln_reg.read_id in active_read_ids: return False
                     else: active_read_ids.add(aln_reg.read_id)
                 # Check if there is mapping in read2cds.
-                if not(cds_aln in self._cds_aln_container.read2cds[aln_reg.read_id]):
+                if not(cds_aln in cds_aln_container.read2cds[aln_reg.read_id]):
                     return False
         # For each mapping in read2cds check if there is mapping in cds_repository.
-        for (read_id, cds_alns) in self._cds_aln_container.read2cds.items():
+        for (read_id, cds_alns) in cds_aln_container.read2cds.items():
             for cds_aln in cds_alns:
                 try:
-                    if not(read_id in self._cds_aln_container.cds_repository[cds_aln.cds].aligned_regions.keys()):
+                    if not(read_id in cds_aln_container.cds_repository[cds_aln.cds].aligned_regions.keys()):
                         return False
                 except KeyError:
                     return False

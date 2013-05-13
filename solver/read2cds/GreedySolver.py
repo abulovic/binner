@@ -27,7 +27,7 @@ class GreedySolver (Read2CDSSolver):
         active_reads = set()
         for cds_aln in cds_alns.values():
             for aln_reg in cds_aln.aligned_regions.values():
-                if self._is_read_active(aln_reg):
+                if aln_reg.active:
                     active_reads.add(aln_reg.read_id)
         # Number of unprocessed active reads.                    
         num_unproc_active_reads = len(active_reads)
@@ -56,11 +56,11 @@ class GreedySolver (Read2CDSSolver):
             # For all reads in best cds alignment that are active:
             #    Deactivate them in all other cdss (and update/recalculate coverage for those cdss)
             for aln_reg in best_cds_aln.aligned_regions.values():
-                if self._is_read_active(aln_reg):
+                if aln_reg.active:
                     num_unproc_active_reads -= 1
                     for cds_aln in self._cds_aln_container.read2cds[aln_reg.read_id]:
                         if not(cds_aln is best_cds_aln):
-                            self._deactivate_read(cds_aln.aligned_regions[aln_reg.read_id])
+                            cds_aln.aligned_regions[aln_reg.read_id].active = False
                             self._coverages.pop(cds_aln, None) # removes coverage which forces recalculation
                             
         # Move proccesed cds alignments back to cds alignment container
@@ -79,7 +79,7 @@ class GreedySolver (Read2CDSSolver):
         new_read_mappings = {}
 
         for aln_reg in cds_aln.aligned_regions.values():
-            if self._is_read_active(aln_reg):
+            if aln_reg.active:
                 # Find alternative cds alignment with highest coverage
                 best_alt_cds_aln = None
                 for alt_cds_aln in self._cds_aln_container.read2cds[aln_reg.read_id]:
@@ -87,7 +87,7 @@ class GreedySolver (Read2CDSSolver):
                         best_alt_cds_aln = alt_cds_aln
                 # Activate it in best alternative cds alignment (if there is one)
                 if (best_alt_cds_aln != None):
-                    self._activate_read(best_alt_cds_aln.aligned_regions[aln_reg.read_id])
+                    best_alt_cds_aln.aligned_regions[aln_reg.read_id].active = True
                 # Add mapping to output dictionary
                 new_read_mappings[aln_reg.read_id] = best_alt_cds_aln
 
