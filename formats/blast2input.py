@@ -38,18 +38,21 @@ class BLASTParser (object):
         alignment_list = []
 
         while (True):
-            line = next(lines, None)
+            line = next(lines, "")
+            line = line.strip()
             if not line:    break
             
             (new_read_id, aln_data) = self.parse_line(line)
             if not read_id:
                 read_id = new_read_id
+
             if new_read_id != read_id:
                 print >> output_file, self.get_input_line(read_id, alignment_list)
                 read_id = new_read_id
-                alignment_list = []
+                alignment_list = [aln_data]
             else:
                 alignment_list.append(aln_data)
+
         print >> output_file, self.get_input_line(read_id, alignment_list)            
         blast_output_file.close()
     
