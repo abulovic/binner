@@ -83,15 +83,23 @@ class XMLOutput(object):
     def _dataset_details_output(self, level):
 
         tab = " " * level * 2
-
-        print(tab + "<datasetName>" + str(self.dataset.name) + "</datasetName>")
-        print(tab + "<hostGenus>" + str(self.dataset.host_genus) + "</hostGenus>")
-        print(tab + "<hostSpecies>" + str(self.dataset.host_species) + "</hostSpecies>")
-        print(tab + "<commonName>" + str(self.dataset.common_name) + "</commonName>")
-        print(tab + "<taxonomy taxon_id=\"" + str(self.dataset.taxon_id)  + "\">" + str(self.dataset.taxonomy) + "</taxonomy>")
-        print(tab + "<sampleSource>" + str(self.dataset.sample_source) + "</sampleSource>")
-        print(tab + "<sampleType>" + str(self.dataset.sample_type) + "</sampleType>")
-        print(tab + "<sequencer method=\"" + str(self.dataset.seq_method) + "\">" + str(self.dataset.sequencer) + "</sequencer>")
+   
+        if (self.dataset.name): 
+            print(tab + "<datasetName>" + str(self.dataset.name) + "</datasetName>")
+        if (self.dataset.host_genus):
+            print(tab + "<hostGenus>" + str(self.dataset.host_genus) + "</hostGenus>")
+        if (self.dataset.host_species):
+            print(tab + "<hostSpecies>" + str(self.dataset.host_species) + "</hostSpecies>")
+        if (self.dataset.common_name):
+            print(tab + "<commonName>" + str(self.dataset.common_name) + "</commonName>")
+        if (self.dataset.taxon_id):
+            print(tab + "<taxonomy taxon_id=\"" + str(self.dataset.taxon_id)  + "\">" + str(self.dataset.taxonomy) + "</taxonomy>")
+        if (self.dataset.sample_source):
+            print(tab + "<sampleSource>" + str(self.dataset.sample_source) + "</sampleSource>")
+        if (self.dataset.sample_type):
+            print(tab + "<sampleType>" + str(self.dataset.sample_type) + "</sampleType>")
+        if (self.dataset.seq_method and self.dataset.sequencer):
+            print(tab + "<sequencer method=\"" + str(self.dataset.seq_method) + "\">" + str(self.dataset.sequencer) + "</sequencer>")
 
     def _dataset_output(self, level):
         
@@ -133,15 +141,19 @@ class XMLOutput(object):
         tab = " " * level * 2
 
         print(tab + "<relativeAmount count=\">" + str(organism.amount_count) + "\">" + str(organism.amount_relative) + "</relativeAmount>")
-        print(tab + "<taxonomy taxon_id=\"" + str(organism.taxon_id) + "\">" + str(organism.taxonomy) + "</taxonomy>")
-        print(tab + "<organismName>" + str(organism.name) + "</organismName>")
+        if (organism.taxon_id):
+            print(tab + "<taxonomy taxon_id=\"" + str(organism.taxon_id) + "\">" + str(organism.taxonomy) + "</taxonomy>")
+        if (organism.name):
+            print(tab + "<organismName>" + str(organism.name) + "</organismName>")
 
         if organism.is_host:
             # rest of data not needed in this case
             return
 
-        print(tab + "<genus>" + str(organism.genus) + "</genus>")
-        print(tab + "<species>" + str(organism.species) + "</species>")
+        if (organism.genus):
+            print(tab + "<genus>" + str(organism.genus) + "</genus>")
+        if (organism.species):
+            print(tab + "<species>" + str(organism.species) + "</species>")
 
         print(tab + "<genes>")
         for gene in organism.genes:
