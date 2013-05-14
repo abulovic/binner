@@ -39,12 +39,7 @@ class ReadContainer (object):
         return format(self.read_repository.values())
     
     def _add_read_from_str (self, read_str):
-        try:
-            read = Read.from_read_str(read_str)
-        except IndexError, e:
-            print e
-            return
-        # read identifier must be unique
+        read = Read.from_read_str(read_str)
         assert (not self.read_repository.has_key(read.id))
         self.read_repository[read.id] = read
         
