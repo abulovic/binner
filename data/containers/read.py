@@ -21,7 +21,9 @@ class ReadContainer (object):
 
     def populate_cdss (self, record_container):
         '''
-        Coding sequences are determined for every read alignment.
+        Coding sequences are determined and stored for every read alignment.
+        Prerequisite: record container has been populated with all records
+        mentioned in the alignment file
         @param record_container (RecordContainer)
         '''
         for read in self.fetch_all_reads(format=iter):
