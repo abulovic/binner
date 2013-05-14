@@ -169,6 +169,8 @@ class TaxTree ():
         self.viroids       = 12884
         self.viruses       = 10239
         self.animalia      = 33208 
+        self.other         = 28384
+        self.unclassified  = 12908
 
 
 class TaxNode (object):
