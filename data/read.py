@@ -48,15 +48,14 @@ class Read (object):
             # Create and store new ReadAlnLocation object
             try:
                 newAlignInfo = ReadAlnLocation(newRead_id, nucl_acc, db_source, GI, score,
-                                           (start, stop), complement);
+                                           (start, stop),   complement);
                 newRead_aln_locs.append(newAlignInfo)
             except Exception, e:
                 print e
                 print "Location parsing error."
-                # temporary fix
-                # newRead_aln_locs.append(newAlignInfo);
 
         return Read(newRead_id, newRead_length, newRead_aln_locs)
+
 
     def get_alignments (self, format=list):
         '''

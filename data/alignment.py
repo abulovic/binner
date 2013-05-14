@@ -6,7 +6,6 @@ class ReadAlnLocation (object):
         an NT nucleotide string
     """
     
-    record_container                = RecordContainer.Instance()
     def __init__ (self, read_id, nucleotide_accession, db_source, genome_index, score, 
                   location_span, complement, active=True):
         self.read_id                = read_id
@@ -41,14 +40,14 @@ class ReadAlnLocation (object):
         """
         return self.potential_host
 
-    def determine_coding_seqs (self):
+    def determine_coding_seqs (self, record_container):
         ''' Determines which of the CDSs in the record aligned_regions
             aligned to the read.
             @return list of tuples (cds, intersecting_location) if such exist, 
             None if record is not available from the database
         '''
         self.aligned_cdss = []
-        record = ReadAlnLocation.record_container.fetch_record (self.nucleotide_accession)
+        record = record_container.fetch_record (self.nucleotide_accession)
 
         # if not possible to fetch a record from the db, return None
         if not record:
