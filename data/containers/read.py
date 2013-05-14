@@ -1,16 +1,12 @@
-from data.read		    import Read
-from utils.singleton    import Singleton
+from data.read import Read
 
-# TIP: Implement all containers as singletons
-
-@Singleton
 class ReadContainer (object):
     ''' Contains all the reads loaded from an 
         alignment file. Can be queried by read id.
     '''
     def __init__(self):
         """
-        (dict) read_repository Dictionary where value is (Read)read and key is (int)read id.
+        (dict) read_repository Dictionary where value is (Read)read and key is (str)read id.
         """
         self.read_repository = {}
         
@@ -21,9 +17,6 @@ class ReadContainer (object):
         aln_file = open(read_alignment_file, 'r')
         for line in aln_file.readlines():
             self._add_read_from_str(line)
-        
-        for read in self.read_repository.values():
-            assert (read.has_alignments())
     
     def fetch_read (self, read_id):
         if self.read_repository.has_key(read_id):
@@ -31,19 +24,17 @@ class ReadContainer (object):
         else:
             raise KeyError("Read repository doesn't contain read associated with read ID: {0}".format(read_id))
 
-    def fetch_all_reads (self):
-        return iter(self.read_repository.values())
+
+    def fetch_all_reads (self, format=iter):
+        return format(self.read_repository.values())
     
     def _add_read_from_str (self, read_str):
         try:
             read = Read.from_read_str(read_str)
-	    if not read.has_alignments():
-		return
-        except IndexError:
+        except IndexError, e:
+            print e
             return
         # read identifier must be unique
         assert (not self.read_repository.has_key(read.id))
         self.read_repository[read.id] = read
         
-    def add_read (self, read):
-        pass

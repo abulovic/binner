@@ -23,7 +23,7 @@ class Read (object):
 
         # valList: ["read_id, num_align", "alignInfo1", "alignInfo2", ... "alignInfoN"]
         valList = read_str.split(';');
-        valList.pop(); # Pop the last element, '\n'
+        #valList.pop(); # Pop the last element, '\n'
 
         # Get header info
         # headerList: [read_id, num_align]
@@ -46,17 +46,26 @@ class Read (object):
             complement  = False if strand=='+' else True
 
             # Create and store new ReadAlnLocation object
-	    try:
+            try:
                 newAlignInfo = ReadAlnLocation(newRead_id, nucl_acc, db_source, GI, score,
                                            (start, stop), complement);
                 newRead_aln_locs.append(newAlignInfo)
-	    except Exception, e:
-		print e
-		print "Location parsing error."
-            # temporary fix
-            # newRead_aln_locs.append(newAlignInfo);
+            except Exception, e:
+                print e
+                print "Location parsing error."
+                # temporary fix
+                # newRead_aln_locs.append(newAlignInfo);
 
         return Read(newRead_id, newRead_length, newRead_aln_locs)
-    
+
+    def get_alignments (self, format=list):
+        '''
+        Get read alignments for the read.
+        @param: format (collection or iterator) format in which to 
+        acquire the alignments
+        '''
+        assert (format in [iter, list, set])
+        return format(self.alignment_locations)
+
     def has_alignments (self):
         return len(self.alignment_locations) > 0

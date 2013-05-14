@@ -17,7 +17,7 @@ class ReadAlnLocation (object):
         self.location_span          = location_span
         self.complement             = complement
         self.active                 = active
-        self.determine_coding_seqs()
+        # self.determine_coding_seqs()
     
     def set_active (self, active):
         '''
