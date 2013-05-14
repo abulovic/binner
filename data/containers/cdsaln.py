@@ -1,10 +1,8 @@
 from collections            import defaultdict
 
-from utils.singleton        import Singleton
 from data.containers.record import RecordContainer
 from data.alignment         import CdsAlignment
 
-@Singleton
 class CdsAlnContainer (object):
     ''' CDS Alignment Container serves as the storage for all 
         CDSs reported in the read alignments. 
