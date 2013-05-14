@@ -13,10 +13,7 @@ class CdsAlnContainer (object):
 
     def __init__(self):
         self.cds_repository = {}
-        self.read2cds       = defaultdict(list)
-        self.record_repository = RecordContainer.Instance()
-
-    
+        self.read2cds       = defaultdict(list)    
 
     def populate (self, read_cont):
         '''

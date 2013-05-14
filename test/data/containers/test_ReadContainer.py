@@ -21,9 +21,9 @@ class ReadContainerTest(unittest.TestCase):
         '''
         self.read_cont.populate_from_aln_file(self.aln_file)
         reads_cont = self.read_cont.read_repository.keys()
-        reads_file = self._load_read_ids()
+        reads_from_file = self._load_read_ids()
 
-        for read_id in reads_file:
+        for read_id in reads_from_file:
             self.assertTrue(read_id in reads_cont, msg = "Read ID %s not in read container." % read_id)
         self.assertEqual(len(reads_cont), 100)
 
