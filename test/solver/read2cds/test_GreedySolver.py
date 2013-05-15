@@ -14,6 +14,7 @@ from solver.read2cds.Read2CDSSolver import Read2CDSSolver
 
 class GreedySolverTest (unittest.TestCase):
 
+    # setUp is executed before each test method
     def setUp(self):
         '''
         @param mock_db_fpath (str) path to syntheticaly created CDSs which serves
@@ -21,7 +22,7 @@ class GreedySolverTest (unittest.TestCase):
         @param input_aln_fpath (str) path to input alignment file 
         @param results_fpath (str) path to file with generated correct results 
         greedy solver should generate
-        '''
+        '''        
         self.mock_db_fpath = './test/solver/read2cds/.test_data/cds.fa'
         self.input_aln_fpath = './test/solver/read2cds/.test_data/lisa.in'
         self.results_fpath = './test/solver/read2cds/.test_data/cds_ordering.txt'
@@ -32,30 +33,28 @@ class GreedySolverTest (unittest.TestCase):
         self.read_cont.populate_from_aln_file(self.input_aln_fpath)
         self.cds_aln_cont = CdsAlnContainer.Instance()
         self.cds_aln_cont.populate(self.read_cont)
-# Trenutno je problem sto se read2cds ne popuni dobro, ima nesto u njemu ali ne dovoljno.
-# Odkomentiraj sljedecu liniju pa ces vidjeti kako izgleda read2cds.
-#        print self.cds_aln_cont
+
         self.greedy_solver = GreedySolver()
         self.greedy_solver.map_reads_2_cdss(self.cds_aln_cont)
-#        print self.cds_aln_cont
 
-    # Ovo sam zakomentirao jer mi nije htjelo raditi onaj drugi test ne znam zasto
-    # def testAlignmentsCorrectlyInactivated(self):
-    #     '''
-    #     Loads correct results from results file and checks whether 
-    #     all the reads for a CDS listed in the file are active and
-    #     whether all the other reads are inactive.
-    #     '''
-    #     cds2read = self._load_active_reads()
 
-    #     for (cds, cds_aln) in self.cds_aln_cont.cds_repository.items():
-    #         accession = cds.record_id
-    #         mapped_reads = cds2read[accession]
-    #         for cds_aln_subloc in cds_aln.aligned_regions.values():
-    #             if cds_aln_subloc.active:
-    #                 assert (cds_aln_subloc.read_id in mapped_reads)
-    #             else:
-    #                 assert (cds_aln_subloc.read_id not in mapped_reads)
+    # Ovo sam zakomentirao jer mi nije htjelo raditi onaj drugi test, to je zbog singletona u setUp
+    def testAlignmentsCorrectlyInactivated(self):
+        '''
+        Loads correct results from results file and checks whether 
+        all the reads for a CDS listed in the file are active and
+        whether all the other reads are inactive.
+        '''
+        cds2read = self._load_active_reads()
+
+        for (cds, cds_aln) in self.cds_aln_cont.cds_repository.items():
+            accession = cds.record_id
+            mapped_reads = cds2read[accession]
+            for cds_aln_subloc in cds_aln.aligned_regions.values():
+                if cds_aln_subloc.active:
+                    assert (cds_aln_subloc.read_id in mapped_reads)
+                else:
+                    assert (cds_aln_subloc.read_id not in mapped_reads)
 
     def testCdsAlignmentContainerConsistency(self):
         assert(Read2CDSSolver.test_cds_alignment_container_consistency(self.cds_aln_cont) == True)

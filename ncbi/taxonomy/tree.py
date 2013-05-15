@@ -97,16 +97,23 @@ class TaxTree ():
         organism that are ancestors of taxid
         '''
 
-        taxonomy_lineage = []
-        current_node = self.parent_nodes[taxid]
-        while current_node != self.root:
-            organism_name = db_access.get_organism_name(current_node)
-            if organism_name:
-                taxonomy_lineage.append (organism_name)
-            current_node = self.parent_nodes[current_node]
-        taxonomy_lineage.reverse()
+        lineage_org_names = []
+        lineage_org_taxids = []
 
-        return taxonomy_lineage
+        current_node = taxid
+        while current_node != self.root:
+            lineage_org_taxids.append(current_node)
+            if not self.parent_nodes.has_key(current_node):
+                break
+            current_node = self.parent_nodes[current_node]
+        lineage_org_taxids.reverse()
+
+        for taxid in lineage_org_taxids:
+            organism_name = db_access.get_organism_name(taxid)
+            if organism_name:
+                lineage_org_names.append (organism_name)
+
+        return lineage_org_names
         
 
     def _h_get_tax_nodes        (self, nodes_file):
@@ -169,6 +176,8 @@ class TaxTree ():
         self.viroids       = 12884
         self.viruses       = 10239
         self.animalia      = 33208 
+        self.other         = 28384
+        self.unclassified  = 12908
 
 
 class TaxNode (object):
