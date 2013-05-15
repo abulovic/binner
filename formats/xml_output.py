@@ -143,7 +143,7 @@ class XMLOutput(object):
 
         tab = " " * level * 2
 
-        print(tab + "<relativeAmount count=\">" + str(organism.amount_count) + "\">" + str(organism.amount_relative) + "</relativeAmount>")
+        print(tab + "<relativeAmount count=\"" + str(organism.amount_count) + "\">" + str(organism.amount_relative) + "</relativeAmount>")
         if (organism.taxon_id):
             print(tab + "<taxonomy taxon_id=\"" + str(organism.taxon_id) + "\">" + str(organism.taxonomy) + "</taxonomy>")
         if (organism.name):
