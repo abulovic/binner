@@ -44,8 +44,19 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
             taxid = gi2taxid [read_aln.genome_index]
             if tax_tree.is_child (taxid, tax_tree.animalia):
                 read_aln.set_active(False)
-                # mark read alignment as potential host
                 read_aln.set_potential_host_status(True)
+            elif tax_tree.is_child(taxid, tax_tree.plants):
+                read_aln.set_active(False)
+                read_aln.set_potential_host_status(False)
+            elif tax_tree.is_child(taxid, tax_tree.other):
+                read_aln.set_active(False)
+                read_aln.set_potential_host_status(False)
+            elif tax_tree.is_child(taxid, tax_tree.unclassified):
+                read_aln.set_active(False)
+                read_aln.set_potential_host_status(False)
+            elif tax_tree.is_child(taxid, tax_tree.artificial):
+                read_aln.set_active(False)
+                read_aln.set_potential_host_status(False)
 
     return (read_container, host_read_cnt)
 
