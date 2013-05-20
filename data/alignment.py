@@ -1,5 +1,6 @@
 from data.containers.record import RecordContainer
 from utils.location import Location
+from utils.location import LoactionParsingException
 
 class ReadAlnLocation (object):
     """ Contains information on alignment location on 
@@ -54,9 +55,19 @@ class ReadAlnLocation (object):
             return None
 
         (start,stop) = self.location_span
-        location = Location.from_location_str("%d..%d" % (start, stop))
+        try:
+            location = Location.from_location_str("%d..%d" % (start, stop))
+        except LoactionParsingException, e:
+            print "ReadAlignment/determine_coding_seqs:", e
+
+            self.aligned_cdss = []
+            return self.aligned_cdss
         for cds in record.cdss:
-            cds_location = Location.from_location_str(cds.location)
+            try:
+                cds_location = Location.from_location_str(cds.location)
+            except LoactionParsingException, e: 
+                print "ReadAlignment/determine_coding_seqs:", e
+                continue
             location_intersection = cds_location.find_intersection (location)
             if location_intersection is not None:
                 self.aligned_cdss.append ((cds, location_intersection))
