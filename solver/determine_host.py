@@ -31,11 +31,11 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
         try:
             best_aln_taxid = gi2taxid [best_aln.genome_index]
             if (tax_tree.is_child (best_aln_taxid, tax_tree.animalia)):
-                del read_container.read_repository[read.id]
+                # del read_container.read_repository[read.id]
+                read.set_active(False)
                 host_read_cnt += 1
-        except KeyError:
-            pass
-
+        except KeyError, e:
+            print "solver/determine_host", e
         
         # set all host alignments inactive
         for read_aln in read_alignments:
@@ -66,7 +66,7 @@ def determine_host(read_container):
     dbquery = DbQuery()
     tax_tree = TaxTree()
 
-    reads = read_container.fetch_all_reads()
+    reads = read_container.fetch_all_reads(format=iter)
     taxids_cnt = defaultdict(int)
     gis_cnt    = defaultdict(int)
 
@@ -78,13 +78,10 @@ def determine_host(read_container):
 
     # find gi <-> taxid mapping using ncbi database
     gi2taxid = dbquery.get_taxids (gis_cnt.keys(), format=dict)
-
-    # filter read container. Read container iterator no longer valid
-    # after filtering
-    reads = None
+    # deactivate reads that map to potential host
     (read_container, host_read_cnt) =  remove_host_reads (read_container, tax_tree, gi2taxid)
     
-
+    # calculate how many times each taxid is reported
     for (gi, taxid) in gi2taxid.items():
         taxids_cnt[taxid] += gis_cnt[gi]
 
@@ -92,9 +89,7 @@ def determine_host(read_container):
     host_taxid = None
     # sort taxids by occurence 
     sorted_taxid_cnt = sorted (taxids_cnt.items(), key= lambda x: x[1], reverse=True)
-    print sorted_taxid_cnt
     for (taxid, cnt)  in sorted_taxid_cnt:
-	print taxid
     	if tax_tree.is_child(taxid, tax_tree.animalia):
             host_taxid = taxid
             break
