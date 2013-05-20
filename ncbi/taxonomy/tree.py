@@ -166,6 +166,30 @@ class TaxTree ():
             if organism_name.startswith('__'):
                 continue
             setattr(self, organism_name, getattr(orgs, organism_name))
+        self.potential_hosts = [self.human,
+                                self.mouse,
+                                self.rats,
+                                self.rodents,
+                                self.primates,
+                                self.animalia,
+                                self.green_plants]
+
+        self.microbes =        [self.archea,
+                                self.bacteria,
+                                self.viruses,
+                                self.fungi,
+                                self.euglenozoa,
+                                self.alveolata,
+                                self.amoebozoa,
+                                self.fornicata,
+                                self.parabasalia,
+                                self.heterolobosea,
+                                self.viroids,
+                                self.stramenopiles,
+                                self.cryptomycota,
+                                self.entomophthoromycota,
+                                self.microsporidia,
+                                self.neocallimastigomycota]
 
 
 class TaxNode (object):

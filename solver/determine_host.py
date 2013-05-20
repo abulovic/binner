@@ -34,6 +34,7 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
                 # del read_container.read_repository[read.id]
                 read.set_active(False)
                 host_read_cnt += 1
+            
         except KeyError, e:
             print "solver/determine_host", e
         
@@ -45,7 +46,11 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
                 continue
 
             taxid = gi2taxid [read_aln.genome_index]
-            if tax_tree.is_child (taxid, tax_tree.animalia):
+            is_microbe=False
+            for microbe_taxid in tax_tree.microbes:
+                if tax_tree.is_child(taxid, microbe_taxid):
+                    is_microbe=True
+            if not is_microbe:
                 read_aln.set_active(False)
                 # mark read alignment as potential host
                 read_aln.set_potential_host_status(True)
