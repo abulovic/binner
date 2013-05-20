@@ -17,12 +17,12 @@ import statistics.statistics as stats
 
 if __name__ == '__main__':
 
-	if (len(sys.argv) < 2):
-		print "Solver usage: python populate_containers.py <INPUT_ALN_FILE>"
-		sys.exit(-1)
-	aln_file = sys.argv[1]
+    if (len(sys.argv) < 2):
+        print "Solver usage: python populate_containers.py <INPUT_ALN_FILE>"
+        sys.exit(-1)
+    aln_file = sys.argv[1]
 
-        print "I got the input file!"
+    print "I got the input file!"
 
         # # ---------------------- Initialize containers --------------------- #
 
@@ -42,40 +42,40 @@ if __name__ == '__main__':
         
         # ---------------------- Initialize Solver --------------------- #
 
-        greedySolver    = GreedySolver()
-        taxonomySolver  = SimpleTaxonomySolver() 
-        solver = Solver(determine_host, greedySolver, taxonomySolver)
+    greedySolver    = GreedySolver()
+    taxonomySolver  = SimpleTaxonomySolver() 
+    solver = Solver(determine_host, greedySolver, taxonomySolver)
                         
 
         # ---------------------- Run Solver --------------------- #
 
-        solver.generateSolutionXML(aln_file)
+    solver.generateSolutionXML(aln_file)
 
-        print "Successfully initialized solver!"
+    print "Successfully initialized solver!"
         
 	# fill_containers (aln_file)
 
         # -------------------- Test stats methods ----------------------- #
-
-        read_container = ReadContainer.Instance()
-	cds_aln_container = CdsAlnContainer.Instance()
+'''
+    read_container = ReadContainer.Instance()
+    cds_aln_container = CdsAlnContainer.Instance()
 	
-        no_alns = stats.num_reads_with_no_alignments(read_container)
-        print "Reads with no alignments: %d" % no_alns
+    no_alns = stats.num_reads_with_no_alignments(read_container)
+    print "Reads with no alignments: %d" % no_alns
+    print "Number of reads: %d" % stats.num_reads(read_container)
 
-	print "Number of reads: %d" % stats.num_reads(read_container)
+    print "Number of reads with no aligned cdss: %d" % \
+	  stats.num_reads_with_no_aligned_cdss(read_container, cds_aln_container)
 
-	print "Number of reads with no aligned cdss: %d" % \
-	      stats.num_reads_with_no_aligned_cdss(read_container, cds_aln_container)
-
-	print "Number of reads with host and parasit alignments: %d" % \
+    print "Number of reads with host and parasit alignments: %d" % \
 	      stats.num_reads_with_host_and_parasit_alignments(cds_aln_container)
 
-	print "Number of reads with multiple aligned cdss: %d" % \
+    print "Number of reads with multiple aligned cdss: %d" % \
 	      stats.num_reads_with_multiple_aligned_cdss(cds_aln_container)
 
-	average, deviation = stats.calc_average_cds_coverage(cds_aln_container)
-	print "Average and deviation of cds coverage: %f %f" % (average, deviation)
+    average, deviation = stats.calc_average_cds_coverage(cds_aln_container)
+    print "Average and deviation of cds coverage: %f %f" % (average, deviation)
 	
-        more_sublocs = stats.num_reads_with_multiple_mapped_cds_sublocations(read_container)
-        print "Reads aligned to more sublocs of CDS: %d" % more_sublocs
+    more_sublocs = stats.num_reads_with_multiple_mapped_cds_sublocations(read_container)
+    print "Reads aligned to more sublocs of CDS: %d" % more_sublocs
+'''

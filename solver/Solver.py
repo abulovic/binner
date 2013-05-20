@@ -1,8 +1,13 @@
-from data.containers.load   import initialize_containers
-from ncbi.db.access         import DbQuery
-from ncbi.taxonomy.tree  import TaxTree
-from formats.xml_output     import *
 from collections            import defaultdict
+
+from data.containers.read   import ReadContainer
+from data.containers.record import RecordContainer
+from data.containers.cdsaln import CdsAlnContainer
+
+from ncbi.db.access         import DbQuery
+from ncbi.taxonomy.tree     import TaxTree
+
+from formats.xml_output     import *
 
 
 class Solver (object):
@@ -35,32 +40,39 @@ class Solver (object):
             Generates XML file containing solution.
         '''
         # Initialize containers
-        (read_container, record_container, cds_aln_container) = initialize_containers()
+        read_container = ReadContainer()
+        record_container = RecordContainer()
+        cds_aln_container = CdsAlnContainer()
         # Create database access
         db_access = DbQuery()
-
+        record_container.set_db_access(db_access)
         # Populate read container - NOT NOW NEEDED
         read_container.populate_from_aln_file (alignment_file)
-	print "Read container populated!"
+        print "Read container populated!"
+        # Extract all records from database
+        record_container.populate(read_container)
+        print "Record container populated!"
+        # find intersecting cdss for read alignments
+        read_container.populate_cdss(record_container)
 
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
-        (host_taxid, host_read_cnt) = self.determine_host(read_container)
+        (host_taxid, host_read_cnt, read_container) = self.determine_host(read_container)
         print host_taxid, host_read_cnt
-	if host_taxid:
-  	    print "Host identified: %d!" % (int(host_taxid))
+        if host_taxid:
+            print "Host identified: %d!" % (int(host_taxid))
 
         # Populate CDS container 
         cds_aln_container.populate(read_container)
-	print "Cds Aln Container populated!"
+        print "Cds Aln Container populated!"
 
         # Map each read to one CDS (greedy)
         self.read2cds_solver.map_reads_2_cdss(cds_aln_container)
-	print "Reads mapped to CDSS."
+        print "Reads mapped to CDSS."
 
         # Determine species
         taxid2cdss = self.taxonomy_solver.map_cdss_2_species (db_access, read_container, cds_aln_container)
-	print "Taxonomy determined."
+        print "Taxonomy determined."
 
         # Generate XML file
         self.generateXML (host_taxid, host_read_cnt, taxid2cdss, cds_aln_container, db_access)

@@ -20,9 +20,12 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
 
     host_read_cnt = 0
 
-    for read in read_container.read_repository.values():
+    for read in read_container.fetch_all_reads(format=iter):
+        read_alignments = read.get_alignments()
+        if not len(read_alignments):
+            continue
         # sort alignments by alignment score
-        sorted_alignments = sorted (read.alignment_locations, key=lambda location: location.score)
+        sorted_alignments = sorted (read_alignments, key=lambda location: location.score, reverse=True)
         # if best alignment is host alignment, remove it
         best_aln = sorted_alignments[0]
         try:
@@ -35,7 +38,7 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
 
         
         # set all host alignments inactive
-        for read_aln in read.alignment_locations:
+        for read_aln in read_alignments:
      	    if not gi2taxid.has_key(read_aln.genome_index):
                 print "NOT IN NCBITAX: %d" % read_aln.genome_index
                 read_aln.set_active(False)
@@ -96,4 +99,4 @@ def determine_host(read_container):
             host_taxid = taxid
             break
 
-    return (host_taxid, host_read_cnt)
+    return (host_taxid, host_read_cnt, read_container)
