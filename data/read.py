@@ -10,7 +10,7 @@ class Read (object):
         self.id                     = read_id
         self.length                 = read_length
         self.alignment_locations    = alignment_locations
-        self.is_active                 = True
+        self.is_host_read           = False
     
     @staticmethod
     def from_read_str (read_str):
@@ -59,8 +59,8 @@ class Read (object):
         return Read(newRead_id, newRead_length, newRead_aln_locs)
 
 
-    def set_active(self, is_active):
-        self.is_active = is_active
+    def set_host_status(self, is_host_read):
+        self.is_host_read = is_host_read
 
     def get_alignments (self, format=list):
         '''
