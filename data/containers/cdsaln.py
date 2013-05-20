@@ -29,6 +29,9 @@ class CdsAlnContainer (object):
         '''
         # Iterate through reads
         for read in read_cont.read_repository.values():
+            # skip inactive (potential host) reads
+            if not read.is_active:
+                continue
             # Iterate through read alignments
             for readAln in read.alignment_locations:
                 if not readAln.active:
