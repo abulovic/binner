@@ -54,6 +54,7 @@ class Solver (object):
         print "Record container populated!"
         # find intersecting cdss for read alignments
         read_container.populate_cdss(record_container)
+        read_cnt = len(read_container.fetch_all_reads(format=list))
 
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
@@ -75,13 +76,13 @@ class Solver (object):
         print "Taxonomy determined."
 
         # Generate XML file
-        self.generateXML (host_taxid, host_read_cnt, taxid2cdss, cds_aln_container, db_access)
+        self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access)
 
         print "Proba 0: funkcija generateXML prosla!"
 
         pass
 
-    def generateXML (self, host_taxid, host_read_cnt, taxid2cdss, cds_aln_container,  db_access):
+    def generateXML (self, host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container,  db_access):
 
         tax_tree     = TaxTree()
 
@@ -91,13 +92,11 @@ class Solver (object):
         all_organisms = []
 
         #-------------------------------- HOST -------------------------------#
-        host_taxid = 9606
-        host_read_cnt = 0
         host_name    = db_access.get_organism_name(host_taxid)
         host_lineage = tax_tree.get_taxonomy_lineage(host_taxid, db_access)
         (genus, species) = host_name.split()
 
-        host = Organism (host_read_cnt, 0., str(host_taxid), ", ".join(host_lineage), host_name,
+        host = Organism (host_read_cnt, float(host_read_cnt)/read_cnt, str(host_taxid), ", ".join(host_lineage), host_name,
                  genus, species, [], [], [], is_host=True)
         all_organisms.append(host)
 
@@ -131,7 +130,7 @@ class Solver (object):
                 cds = cds_aln.cds
                 organism_genes.append (Gene(cds.protein_id, cds.locus_tag, cds.product, cds.gene))
 	
-            organism = Organism (organism_count, 0., taxid, ", ".join(organism_lineage), organism_name,
+            organism = Organism (organism_count, float(organism_count)/read_cnt, taxid, ", ".join(organism_lineage), organism_name,
                  org_species, org_genus, organism_genes, [], organism_reads, is_host=False)
             all_organisms.append(organism)
 
