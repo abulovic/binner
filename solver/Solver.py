@@ -35,7 +35,7 @@ class Solver (object):
 
     # Here should go some User Interface methods like getXML(), solve() and similar
 
-    def generateSolutionXML(self, alignment_file):
+    def generateSolutionXML(self, alignment_file, dataset_xml_file):
         ''' Main UI method.
             Generates XML file containing solution.
         '''
@@ -78,13 +78,13 @@ class Solver (object):
         print "Taxonomy determined."
 
         # Generate XML file
-        self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree)
+        self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree, dataset_xml_file)
 
         print "Proba 0: funkcija generateXML prosla!"
 
         pass
 
-    def generateXML (self, host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container,  db_access, tax_tree):
+    def generateXML (self, host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container,  db_access, tax_tree, dataset_xml_file):
 
 #        tax_tree     = TaxTree()
 
@@ -94,9 +94,9 @@ class Solver (object):
         all_organisms = []
 
         #-------------------------------- HOST -------------------------------#
-        host_name    = db_access.get_organism_name(host_taxid)
-        host_lineage = tax_tree.get_taxonomy_lineage(host_taxid, db_access)
-        (genus, species) = host_name.split()
+        host_name    = "Licimur" #db_access.get_organism_name(host_taxid)
+        host_lineage = "broj 2"  # tax_tree.get_taxonomy_lineage(host_taxid, db_access)
+        (genus, species) = ("1", "2")  # host_name.split()
 
         host = Organism (host_read_cnt, float(host_read_cnt)/read_cnt, str(host_taxid), ", ".join(host_lineage), host_name,
                  genus, species, [], [], [], is_host=True)

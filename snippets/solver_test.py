@@ -17,10 +17,11 @@ import statistics.statistics as stats
 
 if __name__ == '__main__':
 
-    if (len(sys.argv) < 2):
-        print "Solver usage: python populate_containers.py <INPUT_ALN_FILE>"
+    if (len(sys.argv) < 3):
+        print "Solver usage: python populate_containers.py <INPUT_ALN_FILE> <DATASET_DESC_XML_FILE>"
         sys.exit(-1)
     aln_file = sys.argv[1]
+    dataset_xml_file = sys.argv[2]
 
     print "I got the input file!"
 
@@ -49,7 +50,7 @@ if __name__ == '__main__':
 
         # ---------------------- Run Solver --------------------- #
 
-    solver.generateSolutionXML(aln_file)
+    solver.generateSolutionXML(aln_file, dataset_xml_file)
 
     print "Successfully initialized solver!"
         
