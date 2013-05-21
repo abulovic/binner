@@ -8,7 +8,7 @@ class SimpleTaxonomySolver (TaxonomySolver):
     It does no filtering of the under-represented species.
     '''
 
-    def map_cdss_2_species (self, db_access, read_container, cds_aln_container):
+    def map_cdss_2_species (self, db_access, tax_tree, read_container, cds_aln_container):
         '''
         Determines species for each CDS. 
         @param db_access (DbQuery) 
