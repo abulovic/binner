@@ -53,18 +53,6 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
             if not is_microbe:
                 read_aln.set_active(False)
                 read_aln.set_potential_host_status(True)
-            elif tax_tree.is_child(taxid, tax_tree.plants):
-                read_aln.set_active(False)
-                read_aln.set_potential_host_status(False)
-            elif tax_tree.is_child(taxid, tax_tree.other):
-                read_aln.set_active(False)
-                read_aln.set_potential_host_status(False)
-            elif tax_tree.is_child(taxid, tax_tree.unclassified):
-                read_aln.set_active(False)
-                read_aln.set_potential_host_status(False)
-            elif tax_tree.is_child(taxid, tax_tree.artificial):
-                read_aln.set_active(False)
-                read_aln.set_potential_host_status(False)
 
     return (read_container, host_read_cnt)
 
