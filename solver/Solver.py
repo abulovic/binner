@@ -43,6 +43,8 @@ class Solver (object):
         read_container = ReadContainer()
         record_container = RecordContainer()
         cds_aln_container = CdsAlnContainer()
+        # create taxonomy tree
+        tax_tree = TaxTree()
         # Create database access
         db_access = DbQuery()
         record_container.set_db_access(db_access)
@@ -72,19 +74,19 @@ class Solver (object):
         print "Reads mapped to CDSS."
 
         # Determine species
-        taxid2cdss = self.taxonomy_solver.map_cdss_2_species (db_access, read_container, cds_aln_container)
+        taxid2cdss = self.taxonomy_solver.map_cdss_2_species (db_access, tax_tree, read_container, cds_aln_container)
         print "Taxonomy determined."
 
         # Generate XML file
-        self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access)
+        self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree)
 
         print "Proba 0: funkcija generateXML prosla!"
 
         pass
 
-    def generateXML (self, host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container,  db_access):
+    def generateXML (self, host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container,  db_access, tax_tree):
 
-        tax_tree     = TaxTree()
+#        tax_tree     = TaxTree()
 
         #-------------------------------DATASET-------------------------------#
         dataset = Dataset("Example2.fq", "Homo2", "sapiens", "human2", "9696", 
@@ -103,17 +105,25 @@ class Solver (object):
         #--------------------------- ORGANISMS ------------------------------#
         for (taxid, cdss) in taxid2cdss.items():
             organism_name    = db_access.get_organism_name (taxid)
-            organism_lineage = tax_tree.get_taxonomy_lineage (taxid, db_access)
-            org_name_details = organism_name.split()
-            org_species = org_name_details[0]
-            if (len(org_name_details) > 1):
-                org_genus = org_name_details[1]
-            else: 
+            if not organism_name:
+                print "ERROR:Unable to find name for taxid %d" % taxid
+                organism_name = ""
+                organism_lineage = ""
+                org_species = ""
                 org_genus = ""
-            if (len(org_name_details) > 2):
-                org_strain = org_name_details[2:]
-            else:
                 org_strain = ""
+            else:
+                organism_lineage = tax_tree.get_taxonomy_lineage (taxid, db_access)
+                org_name_details = organism_name.split()
+                org_species = org_name_details[0]
+                if (len(org_name_details) > 1):
+                    org_genus = org_name_details[1]
+                else: 
+                    org_genus = ""
+                if (len(org_name_details) > 2):
+                    org_strain = org_name_details[2:]
+                else:
+                    org_strain = ""
 
             organism_count   = 0
             organism_reads   = []
