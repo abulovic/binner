@@ -103,6 +103,22 @@ class DbQuery(object):
         return org_name
 
 
+    def get_organism_taxid (self, organism_name, name_class='scientific name'):
+        '''
+        Fetches organism taxid for the specified organism name.
+        @param organism_name (str) organism nam
+        @return taxid (int)
+        '''
+        sql = 'SELECT tax_id FROM ncbi_names WHERE name_class="%s" AND name_txt="%s"'
+        self.ncbitax_db.query (sql % (name_class, organism_name))
+        result = self.ncbitax_db.use_result()
+        tax_id = result.fetch_row()
+        if tax_id:
+            ((tax_id,),) = tax_id
+            tax_id = int(tax_id)
+        return tax_id
+
+
     def _create_sessions(self):
         ''' Creates database sessions '''
         genbank_engine = create_engine (self.genbank_db_url, echo=False, 

@@ -44,6 +44,15 @@ class Test(unittest.TestCase):
     def testNcbitaxOrgNameQuery (self):
         org_name = self.dbQuery.get_organism_name(9606)
         self.assertEqual ('Homo sapiens', org_name)
+        org_name = self.dbQuery.get_organism_name(-1)
+        self.assertEqual((), org_name)
+
+    def testNcbitaxTaxidQuery (self):
+        org_name = "Homo sapiens"
+        tax_id = self.dbQuery.get_organism_taxid(org_name)
+        self.assertEqual(tax_id, 9606)
+        tax_id = self.dbQuery.get_organism_taxid('not in database!!!')
+        self.assertEqual(tax_id, ())
 
 
 
