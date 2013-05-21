@@ -1,8 +1,9 @@
 import sys, os
 sys.path.append(os.getcwd())
 
-from solver.determine_host import determine_host
-from data.containers.load import initialize_containers
+from solver.determine_host  import determine_host
+from data.containers.read   import ReadContainer
+from ncbi.db.access         import DbQuery
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -12,10 +13,12 @@ if __name__ == '__main__':
     alignment_file = sys.argv[1]
     assert (os.path.isfile(alignment_file))
 
-    (read_cont, record_cont, cds_aln_cont) = initialize_containers()
+    db_query = DbQuery()
+    read_cont = ReadContainer()
     read_cont.populate_from_aln_file(alignment_file)
 
-    host_taxid = determine_host(read_cont)
+    (host_taxid, host_read_cnt, read_cont) = determine_host(read_cont)
+    
     if host_taxid:
 	print "Host taxid estimated to be: %d" % (host_taxid)
     else:

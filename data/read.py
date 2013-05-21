@@ -10,6 +10,7 @@ class Read (object):
         self.id                     = read_id
         self.length                 = read_length
         self.alignment_locations    = alignment_locations
+        self.is_host_read           = False
     
     @staticmethod
     def from_read_str (read_str):
@@ -22,8 +23,10 @@ class Read (object):
         newRead_aln_locs = []
 
         # valList: ["read_id, num_align", "alignInfo1", "alignInfo2", ... "alignInfoN"]
+        read_str = read_str.strip()
+        if read_str.endswith(';'):
+            read_str = read_str[0:-1]
         valList = read_str.split(';');
-        valList.pop(); # Pop the last element, '\n'
 
         # Get header info
         # headerList: [read_id, num_align]
@@ -42,21 +45,31 @@ class Read (object):
             start       = int   (data[4])
             stop        = int   (data[5])
             strand      = data[6]
-
+            assert (strand in ['+', '-'])
             complement  = False if strand=='+' else True
 
             # Create and store new ReadAlnLocation object
-	    try:
+            try:
                 newAlignInfo = ReadAlnLocation(newRead_id, nucl_acc, db_source, GI, score,
-                                           (start, stop), complement);
+                                           (start, stop),   complement);
                 newRead_aln_locs.append(newAlignInfo)
-	    except Exception, e:
-		print e
-		print "Location parsing error."
-            # temporary fix
-            # newRead_aln_locs.append(newAlignInfo);
+            except Exception as e:
+                print "Location parsing error."
 
         return Read(newRead_id, newRead_length, newRead_aln_locs)
-    
+
+
+    def set_host_status(self, is_host_read):
+        self.is_host_read = is_host_read
+
+    def get_alignments (self, format=list):
+        '''
+        Get read alignments for the read.
+        @param: format (collection or iterator) format in which to 
+        acquire the alignments
+        '''
+        assert (format in [iter, list, set])
+        return format(self.alignment_locations)
+
     def has_alignments (self):
         return len(self.alignment_locations) > 0

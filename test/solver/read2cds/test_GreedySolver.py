@@ -26,12 +26,17 @@ class GreedySolverTest (unittest.TestCase):
         self.mock_db_fpath = './test/solver/read2cds/.test_data/cds.fa'
         self.input_aln_fpath = './test/solver/read2cds/.test_data/lisa.in'
         self.results_fpath = './test/solver/read2cds/.test_data/cds_ordering.txt'
-        self.db_query = MockDbQuery (self.mock_db_fpath)
-        self.record_cont = RecordContainer.Instance()
-        self.record_cont.set_db_access(self.db_query)
-        self.read_cont = ReadContainer.Instance()
+#       Initialize read container
+        self.read_cont = ReadContainer()
         self.read_cont.populate_from_aln_file(self.input_aln_fpath)
-        self.cds_aln_cont = CdsAlnContainer.Instance()
+#       Initialize and fill record container
+        self.db_query = MockDbQuery (self.mock_db_fpath)
+        self.record_cont = RecordContainer()
+        self.record_cont.set_db_access(self.db_query)
+        self.record_cont.populate(self.read_cont)
+        self.read_cont.populate_cdss(self.record_cont)
+#       Initialize and fill up cds aln container
+        self.cds_aln_cont = CdsAlnContainer()
         self.cds_aln_cont.populate(self.read_cont)
 
         self.greedy_solver = GreedySolver()

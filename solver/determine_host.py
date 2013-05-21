@@ -20,29 +20,37 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
 
     host_read_cnt = 0
 
-    for read in read_container.read_repository.values():
+    for read in read_container.fetch_all_reads(format=iter):
+        read_alignments = read.get_alignments()
+        if not len(read_alignments):
+            continue
         # sort alignments by alignment score
-        sorted_alignments = sorted (read.alignment_locations, key=lambda location: location.score)
+        sorted_alignments = sorted (read_alignments, key=lambda location: location.score, reverse=True)
         # if best alignment is host alignment, remove it
         best_aln = sorted_alignments[0]
         try:
             best_aln_taxid = gi2taxid [best_aln.genome_index]
             if (tax_tree.is_child (best_aln_taxid, tax_tree.animalia)):
-                del read_container.read_repository[read.id]
+                # del read_container.read_repository[read.id]
+                read.set_host_status(True)
                 host_read_cnt += 1
-        except KeyError:
-            pass
-
+            
+        except KeyError, e:
+            print "solver/determine_host", e
         
         # set all host alignments inactive
-        for read_aln in read.alignment_locations:
+        for read_aln in read_alignments:
      	    if not gi2taxid.has_key(read_aln.genome_index):
                 print "NOT IN NCBITAX: %d" % read_aln.genome_index
                 read_aln.set_active(False)
                 continue
 
             taxid = gi2taxid [read_aln.genome_index]
-            if tax_tree.is_child (taxid, tax_tree.animalia):
+            is_microbe=False
+            for microbe_taxid in tax_tree.microbes:
+                if tax_tree.is_child(taxid, microbe_taxid):
+                    is_microbe=True
+            if not is_microbe:
                 read_aln.set_active(False)
                 read_aln.set_potential_host_status(True)
             elif tax_tree.is_child(taxid, tax_tree.plants):
@@ -60,6 +68,21 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
 
     return (read_container, host_read_cnt)
 
+def _count_reported_taxids (reads, db_query):
+    gis_cnt = defaultdict(int)
+    taxids_cnt = defaultdict(int)
+    # find out how many times each GI is reported
+    # in the alignments
+    for read in reads:
+        for read_aln in read.alignment_locations:
+            gis_cnt[read_aln.genome_index] += 1
+    # find gi <-> taxid mapping using ncbi database
+    gi2taxid = db_query.get_taxids (gis_cnt.keys(), format=dict)
+    # calculate how many times each taxid is reported
+    for (gi, taxid) in gi2taxid.items():
+        taxids_cnt[taxid] += gis_cnt[gi]
+    return (gi2taxid, gis_cnt, taxids_cnt)
+
 
 def determine_host(read_container):
     ''' Method serves to determine host among all the read alignments.
@@ -74,37 +97,19 @@ def determine_host(read_container):
     dbquery = DbQuery()
     tax_tree = TaxTree()
 
-    reads = read_container.fetch_all_reads()
-    taxids_cnt = defaultdict(int)
-    gis_cnt    = defaultdict(int)
-
-    # find out how many times each GI is reported
-    # in the alignments
-    for read in reads:
-        for read_aln in read.alignment_locations:
-            gis_cnt[read_aln.genome_index] += 1
-
-    # find gi <-> taxid mapping using ncbi database
-    gi2taxid = dbquery.get_taxids (gis_cnt.keys(), format=dict)
-
-    # filter read container. Read container iterator no longer valid
-    # after filtering
-    reads = None
+    reads      = read_container.fetch_all_reads(format=iter)
+    # how many times each taxid has been reported
+    (gi2taxid, gis_cnt, taxids_cnt)  = _count_reported_taxids(reads, dbquery)
+    # deactivate reads that map to potential host
     (read_container, host_read_cnt) =  remove_host_reads (read_container, tax_tree, gi2taxid)
     
-
-    for (gi, taxid) in gi2taxid.items():
-        taxids_cnt[taxid] += gis_cnt[gi]
-
     # find the most frequent taxid from animalia kingdom
     host_taxid = None
     # sort taxids by occurence 
     sorted_taxid_cnt = sorted (taxids_cnt.items(), key= lambda x: x[1], reverse=True)
-    print sorted_taxid_cnt
     for (taxid, cnt)  in sorted_taxid_cnt:
-	print taxid
     	if tax_tree.is_child(taxid, tax_tree.animalia):
             host_taxid = taxid
             break
 
-    return (host_taxid, host_read_cnt)
+    return (host_taxid, host_read_cnt, read_container)

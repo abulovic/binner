@@ -168,18 +168,35 @@ class TaxTree ():
             assignments which can help in checking which kingdom
             an organism belongs to.
         '''
+        import ncbi.taxonomy.organisms as orgs
+        for organism_name in dir(orgs):
+            if organism_name.startswith('__'):
+                continue
+            setattr(self, organism_name, getattr(orgs, organism_name))
+        self.potential_hosts = [self.human,
+                                self.mouse,
+                                self.rats,
+                                self.rodents,
+                                self.primates,
+                                self.animalia,
+                                self.green_plants]
 
-        self.bacteria      = 2
-        self.eukaryota     = 2759
-        self.fungi         = 4751
-        self.archea        = 2157
-        self.viroids       = 12884
-        self.viruses       = 10239
-        self.animalia      = 33208 
-        self.plants        = 3193
-        self.other         = 28384
-        self.unclassified  = 12908
-        self.artificial    = 81077
+        self.microbes =        [self.archea,
+                                self.bacteria,
+                                self.viruses,
+                                self.fungi,
+                                self.euglenozoa,
+                                self.alveolata,
+                                self.amoebozoa,
+                                self.fornicata,
+                                self.parabasalia,
+                                self.heterolobosea,
+                                self.viroids,
+                                self.stramenopiles,
+                                self.cryptomycota,
+                                self.entomophthoromycota,
+                                self.microsporidia,
+                                self.neocallimastigomycota]
 
 
 class TaxNode (object):
