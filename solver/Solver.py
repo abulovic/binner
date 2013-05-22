@@ -89,17 +89,12 @@ class Solver (object):
 #        tax_tree     = TaxTree()
 
         #-------------------------------DATASET-------------------------------#
-        dataset = Dataset("Example2.fq", "Homo2", "sapiens", "human2", "9696", 
-                  "eukaryota, ...; Homo", "Whole Blood2", "DNA", "single-end", "Roche 454")
+        dataset = Dataset(dataset_xml_file)
         all_organisms = []
 
         #-------------------------------- HOST -------------------------------#
-        host_name    = "Licimur" #db_access.get_organism_name(host_taxid)
-        host_lineage = "broj 2"  # tax_tree.get_taxonomy_lineage(host_taxid, db_access)
-        (genus, species) = ("1", "2")  # host_name.split()
-
-        host = Organism (host_read_cnt, float(host_read_cnt)/read_cnt, str(host_taxid), ", ".join(host_lineage), host_name,
-                 genus, species, [], [], [], is_host=True)
+        host = Organism (host_read_cnt, float(host_read_cnt)/read_cnt, None, None, "Host",
+                 None, None, [], [], [], is_host=True)
         all_organisms.append(host)
 
         #--------------------------- ORGANISMS ------------------------------#
