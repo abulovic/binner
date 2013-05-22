@@ -8,11 +8,11 @@ from data.containers.read           import ReadContainer
 from data.containers.record         import RecordContainer
 from data.containers.cdsaln         import CdsAlnContainer
 
-from solver.read2cds.GreedySolver   import GreedySolver
+from solver.read2cds.BestScoreSolver   import BestScoreSolver
 from solver.read2cds.Read2CDSSolver import Read2CDSSolver
 
 
-class GreedySolverTest (unittest.TestCase):
+class BestScoreSolverTest (unittest.TestCase):
 
     # setUp is executed before each test method
     def setUp(self):
@@ -39,10 +39,11 @@ class GreedySolverTest (unittest.TestCase):
         self.cds_aln_cont = CdsAlnContainer()
         self.cds_aln_cont.populate(self.read_cont)
 
-        self.greedy_solver = GreedySolver()
-        self.greedy_solver.map_reads_2_cdss(self.cds_aln_cont)
+        self.bs_solver = BestScoreSolver()
+        self.bs_solver.map_reads_2_cdss(self.cds_aln_cont)
 
 
+    # Ovo sam zakomentirao jer mi nije htjelo raditi onaj drugi test, to je zbog singletona u setUp
     def testAlignmentsCorrectlyInactivated(self):
         '''
         Loads correct results from results file and checks whether 
