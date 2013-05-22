@@ -1,29 +1,34 @@
-from data.read		    import Read
-from utils.singleton    import Singleton
+from data.read import Read
 
-# TIP: Implement all containers as singletons
-
-@Singleton
 class ReadContainer (object):
     ''' Contains all the reads loaded from an 
         alignment file. Can be queried by read id.
     '''
     def __init__(self):
         """
-        (dict) read_repository Dictionary where value is (Read)read and key is (int)read id.
+        (dict) read_repository Dictionary where value is (Read)read and key is (str)read id.
         """
         self.read_repository = {}
         
     def populate_from_aln_file (self, read_alignment_file):
         ''' Adds all the reads in the alignment file to the
-            read repository
+            read repository.
+            This is the first stage of filling the read container.
         '''
         aln_file = open(read_alignment_file, 'r')
         for line in aln_file.readlines():
             self._add_read_from_str(line)
-        
-        for read in self.read_repository.values():
-            assert (read.has_alignments())
+
+    def populate_cdss (self, record_container):
+        '''
+        Coding sequences are determined and stored for every read alignment.
+        Prerequisite: record container has been populated with all records
+        mentioned in the alignment file
+        @param record_container (RecordContainer)
+        '''
+        for read in self.fetch_all_reads(format=iter):
+            for read_alignment in read.get_alignments(format=iter):
+                read_alignment.determine_coding_seqs(record_container)
     
     def fetch_read (self, read_id):
         if self.read_repository.has_key(read_id):
@@ -31,19 +36,12 @@ class ReadContainer (object):
         else:
             raise KeyError("Read repository doesn't contain read associated with read ID: {0}".format(read_id))
 
-    def fetch_all_reads (self):
-        return iter(self.read_repository.values())
+
+    def fetch_all_reads (self, format=iter):
+        return format(self.read_repository.values())
     
     def _add_read_from_str (self, read_str):
-        try:
-            read = Read.from_read_str(read_str)
-	    if not read.has_alignments():
-		return
-        except IndexError:
-            return
-        # read identifier must be unique
+        read = Read.from_read_str(read_str)
         assert (not self.read_repository.has_key(read.id))
         self.read_repository[read.id] = read
         
-    def add_read (self, read):
-        pass

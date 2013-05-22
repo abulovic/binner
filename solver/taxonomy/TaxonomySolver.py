@@ -5,7 +5,7 @@ class TaxonomySolver (object):
     """
     pass
 
-    def map_cdss_2_species (self, db_access, read_container, cds_aln_container):
+    def map_cdss_2_species (self, db_access, tax_tree, read_container, cds_aln_container):
         '''
         Maps CDS to species. 
         CDS can be mapped directly to the species it belongs to, 
@@ -13,6 +13,7 @@ class TaxonomySolver (object):
         CDS can also be disregarded if the species it belongs to
         isn't represented with enough CDSs.
         @param db_access         (DbQuery)
+        @param tax_tree          (TaxTree)
         @param read_container    (ReadContainer)
         @param cds_aln_container (CdsAlnContainer)
         '''

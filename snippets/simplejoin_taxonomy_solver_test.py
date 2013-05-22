@@ -8,26 +8,21 @@ from data.containers.cdsaln import CdsAlnContainer
 
 from solver.read2cds.Read2CDSSolver import Read2CDSSolver
 from solver.read2cds.GreedySolver import GreedySolver
-from solver.taxonomy.SimpleTaxonomySolver import SimpleTaxonomySolver
+from solver.taxonomy.SimpleJoinTaxonomySolver import SimpleJoinTaxonomySolver
 from solver.Solver import Solver
 
 from solver.determine_host import determine_host
 
 import statistics.statistics as stats
-from utils.logger import Logger
 
 if __name__ == '__main__':
 
-    Logger("LOGFILE")
-
-    if (len(sys.argv) < 4):
-        print "Solver usage: python populate_containers.py <INPUT_ALN_FILE> <DATASET_DESC_XML_FILE> <SOLUTION_XML_OUTPUT_FILE>"
+    if (len(sys.argv) < 2):
+        print "Solver usage: python populate_containers.py <INPUT_ALN_FILE>"
         sys.exit(-1)
     aln_file = sys.argv[1]
-    dataset_xml_file = sys.argv[2]
-    solution_xml_output_file = sys.argv[3]
 
-    log.info("I got the input file!")
+    print "I got the input file!"
 
         # # ---------------------- Initialize containers --------------------- #
 
@@ -48,15 +43,15 @@ if __name__ == '__main__':
         # ---------------------- Initialize Solver --------------------- #
 
     greedySolver    = GreedySolver()
-    taxonomySolver  = SimpleTaxonomySolver() 
+    taxonomySolver  = SimpleJoinTaxonomySolver() 
     solver = Solver(determine_host, greedySolver, taxonomySolver)
                         
 
         # ---------------------- Run Solver --------------------- #
-    
-    solver.generateSolutionXML(aln_file, dataset_xml_file, solution_xml_output_file)
 
-    log.info("Successfully initialized solver!")
+    solver.generateSolutionXML(aln_file)
+
+    print "Successfully initialized solver!"
         
 	# fill_containers (aln_file)
 

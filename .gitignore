@@ -44,3 +44,6 @@ nosetests.xml
 # sublime project
 .sublime
 *.sublime-project
+
+# temporary files
+*~

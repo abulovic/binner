@@ -1,10 +1,8 @@
 from collections            import defaultdict
 
-from utils.singleton        import Singleton
 from data.containers.record import RecordContainer
 from data.alignment         import CdsAlignment
 
-@Singleton
 class CdsAlnContainer (object):
     ''' CDS Alignment Container serves as the storage for all 
         CDSs reported in the read alignments. 
@@ -15,10 +13,7 @@ class CdsAlnContainer (object):
 
     def __init__(self):
         self.cds_repository = {}
-        self.read2cds       = defaultdict(list)
-        self.record_repository = RecordContainer.Instance()
-
-    
+        self.read2cds       = defaultdict(list)    
 
     def populate (self, read_cont):
         '''
@@ -34,6 +29,9 @@ class CdsAlnContainer (object):
         '''
         # Iterate through reads
         for read in read_cont.read_repository.values():
+            # skip inactive (potential host) reads
+            if read.is_host_read:
+                continue
             # Iterate through read alignments
             for readAln in read.alignment_locations:
                 if not readAln.active:

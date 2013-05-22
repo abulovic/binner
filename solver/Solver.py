@@ -1,9 +1,14 @@
-from data.containers.load   import initialize_containers
-from ncbi.db.access         import DbQuery
-from ncbi.taxonomy.tree  import TaxTree
-from formats.xml_output     import *
 from collections            import defaultdict
 
+from data.containers.read   import ReadContainer
+from data.containers.record import RecordContainer
+from data.containers.cdsaln import CdsAlnContainer
+
+from ncbi.db.access         import DbQuery
+from ncbi.taxonomy.tree     import TaxTree
+
+from formats.xml_output     import *
+# import logging
 
 class Solver (object):
 
@@ -30,79 +35,90 @@ class Solver (object):
 
     # Here should go some User Interface methods like getXML(), solve() and similar
 
-    def generateSolutionXML(self, alignment_file):
+    def generateSolutionXML(self, alignment_file, dataset_xml_file, output_solution_filename):
         ''' Main UI method.
             Generates XML file containing solution.
         '''
         # Initialize containers
-        (read_container, record_container, cds_aln_container) = initialize_containers()
+        read_container = ReadContainer()
+        record_container = RecordContainer()
+        cds_aln_container = CdsAlnContainer()
+        # create taxonomy tree
+        tax_tree = TaxTree()
         # Create database access
         db_access = DbQuery()
-
+        record_container.set_db_access(db_access)
         # Populate read container - NOT NOW NEEDED
         read_container.populate_from_aln_file (alignment_file)
-	print "Read container populated!"
+        log.info("Read container populated!")
+        # Extract all records from database
+        record_container.populate(read_container)
+        log.info("Record container populated!")
+        # find intersecting cdss for read alignments
+        read_container.populate_cdss(record_container)
+        read_cnt = len(read_container.fetch_all_reads(format=list))
 
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
-        (host_taxid, host_read_cnt) = self.determine_host(read_container)
-        print host_taxid, host_read_cnt
-	if host_taxid:
-  	    print "Host identified: %d!" % (int(host_taxid))
+        (host_taxid, host_read_cnt, read_container) = self.determine_host(read_container)
+        log.info("host_taxid:%s host_read_cnt:%s", str(host_taxid), str(host_read_cnt))
+        if host_taxid:
+            log.info("Host identified: %d!", (int(host_taxid)))
 
         # Populate CDS container 
         cds_aln_container.populate(read_container)
-	print "Cds Aln Container populated!"
+        log.info("Cds Aln Container populated!")
 
         # Map each read to one CDS (greedy)
         self.read2cds_solver.map_reads_2_cdss(cds_aln_container)
-	print "Reads mapped to CDSS."
+        log.info("Reads mapped to CDSS.")
 
         # Determine species
-        taxid2cdss = self.taxonomy_solver.map_cdss_2_species (db_access, read_container, cds_aln_container)
-	print "Taxonomy determined."
+        taxid2cdss = self.taxonomy_solver.map_cdss_2_species (db_access, tax_tree, read_container, cds_aln_container)
+        log.info("Taxonomy determined.")
 
         # Generate XML file
-        self.generateXML (host_taxid, host_read_cnt, taxid2cdss, cds_aln_container, db_access)
+        self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree, dataset_xml_file, output_solution_filename)
 
-        print "Proba 0: funkcija generateXML prosla!"
+        log.info("Proba 0: funkcija generateXML prosla!")
 
         pass
 
-    def generateXML (self, host_taxid, host_read_cnt, taxid2cdss, cds_aln_container,  db_access):
+    def generateXML (self, host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container,  db_access, tax_tree, dataset_xml_file, output_solution_filename):
 
-        tax_tree     = TaxTree()
+#        tax_tree     = TaxTree()
 
         #-------------------------------DATASET-------------------------------#
-        dataset = Dataset("Example2.fq", "Homo2", "sapiens", "human2", "9696", 
-                  "eukaryota, ...; Homo", "Whole Blood2", "DNA", "single-end", "Roche 454")
+        dataset = Dataset(dataset_xml_file)
         all_organisms = []
 
         #-------------------------------- HOST -------------------------------#
-        host_taxid = 9606
-        host_read_cnt = 0
-        host_name    = db_access.get_organism_name(host_taxid)
-        host_lineage = tax_tree.get_taxonomy_lineage(host_taxid, db_access)
-        (genus, species) = host_name.split()
-
-        host = Organism (host_read_cnt, 0., str(host_taxid), ", ".join(host_lineage), host_name,
-                 genus, species, [], [], [], is_host=True)
+        host = Organism (host_read_cnt, float(host_read_cnt)/read_cnt, None, None, "Host",
+                 None, None, [], [], [], is_host=True)
         all_organisms.append(host)
 
         #--------------------------- ORGANISMS ------------------------------#
         for (taxid, cdss) in taxid2cdss.items():
             organism_name    = db_access.get_organism_name (taxid)
-            organism_lineage = tax_tree.get_taxonomy_lineage (taxid, db_access)
-            org_name_details = organism_name.split()
-            org_species = org_name_details[0]
-            if (len(org_name_details) > 1):
-                org_genus = org_name_details[1]
-            else: 
+            if not organism_name:
+                log.error("Unable to find name for taxid %d", taxid)
+                organism_name = ""
+                organism_lineage = ""
+                org_species = ""
                 org_genus = ""
-            if (len(org_name_details) > 2):
-                org_strain = org_name_details[2:]
-            else:
                 org_strain = ""
+            else:
+                organism_lineage = tax_tree.get_taxonomy_lineage (taxid, db_access)
+                org_name_details = organism_name.split()
+                org_species = org_name_details[0]
+                if (len(org_name_details) > 1):
+                    org_genus = org_name_details[1]
+                else: 
+                    org_genus = ""
+                if (len(org_name_details) > 2):
+                    org_strain = org_name_details[2:]
+                else:
+                    org_strain = ""
 
             organism_count   = 0
             organism_reads   = []
@@ -117,16 +133,16 @@ class Solver (object):
                         organism_reads.append (Read(read_id))
                 # Append genes (protein_id, locus_tag, product, name)
                 cds = cds_aln.cds
-                organism_genes.append (Gene(cds.protein_id, cds.locus_tag, cds.product, cds.gene))
+                organism_genes.append (Gene(cds.protein_id, cds.locus_tag, cds.product, cds.protein_id, cds.gene))
 	
-            organism = Organism (organism_count, 0., taxid, ", ".join(organism_lineage), organism_name,
+            organism = Organism (organism_count, float(organism_count)/read_cnt, taxid, ", ".join(organism_lineage), organism_name,
                  org_species, org_genus, organism_genes, [], organism_reads, is_host=False)
             all_organisms.append(organism)
 
 
 
 
-        xml = XMLOutput(dataset, all_organisms) 
+        xml = XMLOutput(dataset, all_organisms, output_solution_filename) 
         xml.xml_output();
 
 

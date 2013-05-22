@@ -1,50 +1,26 @@
 from data.containers.read   import ReadContainer
 from data.containers.record import RecordContainer
 from data.containers.cdsaln import CdsAlnContainer
-from ncbi.db.access   	    import DbQuery
+from ncbi.db.mock_db_access import MockDbQuery
 
-def fill_containers (alignment_file):
+def fill_containers (alignment_file, db_access):
+    '''
+    Populates read, record and CDS alignment container.
+    @return tuple(ReadContainer, RecordContainer, CdsAlnContainer)
+    '''
 
-    # initialization (sets up database access)
-    (readCont, recordCont, cdsAlnCont) = initialize_containers()
+    read_cont   = ReadContainer()
+    record_cont = RecordContainer()
+    record_cont.set_db_access(db_access)
+    cdsaln_cont = CdsAlnContainer()
 
-    # --------------------------- Populate readCont ---------------------------------- #
+#   1. Load all the information available in the alignment file
+    read_cont.populate_from_aln_file(alignment_file)
+#   2. Fetch all the records reported in the alignment file from the database
+    record_cont.populate(read_cont)
+#   3. Find to which coding sequences reads map
+    read_cont.populate_cdss(record_cont)
+#   4. Populate Cds Alignment container
+    cdsaln_cont.populate(read_cont)
 
-    # Populate from the read container
-    readCont.populate_from_aln_file(alignment_file)
-
-    # For testing
-    for read in readCont.read_repository.values():
-        if len(read.alignment_locations) > 0:
-            print read.id, ": Broj CDSova je: %d" % len(read.alignment_locations[0].aligned_cdss)
-            break
-    #firstRead       = readCont.read_repository.itervalues().next();
-    #firstReadAln    = firstRead.alignment_locations[0];
-
-
-    #print "Broj CDSova je: %d" % len(firstReadAln.aligned_cdss)
-
-    # Debugging output
-    print "readCont populated!"
-    print ( "len(readCont): %d" % len(readCont.read_repository) )
-
-    # --------------------------- Populate cdsAlnCont ---------------------------------- #
-
-    # Populate cdsAlnCont using readCont
-    cdsAlnCont.populate(readCont)
-    print len(cdsAlnCont.cds_repository)
-
-    return (readCont, recordCont, cdsAlnCont)
-
-
-def initialize_containers ():
-
-    # enable database access
-    dbQuery = DbQuery()
-    # create containers
-    recordCont = RecordContainer.Instance()
-    recordCont.set_db_access(dbQuery)
-    readCont   = ReadContainer.Instance()
-    cdsAlnCont = CdsAlnContainer.Instance()
-
-    return (readCont, recordCont, cdsAlnCont)
+    return (read_cont, record_cont, cdsaln_cont)

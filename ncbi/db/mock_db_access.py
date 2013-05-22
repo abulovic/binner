@@ -63,6 +63,11 @@ class MockCds(object):
 class MockDbQuery (object):
 
     def __init__ (self, cds_fname):
+        '''
+        @param: cds_fname(str) Path to a regular FASTA file 
+        from which mock database access creates mock records
+        which cdss that match the whole record.
+        '''
         self.records = {}
         cds_fhandle = open (cds_fname, 'r')
         seq_len = 0

@@ -1,11 +1,11 @@
 import sys
 from utils.autoassign import autoassign
+from xml.dom import minidom
 
 class Dataset(object):
 
     @autoassign
-    def __init__(self, name, host_genus, host_species, common_name, taxon_id, 
-                 taxonomy, sample_source, sample_type, seq_method, sequencer):
+    def __init__(self, desc_xml):
         ''' Dataset init
             @param name input file name
             @param host_genus host genus name
@@ -23,11 +23,12 @@ class Dataset(object):
 class Gene(object):
 
     @autoassign
-    def __init__(self, protein_id, locus_tag, product, name):
+    def __init__(self, protein_id, locus_tag, product, ref_name, name):
         ''' Gene init
             @param protein_id protein id e.g. AAS63914.1
             @param locus_tag e.g. YP_3766
             @param product e.g. putative carbohydrate kinase
+            @param ref_name ref name
             @param name gene name e.g. xylB3
         '''
         pass
@@ -83,26 +84,62 @@ class XMLOutput(object):
         self.organisms = organisms
         self.output_file_name = output_file_name
 
+    def _get_xml_text(self, nodes):
+
+        for node in nodes:
+            if node.nodeType == node.TEXT_NODE:
+                return node.data
+
     def _dataset_details_output(self, level):
 
         tab = " " * level * 2
+
+        xmldoc = minidom.parse(self.dataset.desc_xml)
+        
+        nodes = xmldoc.getElementsByTagName('datasetName')[0].childNodes
+        name = self._get_xml_text(nodes)
+
+        nodes = xmldoc.getElementsByTagName('hostGenus')[0].childNodes
+        host_genus = self._get_xml_text(nodes)
+
+        nodes = xmldoc.getElementsByTagName('hostSpecies')[0].childNodes
+        host_species = self._get_xml_text(nodes)
+
+        nodes = xmldoc.getElementsByTagName('commonName')[0].childNodes
+        common_name = self._get_xml_text(nodes)
+
+        nodes = xmldoc.getElementsByTagName('taxonomy')[0].childNodes
+        taxonomy = self._get_xml_text(nodes)
+
+        taxon_id = xmldoc.getElementsByTagName('taxonomy')[0].attributes['taxon_id'].value
+
+        nodes = xmldoc.getElementsByTagName('sampleSource')[0].childNodes
+        sample_source = self._get_xml_text(nodes)
+  
+        nodes = xmldoc.getElementsByTagName('sampleType')[0].childNodes
+        sample_type = self._get_xml_text(nodes)
+
+        nodes = xmldoc.getElementsByTagName('sequencer')[0].childNodes
+        sequencer = self._get_xml_text(nodes)
+
+        seq_method = xmldoc.getElementsByTagName('sequencer')[0].attributes['method'].value
    
-        if (self.dataset.name): 
-            print(tab + "<datasetName>" + str(self.dataset.name) + "</datasetName>")
-        if (self.dataset.host_genus):
-            print(tab + "<hostGenus>" + str(self.dataset.host_genus) + "</hostGenus>")
-        if (self.dataset.host_species):
-            print(tab + "<hostSpecies>" + str(self.dataset.host_species) + "</hostSpecies>")
-        if (self.dataset.common_name):
-            print(tab + "<commonName>" + str(self.dataset.common_name) + "</commonName>")
-        if (self.dataset.taxon_id):
-            print(tab + "<taxonomy taxon_id=\"" + str(self.dataset.taxon_id)  + "\">" + str(self.dataset.taxonomy) + "</taxonomy>")
-        if (self.dataset.sample_source):
-            print(tab + "<sampleSource>" + str(self.dataset.sample_source) + "</sampleSource>")
-        if (self.dataset.sample_type):
-            print(tab + "<sampleType>" + str(self.dataset.sample_type) + "</sampleType>")
-        if (self.dataset.seq_method and self.dataset.sequencer):
-            print(tab + "<sequencer method=\"" + str(self.dataset.seq_method) + "\">" + str(self.dataset.sequencer) + "</sequencer>")
+        if (name): 
+            print(tab + "<datasetName>" + str(name) + "</datasetName>")
+        if (host_genus):
+            print(tab + "<hostGenus>" + str(host_genus) + "</hostGenus>")
+        if (host_species):
+            print(tab + "<hostSpecies>" + str(host_species) + "</hostSpecies>")
+        if (common_name):
+            print(tab + "<commonName>" + str(common_name) + "</commonName>")
+        if (taxon_id):
+            print(tab + "<taxonomy taxon_id=\"" + str(taxon_id)  + "\">" + str(taxonomy) + "</taxonomy>")
+        if (sample_source):
+            print(tab + "<sampleSource>" + str(sample_source) + "</sampleSource>")
+        if (sample_type):
+            print(tab + "<sampleType>" + str(sample_type) + "</sampleType>")
+        if (seq_method and sequencer):
+            print(tab + "<sequencer method=\"" + str(seq_method) + "\">" + str(sequencer) + "</sequencer>")
 
     def _dataset_output(self, level):
         
@@ -116,7 +153,24 @@ class XMLOutput(object):
 
         tab = " " * level * 2
 
-        print(tab + "<gene protein_id=\"" + str(gene.protein_id) + "\" locus_tag=\"" + str(gene.locus_tag) + "\" product=\"" + str(gene.product) + "\">" + str(gene.name) + "</gene>" )
+        gene_attributes = "protein_id =\"" + str(gene.protein_id) + "\""
+        if(gene.locus_tag):
+            gene_attributes = gene_attributes + " locus_tag=\"" + str(gene.locus_tag) + "\""
+            
+        if(not gene.product):
+            gene.product = gene.protein_id
+            
+        gene_attributes = gene_attributes + " product=\"" + str(gene.product) + "\""
+
+        if(not gene.ref_name):
+            gene.ref_name = gene.protein_id
+
+        gene_attributes = gene_attributes + " ref_name=\"" + str(gene.ref_name) + "\""
+
+        if(not gene.name):
+            gene.name = gene.protein_id
+
+        print(tab + "<gene " + gene_attributes + ">" + str(gene.name) + "</gene>" )
 
     def _variant_details(self, level, variant):
 
@@ -143,7 +197,14 @@ class XMLOutput(object):
 
         tab = " " * level * 2
 
-        print(tab + "<relativeAmount count=\"" + str(organism.amount_count) + "\">" + str(organism.amount_relative) + "</relativeAmount>")
+        print(tab + "<relativeAmount count=\"" + str(organism.amount_count) + "\">" + str("{0:.3f}".format(organism.amount_relative*100)) + "</relativeAmount>")
+       
+        xmldoc = minidom.parse(self.dataset.desc_xml)
+        
+        if organism.is_host:
+            organism.taxon_id = xmldoc.getElementsByTagName('taxonomy')[0].attributes['taxon_id'].value
+            organism.taxonomy = self._get_xml_text(xmldoc.getElementsByTagName('taxonomy')[0].childNodes)
+        
         if (organism.taxon_id):
             print(tab + "<taxonomy taxon_id=\"" + str(organism.taxon_id) + "\">" + str(organism.taxonomy) + "</taxonomy>")
         if (organism.name):
@@ -163,10 +224,10 @@ class XMLOutput(object):
             self._gene_output(level+1, gene)
         print(tab + "</genes>")
 
-        print(tab + "<variants>")
-        for variant in organism.variants:
-            self._variant_output(level+1, variant)
-        print(tab + "</variants>")
+        #print(tab + "<variants>")
+        #for variant in organism.variants:
+        #    self._variant_output(level+1, variant)
+        #print(tab + "</variants>")
 
         print(tab + "<reads>")
         for read in organism.reads:

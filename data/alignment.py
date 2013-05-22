@@ -1,12 +1,12 @@
 from data.containers.record import RecordContainer
 from utils.location import Location
+from utils.location import LoactionParsingException
 
 class ReadAlnLocation (object):
     """ Contains information on alignment location on 
         an NT nucleotide string
     """
     
-    record_container                = RecordContainer.Instance()
     def __init__ (self, read_id, nucleotide_accession, db_source, genome_index, score, 
                   location_span, complement, active=True):
         self.read_id                = read_id
@@ -17,7 +17,7 @@ class ReadAlnLocation (object):
         self.location_span          = location_span
         self.complement             = complement
         self.active                 = active
-        self.determine_coding_seqs()
+        # self.determine_coding_seqs()
     
     def set_active (self, active):
         '''
@@ -41,23 +41,33 @@ class ReadAlnLocation (object):
         """
         return self.potential_host
 
-    def determine_coding_seqs (self):
+    def determine_coding_seqs (self, record_container):
         ''' Determines which of the CDSs in the record aligned_regions
             aligned to the read.
             @return list of tuples (cds, intersecting_location) if such exist, 
             None if record is not available from the database
         '''
         self.aligned_cdss = []
-        record = ReadAlnLocation.record_container.fetch_record (self.nucleotide_accession)
+        record = record_container.fetch_record (self.nucleotide_accession)
 
         # if not possible to fetch a record from the db, return None
         if not record:
             return None
 
         (start,stop) = self.location_span
-        location = Location.from_location_str("%d..%d" % (start, stop))
+        try:
+            location = Location.from_location_str("%d..%d" % (start, stop))
+        except LoactionParsingException, e:
+            print "ReadAlignment/determine_coding_seqs:", e
+
+            self.aligned_cdss = []
+            return self.aligned_cdss
         for cds in record.cdss:
-            cds_location = Location.from_location_str(cds.location)
+            try:
+                cds_location = Location.from_location_str(cds.location)
+            except LoactionParsingException, e: 
+                print "ReadAlignment/determine_coding_seqs:", e
+                continue
             location_intersection = cds_location.find_intersection (location)
             if location_intersection is not None:
                 self.aligned_cdss.append ((cds, location_intersection))
