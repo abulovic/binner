@@ -197,7 +197,7 @@ class XMLOutput(object):
 
         tab = " " * level * 2
 
-        print(tab + "<relativeAmount count=\"" + str(organism.amount_count) + "\">" + str(organism.amount_relative) + "</relativeAmount>")
+        print(tab + "<relativeAmount count=\"" + str(organism.amount_count) + "\">" + str("{0:.3f}".format(organism.amount_relative*100)) + "</relativeAmount>")
        
         xmldoc = minidom.parse(self.dataset.desc_xml)
         
