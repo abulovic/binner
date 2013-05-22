@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<organismsReport>
+  <dataset>
+    <datasetName>Example1.fq</datasetName>
+    <hostGenus>Homo</hostGenus>
+    <hostSpecies>sapiens</hostSpecies>
+    <commonName>human</commonName>
+    <taxonomy taxon_id="9606">Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae; Homo.</taxonomy>
+    <sampleSource>Whole Blood</sampleSource>
+    <sampleType>DNA</sampleType>
+    <sequencer method="single-end">Roche 454</sequencer>
+  </dataset>
+</organismsReport>
