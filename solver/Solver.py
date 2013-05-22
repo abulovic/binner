@@ -35,7 +35,7 @@ class Solver (object):
 
     # Here should go some User Interface methods like getXML(), solve() and similar
 
-    def generateSolutionXML(self, alignment_file, dataset_xml_file):
+    def generateSolutionXML(self, alignment_file, dataset_xml_file, output_solution_filename):
         ''' Main UI method.
             Generates XML file containing solution.
         '''
@@ -78,13 +78,13 @@ class Solver (object):
         print "Taxonomy determined."
 
         # Generate XML file
-        self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree, dataset_xml_file)
+        self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree, dataset_xml_file, output_solution_filename)
 
         print "Proba 0: funkcija generateXML prosla!"
 
         pass
 
-    def generateXML (self, host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container,  db_access, tax_tree, dataset_xml_file):
+    def generateXML (self, host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container,  db_access, tax_tree, dataset_xml_file, output_solution_filename):
 
 #        tax_tree     = TaxTree()
 
@@ -142,7 +142,7 @@ class Solver (object):
 
 
 
-        xml = XMLOutput(dataset, all_organisms) 
+        xml = XMLOutput(dataset, all_organisms, output_solution_filename) 
         xml.xml_output();
 
 
