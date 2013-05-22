@@ -54,7 +54,7 @@ class Read (object):
                                            (start, stop),   complement);
                 newRead_aln_locs.append(newAlignInfo)
             except Exception as e:
-                print "Location parsing error."
+                log.error("Location parsing error.")
 
         return Read(newRead_id, newRead_length, newRead_aln_locs)
 

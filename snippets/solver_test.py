@@ -14,8 +14,11 @@ from solver.Solver import Solver
 from solver.determine_host import determine_host
 
 import statistics.statistics as stats
+from utils.logger import Logger
 
 if __name__ == '__main__':
+
+    Logger("LOGFILE")
 
     if (len(sys.argv) < 4):
         print "Solver usage: python populate_containers.py <INPUT_ALN_FILE> <DATASET_DESC_XML_FILE> <SOLUTION_XML_OUTPUT_FILE>"
@@ -24,7 +27,7 @@ if __name__ == '__main__':
     dataset_xml_file = sys.argv[2]
     solution_xml_output_file = sys.argv[3]
 
-    print "I got the input file!"
+    log.info("I got the input file!")
 
         # # ---------------------- Initialize containers --------------------- #
 
@@ -50,10 +53,10 @@ if __name__ == '__main__':
                         
 
         # ---------------------- Run Solver --------------------- #
-
+    
     solver.generateSolutionXML(aln_file, dataset_xml_file, solution_xml_output_file)
 
-    print "Successfully initialized solver!"
+    log.info("Successfully initialized solver!")
         
 	# fill_containers (aln_file)
 

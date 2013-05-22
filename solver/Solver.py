@@ -8,7 +8,7 @@ from ncbi.db.access         import DbQuery
 from ncbi.taxonomy.tree     import TaxTree
 
 from formats.xml_output     import *
-
+# import logging
 
 class Solver (object):
 
@@ -50,10 +50,10 @@ class Solver (object):
         record_container.set_db_access(db_access)
         # Populate read container - NOT NOW NEEDED
         read_container.populate_from_aln_file (alignment_file)
-        print "Read container populated!"
+        log.info("Read container populated!")
         # Extract all records from database
         record_container.populate(read_container)
-        print "Record container populated!"
+        log.info("Record container populated!")
         # find intersecting cdss for read alignments
         read_container.populate_cdss(record_container)
         read_cnt = len(read_container.fetch_all_reads(format=list))
@@ -61,26 +61,26 @@ class Solver (object):
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
         (host_taxid, host_read_cnt, read_container) = self.determine_host(read_container)
-        print host_taxid, host_read_cnt
+        log.info("host_taxid:%s host_read_cnt:%s", str(host_taxid), str(host_read_cnt))
         if host_taxid:
-            print "Host identified: %d!" % (int(host_taxid))
+            log.info("Host identified: %d!", (int(host_taxid)))
 
         # Populate CDS container 
         cds_aln_container.populate(read_container)
-        print "Cds Aln Container populated!"
+        log.info("Cds Aln Container populated!")
 
         # Map each read to one CDS (greedy)
         self.read2cds_solver.map_reads_2_cdss(cds_aln_container)
-        print "Reads mapped to CDSS."
+        log.info("Reads mapped to CDSS.")
 
         # Determine species
         taxid2cdss = self.taxonomy_solver.map_cdss_2_species (db_access, tax_tree, read_container, cds_aln_container)
-        print "Taxonomy determined."
+        log.info("Taxonomy determined.")
 
         # Generate XML file
         self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree, dataset_xml_file, output_solution_filename)
 
-        print "Proba 0: funkcija generateXML prosla!"
+        log.info("Proba 0: funkcija generateXML prosla!")
 
         pass
 
@@ -101,7 +101,7 @@ class Solver (object):
         for (taxid, cdss) in taxid2cdss.items():
             organism_name    = db_access.get_organism_name (taxid)
             if not organism_name:
-                print "ERROR:Unable to find name for taxid %d" % taxid
+                log.error("Unable to find name for taxid %d", taxid)
                 organism_name = ""
                 organism_lineage = ""
                 org_species = ""
