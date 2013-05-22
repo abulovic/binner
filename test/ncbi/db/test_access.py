@@ -54,6 +54,19 @@ class Test(unittest.TestCase):
         tax_id = self.dbQuery.get_organism_taxid('not in database!!!')
         self.assertEqual(tax_id, ())
 
+    def testOrganismRank (self):
+        # query by taxid
+        rank = self.dbQuery.get_organism_rank(9606, False)
+        self.assertEqual(rank, 'species')
+        # query by name
+        rank = self.dbQuery.get_organism_rank('Homo sapiens', True)
+        self.assertEqual(rank, 'species')
+        # not in database
+        rank = self.dbQuery.get_organism_rank('gargoyle', True)
+        self.assertEqual(rank, None)
+        
+        
+
 
 
 if __name__ == "__main__":
