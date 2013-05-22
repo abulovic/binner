@@ -102,6 +102,30 @@ class DbQuery(object):
             ((org_name,),) = org_name
         return org_name
 
+    def get_organism_rank (self, query, by_name=False):
+        '''
+        Fetches organism rank. Query can be done using organism name 
+        or organism tax ID. 
+        @param query (str/int) depends on by_name parameter
+        @param by_name (boolean) true if query should be done using organism
+        name instead of tax ID.
+        @return (str) organism taxonomy rank
+        '''
+        if by_name:
+            tax_id = self.get_organism_taxid(query)
+        else:
+            tax_id = query
+        if not tax_id:
+            return None
+
+        tax_id = int(tax_id)
+        sql = 'SELECT rank FROM ncbi_nodes WHERE tax_id=%d'
+        self.ncbitax_db.query(sql % tax_id)
+        result = self.ncbitax_db.use_result()
+        rank = result.fetch_row()
+        if rank:
+            ((rank,),) = rank
+        return rank
 
     def get_organism_taxid (self, organism_name, name_class='scientific name'):
         '''
