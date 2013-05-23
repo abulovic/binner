@@ -137,7 +137,7 @@ class Solver (object):
                 organism_genes.append (Gene(cds.protein_id, cds.locus_tag, cds.product, cds.protein_id, cds.gene))
 	    
             org_relative_cnt = float(organism_count)/read_cnt
-            organism = Organism (organism_count, org_relative_cnt, taxid, ", ".join(organism_lineage), organism_name,
+            organism = Organism (organism_count, org_relative_cnt, taxid, "; ".join(organism_lineage), organism_name,
                  org_species, org_genus, organism_genes, [], organism_reads, is_host=False)
             all_organisms.append(organism)
 
