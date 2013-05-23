@@ -5,9 +5,9 @@ sys.path.append(os.getcwd())
 from solver.Solver import Solver
 from solver.taxonomy.SimpleTaxonomySolver       import SimpleTaxonomySolver
 from solver.taxonomy.SimpleJoinTaxonomySolver   import SimpleJoinTaxonomySolver
-from solver.read2cds.GreedySolver           import GreedySolver
-from solver.read2cds.BestScoreSolver        import BestScoreSolver
-from solver.determine_host              import determine_host
+from solver.read2cds.GreedySolver               import GreedySolver
+from solver.read2cds.BestScoreSolver            import BestScoreSolver
+from solver.determine_host                      import determine_host
 
 from utils.logger import Logger
 
@@ -48,8 +48,3 @@ log.info("Started.")
 solver = Solver(determine_host, read2cds_solver, tax_solver)
 solver.generateSolutionXML(args.input[0], args.descr[0], args.output[0])
 log.info("Finished.")
-
-
-
-                 
-
