@@ -93,7 +93,8 @@ class Solver (object):
         all_organisms = []
 
         #-------------------------------- HOST -------------------------------#
-        host = Organism (host_read_cnt, float(host_read_cnt)/read_cnt, None, None, "Host",
+        host_relative_amount = float(host_read_cnt)/read_cnt*100.
+        host = Organism (host_read_cnt, host_relative_amount, None, None, "Host",
                  None, None, [], [], [], is_host=True)
         all_organisms.append(host)
 
@@ -134,8 +135,9 @@ class Solver (object):
                 # Append genes (protein_id, locus_tag, product, name)
                 cds = cds_aln.cds
                 organism_genes.append (Gene(cds.protein_id, cds.locus_tag, cds.product, cds.protein_id, cds.gene))
-	
-            organism = Organism (organism_count, float(organism_count)/read_cnt, taxid, ", ".join(organism_lineage), organism_name,
+	    
+            org_relative_cnt = float(organism_count)/read_cnt*100.
+            organism = Organism (organism_count, org_relative_cnt, taxid, ", ".join(organism_lineage), organism_name,
                  org_species, org_genus, organism_genes, [], organism_reads, is_host=False)
             all_organisms.append(organism)
 
