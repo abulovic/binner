@@ -110,7 +110,7 @@ def get_organism_data (xml_root):
 
     return org_list
 
-def get_attribute_count (genes ):
+def get_attribute_count (genes):
     '''
     Checks for each gene how many of the gene attributes 
     are specified. Optionally checks if any of the attributes 
@@ -138,13 +138,31 @@ def get_attribute_count (genes ):
             'product':product_cnt, 'ref_name':ref_name_cnt, 'ref_start': ref_start_cnt,
             'ref_end': ref_end_cnt, 'gene_name': gene_name_cnt}
 
+def get_duplicate_locus_and_name_count (genes):
+    '''
+    Checks how many locus_tag and gene_name attributes of 
+    a same gene are identical
+    @param genes (list of Gene objects)
+    @return (dict, key=attribute name, value=int)
+    '''
 
+    same_cnt = 0
+    for gene in genes:
+        if gene.locus_tag == gene.gene_name: same_cnt += 1
+
+    return {'locus_tag_vs_gene_name_same_percantage':'{0:.2f}'.format(same_cnt/float(len(genes))*100)+"%",
+            'duplicates_cnt':same_cnt, 'all_gene_cnt':len(genes)}
 
 
 
 if __name__ == '__main__':
-    fpath1 = '/cygdrive/e/Projects/Metagenomics/data/binner_output/Example_output/Example1.21_05.2.xml'
-    fpath2 = '/cygdrive/e/Projects/Metagenomics/data/Example/Results/Example1.xml'
+
+    if (len(sys.argv) < 3):
+        print "XML stats usage: python xml_analysis.py <XML_OUR_SOLUTION> <XML_INNOCENTIVE_SOLUTION>"
+        sys.exit(-1)
+
+    fpath1 = sys.argv[1] 
+    fpath2 = sys.argv[2]
     xml_root1 = load_as_xml(fpath1)
     orgs1 = set(get_organism_data(xml_root1))
     xml_root2 = load_as_xml(fpath2)
@@ -158,8 +176,10 @@ if __name__ == '__main__':
     print len(genes2)
     print len(genes1 & genes2)
 
-    gene_stats = get_attribute_count (genes1, False)
+    gene_stats = get_attribute_count (genes1)
     print gene_stats
-    gene_stats = get_attribute_count (genes2, False)
+    gene_stats = get_attribute_count (genes2)
     print gene_stats
 
+    locus_tag_vs_gene_name_duplicate_stats = get_duplicate_locus_and_name_count(genes2)
+    print locus_tag_vs_gene_name_duplicate_stats
