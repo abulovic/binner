@@ -407,7 +407,7 @@ class Location(object):
                 intersection.sub_strand = 1
                 intersection.operator = 'join'
                 return intersection
-            else: #sinle intersection
+            else: #single intersection
                 intersection = intersections[0]
                 intersection.strand = -1 if self.complement else 1
                 return intersection
