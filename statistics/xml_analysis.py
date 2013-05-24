@@ -7,7 +7,7 @@ sys.path.append(os.getcwd())
 import xml.etree.ElementTree as ET
 
 from utils.autoassign import autoassign
-
+from sets import Set
 
 class Organism (object):
     @autoassign
@@ -88,7 +88,9 @@ def get_organism_data (xml_root):
         # <taxonomy taxon_id="315393">Viruses, dsDNA viruses, no RNA stage, Mimiviridae, Mimivirus</taxonomy>
         tax_node = organism.find('taxonomy')
         taxonomy = tax_node.text
-        tax_id   = int(tax_node.attrib['taxon_id'])
+        # appears that in innocentive example results taxon_ids can be empty, so handling this
+        if 'taxon_id' in tax_node.attrib.keys():
+            tax_id   = int(tax_node.attrib['taxon_id'])
         # <nearestNeighbor>Enterobacteriaceae</nearestNeighbor>
         neighbor_node    = organism.find('nearestNeighbor')
         nearest_neighbor = neighbor_node.text if neighbor_node else None 
@@ -153,7 +155,19 @@ def get_duplicate_locus_and_name_count (genes):
     return {'locus_tag_vs_gene_name_same_percantage':'{0:.2f}'.format(same_cnt/float(len(genes))*100)+"%",
             'duplicates_cnt':same_cnt, 'all_gene_cnt':len(genes)}
 
+def get_organisms_stats (orgs1, orgs2):
+    
+    taxon_id_org1 = Set([])
+    for organism in orgs1:
+        taxon_id_org1.add(organism.tax_id)
+    
+    taxon_id_org2 = Set([])
+    for organism in orgs2:
+        taxon_id_org2.add(organism.tax_id)
 
+    similarity = '{0:.2f}'.format(float(len(taxon_id_org1 & taxon_id_org2)) / len(taxon_id_org1 | taxon_id_org2)*100)+"%"
+
+    return {'organisms_similarity_by_taxon_id':similarity}
 
 if __name__ == '__main__':
 
@@ -183,3 +197,6 @@ if __name__ == '__main__':
 
     locus_tag_vs_gene_name_duplicate_stats = get_duplicate_locus_and_name_count(genes2)
     print locus_tag_vs_gene_name_duplicate_stats
+
+    organism_stats = get_organisms_stats(orgs1, orgs2)
+    print organism_stats

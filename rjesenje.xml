@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<organismsReport>
+  <dataset>
+    <datasetName>Example1.fq</datasetName>
+    <hostGenus>Homo</hostGenus>
+    <hostSpecies>sapiens</hostSpecies>
+    <commonName>human</commonName>
+    <taxonomy taxon_id="9606">Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae; Homo.</taxonomy>
+    <sampleSource>Whole Blood</sampleSource>
+    <sampleType>DNA</sampleType>
+    <sequencer method="single-end">Roche 454</sequencer>
+  </dataset>
+  <organisms>
+    <organism>
+      <relativeAmount count="0">0.000</relativeAmount>
+      <taxonomy taxon_id="9606">Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae; Homo.</taxonomy>
+      <organismName>Host</organismName>
+    </organism>
+    <organism>
+      <relativeAmount count="4">11.765</relativeAmount>
+      <taxonomy taxon_id="316385">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli K-12; Escherichia coli str. K-12 substr. DH10B</taxonomy>
+      <organismName>Escherichia coli str. K-12 substr. DH10B</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="ACB02497.1" locus_tag="ECDH10B_1393" product="aconitate hydratase 1" ref_name="ACB02497.1">acnA</gene>
+        <gene protein_id ="ACB04714.1" locus_tag="ECDH10B_3848" product="cryptic adenine deaminase" ref_name="ACB04714.1">ade</gene>
+        <gene protein_id ="ACB01311.1" locus_tag="ECDH10B_0112" product="predicted transposase" ref_name="ACB01311.1">yadD</gene>
+        <gene protein_id ="ACB04131.1" locus_tag="ECDH10B_3220" product="predicted outer membrane usher protein" ref_name="ACB04131.1">yqiG</gene>
+      </genes>
+      <reads>
+        <sequence>m120616_141407_00128_c100362422550000001523027210041247_s2_p0/6627/849_1666</sequence>
+        <sequence>m120525_101612_00128_c100334332550000001523018909161217_s1_p0/31479/2375_2959</sequence>
+        <sequence>m120616_121748_00128_c100362422550000001523027210041246_s1_p0/57570/457_1356</sequence>
+        <sequence>m120605_121921_00128_c100350042550000001523025609291266_s2_p0/37099/711_1321</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">2.941</relativeAmount>
+      <taxonomy taxon_id="386585">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli O157:H7; Escherichia coli O157:H7 str. Sakai</taxonomy>
+      <organismName>Escherichia coli O157:H7 str. Sakai</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="BAB38771.1" product="probable nadAB transcriptional regulator" ref_name="BAB38771.1">ECs5348</gene>
+      </genes>
+      <reads>
+        <sequence>m120525_051854_00128_c100334332550000001523018909161215_s1_p0/25165/208_1562</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">2.941</relativeAmount>
+      <taxonomy taxon_id="741093">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli Xuzhou21</taxonomy>
+      <organismName>Escherichia coli Xuzhou21</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="AFJ31585.1" locus_tag="CDCO157_4533" product="putative transcriptional regulator" ref_name="AFJ31585.1">AFJ31585.1</gene>
+      </genes>
+      <reads>
+        <sequence>m120525_101612_00128_c100334332550000001523018909161217_s2_p0/7926/252_2099</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">2.941</relativeAmount>
+      <taxonomy taxon_id="550">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Enterobacter; Enterobacter cloacae complex; Enterobacter cloacae</taxonomy>
+      <organismName>Enterobacter cloacae</organismName>
+      <genus>Enterobacter</genus>
+      <species>cloacae</species>
+      <genes>
+        <gene protein_id ="AFQ93512.1" product="TEM-1 beta-lactamase" ref_name="AFQ93512.1">blaTEM-1b</gene>
+      </genes>
+      <reads>
+        <sequence>m120619_110522_00128_c100362262550000001523027210041265_s2_p0/79307/0_1759</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">2.941</relativeAmount>
+      <taxonomy taxon_id="595496">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli K-12; Escherichia coli BW2952</taxonomy>
+      <organismName>Escherichia coli BW2952</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="ACR62757.1" locus_tag="BWG_3488" product="diaminopimelate epimerase" ref_name="ACR62757.1">dapF</gene>
+      </genes>
+      <reads>
+        <sequence>m120605_141604_00128_c100350042550000001523025609291267_s2_p0/56999/0_376</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">2.941</relativeAmount>
+      <taxonomy taxon_id="511145">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli K-12; Escherichia coli str. K-12 substr. MG1655</taxonomy>
+      <organismName>Escherichia coli str. K-12 substr. MG1655</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="AAC75912.1" locus_tag="b2874" product="putative amino acid kinase" ref_name="AAC75912.1">yqeA</gene>
+      </genes>
+      <reads>
+        <sequence>m120525_025321_00128_c100334332550000001523018909161214_s2_p0/63509/3323_4128</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="3">8.824</relativeAmount>
+      <taxonomy taxon_id="566546">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli W</taxonomy>
+      <organismName>Escherichia coli W</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="ADT73723.1" locus_tag="ECW_m0174" product="periplasmic chaperone" ref_name="ADT73723.1">skp</gene>
+        <gene protein_id ="ADT75221.1" locus_tag="ECW_m1753" product="oxidoreductase subunit" ref_name="ADT75221.1">ynfF</gene>
+      </genes>
+      <reads>
+        <sequence>m120525_025321_00128_c100334332550000001523018909161214_s2_p0/37800/846_1593</sequence>
+        <sequence>m120619_130141_00128_c100362262550000001523027210041266_s2_p0/18113/1143_1810</sequence>
+        <sequence>m120524_193437_00128_c100334332550000001523018909161211_s1_p0/55829/3145_4063</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="2">5.882</relativeAmount>
+      <taxonomy taxon_id="481805">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli C; Escherichia coli ATCC 8739</taxonomy>
+      <organismName>Escherichia coli ATCC 8739</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="ACA76620.1" locus_tag="EcolC_0951" product="CRISPR-associated helicase Cas3" ref_name="ACA76620.1">ACA76620.1</gene>
+        <gene protein_id ="ACA77964.1" locus_tag="EcolC_2329" product="amino acid permease-associated region" ref_name="ACA77964.1">ACA77964.1</gene>
+      </genes>
+      <reads>
+        <sequence>m120524_193437_00128_c100334332550000001523018909161211_s2_p0/21015/0_511</sequence>
+        <sequence>m120619_145749_00128_c100362262550000001523027210041267_s2_p0/26390/356_1176</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">2.941</relativeAmount>
+      <taxonomy taxon_id="413997">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli B; Escherichia coli B str. REL606</taxonomy>
+      <organismName>Escherichia coli B str. REL606</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="ACT38648.1" locus_tag="ECB_00966" product="DNA helicase IV" ref_name="ACT38648.1">helD</gene>
+      </genes>
+      <reads>
+        <sequence>m120524_193437_00128_c100334332550000001523018909161211_s2_p0/7317/268_856</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="4">11.765</relativeAmount>
+      <taxonomy taxon_id="866768">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli 'BL21-Gold(DE3)pLysS AG'</taxonomy>
+      <organismName>Escherichia coli 'BL21-Gold(DE3)pLysS AG'</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="ACT27356.1" locus_tag="ECBD_0280" product="RNA polymerase, sigma 32 subunit, RpoH" ref_name="ACT27356.1">ACT27356.1</gene>
+        <gene protein_id ="ACT29820.1" locus_tag="ECBD_2800" product="pyruvate formate-lyase" ref_name="ACT29820.1">ACT29820.1</gene>
+        <gene protein_id ="ACT31078.1" locus_tag="ECBD_4095" product="regulator of ribonuclease activity A" ref_name="ACT31078.1">ACT31078.1</gene>
+        <gene protein_id ="ACT28232.1" locus_tag="ECBD_1166" product="alpha-2-macroglobulin domain protein" ref_name="ACT28232.1">ACT28232.1</gene>
+      </genes>
+      <reads>
+        <sequence>m120524_170912_00128_c100334332550000001523018909161210_s2_p0/37864/179_1552</sequence>
+        <sequence>m120525_025321_00128_c100334332550000001523018909161214_s1_p0/74766/1695_3591</sequence>
+        <sequence>m120525_101612_00128_c100334332550000001523018909161217_s1_p0/59200/2772_3543</sequence>
+        <sequence>m120605_102253_00128_c100350042550000001523025609291265_s1_p0/11277/2300_2900</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">2.941</relativeAmount>
+      <taxonomy taxon_id="331112">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli HS</taxonomy>
+      <organismName>Escherichia coli HS</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="ABV07061.1" locus_tag="EcHS_A2811" product="ribonucleoside-diphosphate reductase, alpha subunit" ref_name="ABV07061.1">nrdE</gene>
+      </genes>
+      <reads>
+        <sequence>m120605_121921_00128_c100350042550000001523025609291266_s2_p0/8963/3315_4319</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="3">8.824</relativeAmount>
+      <taxonomy taxon_id="562">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli</taxonomy>
+      <organismName>Escherichia coli</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="CAA33226.1" product="CAA33226.1" ref_name="CAA33226.1">CAA33226.1</gene>
+        <gene protein_id ="AAB20842.1" product="RFE" ref_name="AAB20842.1">rfe</gene>
+        <gene protein_id ="CAA64448.1" product="nitrite extrusion protein" ref_name="CAA64448.1">CAA64448.1</gene>
+      </genes>
+      <reads>
+        <sequence>m120605_121921_00128_c100350042550000001523025609291266_s1_p0/65541/2948_3415</sequence>
+        <sequence>m120616_121748_00128_c100362422550000001523027210041246_s2_p0/73151/5317_5631</sequence>
+        <sequence>m120525_002854_00128_c100334332550000001523018909161213_s1_p0/2300/4649_5328</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">2.941</relativeAmount>
+      <taxonomy taxon_id="573235">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli O26:H11; Escherichia coli O26:H11 str. 11368</taxonomy>
+      <organismName>Escherichia coli O26:H11 str. 11368</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="BAI28076.1" locus_tag="ECO26_4920" product="conserved predicted protein" ref_name="BAI28076.1">yicN</gene>
+      </genes>
+      <reads>
+        <sequence>m120525_002854_00128_c100334332550000001523018909161213_s1_p0/36674/4028_5343</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">2.941</relativeAmount>
+      <taxonomy taxon_id="1033813">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli NA114</taxonomy>
+      <organismName>Escherichia coli NA114</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="AEG36375.1" locus_tag="ECNA114_1550" product="Hypothetical protein" ref_name="AEG36375.1">AEG36375.1</gene>
+      </genes>
+      <reads>
+        <sequence>m120525_002854_00128_c100334332550000001523018909161213_s1_p0/67296/0_194</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="2">5.882</relativeAmount>
+      <taxonomy taxon_id="696406">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli UMNK88</taxonomy>
+      <organismName>Escherichia coli UMNK88</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="AEE59612.1" locus_tag="UMNK88_5144" product="conserved hypothetical protein" ref_name="AEE59612.1">AEE59612.1</gene>
+        <gene protein_id ="AEE56102.1" locus_tag="UMNK88_1502" product="FAD-dependent oxidoreductase" ref_name="AEE56102.1">AEE56102.1</gene>
+      </genes>
+      <reads>
+        <sequence>m120605_102253_00128_c100350042550000001523025609291265_s2_p0/78638/2089_3112</sequence>
+        <sequence>m120524_220209_00128_c100334332550000001523018909161212_s2_p0/70289/4459_5073</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="3">8.824</relativeAmount>
+      <taxonomy taxon_id="316407">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli K-12; Escherichia coli str. K-12 substr. W3110</taxonomy>
+      <organismName>Escherichia coli str. K-12 substr. W3110</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="BAE77349.1" product="pyridine nucleotide transhydrogenase, soluble" ref_name="BAE77349.1">sthA</gene>
+      </genes>
+      <reads>
+        <sequence>m120524_170912_00128_c100334332550000001523018909161210_s2_p0/25459/1840_2629</sequence>
+        <sequence>m120524_170912_00128_c100334332550000001523018909161210_s2_p0/25459/984_1795</sequence>
+        <sequence>m120524_170912_00128_c100334332550000001523018909161210_s2_p0/25459/130_937</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="3">8.824</relativeAmount>
+      <taxonomy taxon_id="536056">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli DH1</taxonomy>
+      <organismName>Escherichia coli DH1</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="ACX40155.1" locus_tag="EcDH1_2519" product="Cupin 4 family protein" ref_name="ACX40155.1">ACX40155.1</gene>
+        <gene protein_id ="ACX40022.1" locus_tag="EcDH1_2379" product="cob(I)alamin adenosyltransferase" ref_name="ACX40022.1">ACX40022.1</gene>
+        <gene protein_id ="ACX38994.1" locus_tag="EcDH1_1322" product="conserved hypothetical protein" ref_name="ACX38994.1">ACX38994.1</gene>
+      </genes>
+      <reads>
+        <sequence>m120616_141407_00128_c100362422550000001523027210041247_s2_p0/70256/3860_4516</sequence>
+        <sequence>m120605_102253_00128_c100350042550000001523025609291265_s1_p0/78721/1924_2496</sequence>
+        <sequence>m120605_121921_00128_c100350042550000001523025609291266_s2_p0/12522/0_1535</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">2.941</relativeAmount>
+      <taxonomy taxon_id="701177">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli O55:H7; Escherichia coli O55:H7 str. CB9615</taxonomy>
+      <organismName>Escherichia coli O55:H7 str. CB9615</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="ADD55279.1" locus_tag="G2583_0654" product="Putative fimbrial protein" ref_name="ADD55279.1">sfmF</gene>
+      </genes>
+      <reads>
+        <sequence>m120525_075121_00128_c100334332550000001523018909161216_s1_p0/56659/0_685</sequence>
+      </reads>
+    </organism>
+  </organisms>
+</organismsReport>

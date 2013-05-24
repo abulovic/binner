@@ -1,0 +1,26 @@
+2013-05-24 11:38:42,698 INFO I got the input file!
+2013-05-24 11:38:46,821 INFO Read container populated!
+2013-05-24 11:38:46,856 INFO No record with ID U29579.1
+2013-05-24 11:38:46,864 INFO No record with ID U00006.1
+2013-05-24 11:38:46,870 INFO No record with ID L10328.1
+2013-05-24 11:38:46,888 INFO No record with ID J04726.1
+2013-05-24 11:38:46,898 INFO No record with ID U00039.1
+2013-05-24 11:38:46,899 INFO No record with ID J05516.1
+2013-05-24 11:38:46,922 INFO No record with ID M19921.2
+2013-05-24 11:38:46,933 INFO No record with ID JX486126.1
+2013-05-24 11:38:46,936 INFO No record with ID M87049.1
+2013-05-24 11:38:46,937 INFO No record with ID M76129.1
+2013-05-24 11:38:46,940 INFO No record with ID L02948.1
+2013-05-24 11:38:46,947 INFO No record with ID U14003.1
+2013-05-24 11:38:46,952 INFO No record with ID U28375.1
+2013-05-24 11:38:46,954 INFO No record with ID L19201.1
+2013-05-24 11:38:46,956 INFO No record with ID U82598.1
+2013-05-24 11:38:46,959 INFO No record with ID L17086.1
+2013-05-24 11:38:46,973 INFO No record with ID L04574.1
+2013-05-24 11:38:46,973 INFO Record container populated!
+2013-05-24 11:39:12,061 INFO host_taxid:None host_read_cnt:0
+2013-05-24 11:39:12,066 INFO Cds Aln Container populated!
+2013-05-24 11:39:12,784 INFO Reads mapped to CDSS.
+2013-05-24 11:39:12,790 INFO Taxonomy determined.
+2013-05-24 11:39:12,847 INFO Proba 0: funkcija generateXML prosla!
+2013-05-24 11:39:13,975 INFO Successfully initialized solver!
