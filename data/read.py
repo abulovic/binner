@@ -32,6 +32,8 @@ class Read (object):
         # headerList: [read_id, num_align]
         headerList = valList[0].split(',');
         newRead_id = headerList[0];
+        if newRead_id.startswith('@'):
+            newRead_id = newRead_id[1:]
         num_align = headerList[1];
         
         # Store every alignInfo
@@ -54,7 +56,7 @@ class Read (object):
                                            (start, stop),   complement);
                 newRead_aln_locs.append(newAlignInfo)
             except Exception as e:
-                print "Location parsing error."
+                log.error("Location parsing error.")
 
         return Read(newRead_id, newRead_length, newRead_aln_locs)
 

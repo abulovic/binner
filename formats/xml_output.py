@@ -23,11 +23,12 @@ class Dataset(object):
 class Gene(object):
 
     @autoassign
-    def __init__(self, protein_id, locus_tag, product, name):
+    def __init__(self, protein_id, locus_tag, product, ref_name, name):
         ''' Gene init
             @param protein_id protein id e.g. AAS63914.1
             @param locus_tag e.g. YP_3766
             @param product e.g. putative carbohydrate kinase
+            @param ref_name ref name
             @param name gene name e.g. xylB3
         '''
         pass
@@ -152,7 +153,24 @@ class XMLOutput(object):
 
         tab = " " * level * 2
 
-        print(tab + "<gene protein_id=\"" + str(gene.protein_id) + "\" locus_tag=\"" + str(gene.locus_tag) + "\" product=\"" + str(gene.product) + "\">" + str(gene.name) + "</gene>" )
+        gene_attributes = "protein_id =\"" + str(gene.protein_id) + "\""
+        if(gene.locus_tag):
+            gene_attributes = gene_attributes + " locus_tag=\"" + str(gene.locus_tag) + "\""
+            
+        if(not gene.product):
+            gene.product = gene.protein_id
+            
+        gene_attributes = gene_attributes + " product=\"" + str(gene.product) + "\""
+
+        if(not gene.ref_name):
+            gene.ref_name = gene.protein_id
+
+        gene_attributes = gene_attributes + " ref_name=\"" + str(gene.ref_name) + "\""
+
+        if(not gene.name):
+            gene.name = gene.protein_id
+
+        print(tab + "<gene " + gene_attributes + ">" + str(gene.name) + "</gene>" )
 
     def _variant_details(self, level, variant):
 
@@ -179,7 +197,7 @@ class XMLOutput(object):
 
         tab = " " * level * 2
 
-        print(tab + "<relativeAmount count=\"" + str(organism.amount_count) + "\">" + str(organism.amount_relative) + "</relativeAmount>")
+        print(tab + "<relativeAmount count=\"" + str(organism.amount_count) + "\">" + str("{0:.3f}".format(organism.amount_relative*100)) + "</relativeAmount>")
        
         xmldoc = minidom.parse(self.dataset.desc_xml)
         
@@ -206,10 +224,10 @@ class XMLOutput(object):
             self._gene_output(level+1, gene)
         print(tab + "</genes>")
 
-        print(tab + "<variants>")
-        for variant in organism.variants:
-            self._variant_output(level+1, variant)
-        print(tab + "</variants>")
+        #print(tab + "<variants>")
+        #for variant in organism.variants:
+        #    self._variant_output(level+1, variant)
+        #print(tab + "</variants>")
 
         print(tab + "<reads>")
         for read in organism.reads:
