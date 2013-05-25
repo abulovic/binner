@@ -37,7 +37,7 @@ def num_reads_with_host_and_parasit_alignments(cds_aln_container):
             num_reads += 1
     return num_reads
 
-# Novo -> testirati
+
 def num_alignments(read_container):
     """
     @param (ReadContainer) read_container
@@ -87,7 +87,7 @@ def num_reads_with_multiple_mapped_cds_sublocations(read_container):
 
     # Function definitions ----------------------------------------------- #
 
-    def tuple_intersects(t1, t2):n
+    def tuple_intersects(t1, t2):
         return not (t1[0] > t2[1] or t2[0] > t1[1])
 
     def is_aln_mapped_to_multiple_cds_sublocs(aln, cds_location):
@@ -124,7 +124,7 @@ def num_reads_with_multiple_mapped_cds_sublocations(read_container):
 
     return ret
             
-# Novo -> testirati
+
 def num_active_aligned_regions(cds_aln_container):
     """ 
     @param (CdsAlnContainer) cds_aln_container.
@@ -172,7 +172,7 @@ def calc_average_cds_coverage(cds_aln_container):
     return (average, deviation)
     
 
-# Novo -> testirati
+
 def num_cdss(cds_aln_container):
     """
     @param (CdsAlnContainer) cds_aln_container
@@ -180,7 +180,7 @@ def num_cdss(cds_aln_container):
     """
     return len(cds_aln_container.cds_repository)
 
-# Novo -> testirati
+
 def num_cdss_with_no_alns(cds_aln_container):
     """
     @param (CdsAlnContainer) cds_aln_container
@@ -189,7 +189,7 @@ def num_cdss_with_no_alns(cds_aln_container):
     num_cds = 0
     for cds_aln in cds_aln_container.cds_repository.values():
         is_empty = True
-        for aln_reg in cds_aln.aligned_regions:
+        for aln_reg in cds_aln.aligned_regions.values():
             if aln_reg.active:
                 is_empty = False
         if is_empty:
