@@ -12,7 +12,7 @@ from data.containers.cdsaln import CdsAlnContainer
 
 from utils.logger import Logger
 
-Logger("\dev\null")
+Logger("log")
 
 db_query = DbQuery()
 
