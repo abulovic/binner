@@ -57,15 +57,15 @@ class ReadAlnLocation (object):
         (start,stop) = self.location_span
         try:
             location = Location.from_location_str("%d..%d" % (start, stop))
-        except LoactionParsingException, e:
+        except LocationParsingException, e:
             print "ReadAlignment/determine_coding_seqs:", e
-
             self.aligned_cdss = []
             return self.aligned_cdss
+            
         for cds in record.cdss:
             try:
                 cds_location = Location.from_location_str(cds.location)
-            except LoactionParsingException, e: 
+            except LocationParsingException, e: 
                 print "ReadAlignment/determine_coding_seqs:", e
                 continue
             location_intersection = cds_location.find_intersection (location)
@@ -74,7 +74,139 @@ class ReadAlnLocation (object):
         
         return self.aligned_cdss
 
+    # -------------------------------- Detrmine CDSs - Optimal ---------------------------- #
+
+    def __overlap (self, cds_loc, aln_loc):
+        ''' Returns True if given CDS and alignment overlap.
+            Only (start, end) is taken in consideration (no sublocations)
+
+            @param   (Location)  cds_loc CDS Location
+            @param   (Location)  aln_loc Alignment Location
+            @return  (Boolean)   True if CDS overlaps with alignment
+        '''
+        return not (cds_loc.end < aln_loc.start or cds_loc.start > aln_loc.end)
+
+    # ---------- #
+
+    def __get_cds_rel_pos (self, cdss, cds_id, aln_loc): 
+        '''Returns position of CDS relative to alignment.
+
+            @param  [Cds]       List of CDSs
+            @param  (Location)  cds_id CDS we are looking at
+            @param  (Location)  aln_loc Alignment Location
+
+            @return (string)    LEFT_OF_ALN  - fully left of alignment      
+                                RIGHT_OF_ALN - fully right or not first which overlaps 
+                                FIRST        - first to overlap
+        '''
+        cds_loc = Location.from_location_str(cdss[cds_id].location)
+
+        if (cds_loc.end < aln_loc.start):
+            return "LEFT_OF_ALN"
+
+        if (cds_loc.start > aln_loc.end):
+            return "RIGHT_OF_ALN"
+
+        # Overlap occured - check if it is first
+            # If it is first CDS or the previous one does not overlap
+        if (cds_id == 0):
+            return "FIRST"
+
+        cds_prev_loc = Location.from_location_str(cdss[cds_id - 1].location)
+        if (not self.__overlap(cds_prev_loc, aln_loc)):
+            return "FIRST"
+
+        return "RIGHT_OF_ALN"
+
+    # ---------- #
+
+    def __find_first_overlapping_CDS_id (self, aln_location, cdss):
+        ''' Find id of the first CDS which overlaps with the given alignment.
+            Uses binary search algorithm.
+
+            @param   (Location) aln_location    Alignment Location
+            @param   [Cds]      cdss            List of CDSs, sorted by start
+            @returns (int|None)                 Id in cdss of described CDS, None if no overlap
+        '''
+        lo = 0
+        hi = len(cdss) - 1
+
+        # If cdss is empty -> return None
+        if (hi < 0):
+            return None
+
+        while (lo < hi):
+            mid = lo + (hi - lo) // 2   # '//' for python 3 compatibility
+
+            cds_rel_pos = self.__get_cds_rel_pos (cdss, mid, aln_location)
+
+            if (cds_rel_pos == "LEFT_OF_ALN"):
+                lo = mid + 1
+                
+            if (cds_rel_pos == "RIGHT_OF_ALN"):
+                hi = mid - 1
+
+            if (cds_rel_pos == "FIRST"):
+                return mid
+
+        # Check lo
+        cds_location = Location.from_location_str(cdss[lo].location)
+        if self. __overlap(cds_location, aln_location):
+            return lo
+        else:
+            return None
+
+    # ---------- #
+
+    def determine_coding_seqs_optimal (self, record_container):
+        ''' Determines which of the CDSs in the record aligned_regions
+            aligned to the read.
+
+            @param (RecordContainer) record_container Contains needed records
+            @return                  list of tuples (cds, intersecting_location) if such exist, 
+                                     None if record is not available from the database
+        '''
         
+        self.aligned_cdss = []
+        record = record_container.fetch_record (self.nucleotide_accession)  # Already sorted
+
+        # If not possible to fetch a record from the db, return None
+        if not record:
+            return None
+
+        # Acquire alignment Location
+        (start, stop) = self.location_span
+        try:
+            aln_location = Location.from_location_str("%d..%d" % (start, stop))
+        except LocationParsingException, e:
+            print "ReadAlignment/determine_coding_seqs:", e
+            self.aligned_cdss = []
+            return self.aligned_cdss
+
+        # Determine first overlapping CDS - binary search
+        first_ovp_id = self.__find_first_overlapping_CDS_id (aln_location, record.cdss) 
+
+        # No CDS from the list overlaps - return []
+        if (first_ovp_id == None):
+            return self.aligned_cdss
+
+        # Determine following overlapping CDSs - loop while overlaps
+        for i in range(first_ovp_id, len(record.cdss)):
+            cds = record.cdss[i]
+            cds_location = Location.from_location_str(cds.location)
+
+            # If this one does not overlap, the others also won't because it's sorted
+            if not self.__overlap(cds_location, aln_location):
+                break
+
+            location_intersection = cds_location.find_intersection (aln_location)
+            if location_intersection is not None:
+                self.aligned_cdss.append ((cds, location_intersection))
+
+        return self.aligned_cdss
+
+    # ---------------------------------------------------------------------------- #
+
     def set_type (self):
         """ Location can be coding or non-coding
         """

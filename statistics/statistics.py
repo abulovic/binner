@@ -38,6 +38,26 @@ def num_reads_with_host_and_parasit_alignments(cds_aln_container):
     return num_reads
 
 
+def num_alignments(read_container):
+    """
+    @param (ReadContainer) read_container
+    @return (int) Number of read alignments.
+    """
+    num_alignments = 0
+    for read in read_container.read_repository.values():
+        num_alignments += len(read.alignment_locations)
+    return num_alignments
+
+# Novo -> dovrsiti
+def num_host_alignments(read_container):
+    """ Should be called after determineHost().
+    @param (ReadContainer) read_container
+    @return (int) Number of read alignments that align to host.
+    """
+    num_host_alns = 0
+    return None
+    
+
 def num_reads_with_no_aligned_cdss(read_container, cds_aln_container):
     """
     @param (ReadContainer) read_container
@@ -105,6 +125,20 @@ def num_reads_with_multiple_mapped_cds_sublocations(read_container):
     return ret
             
 
+def num_active_aligned_regions(cds_aln_container):
+    """ 
+    @param (CdsAlnContainer) cds_aln_container.
+    @return (int) Number of active alignments (aligned regions). 
+    At the beginning all alns are active.
+    After determineHost() host alns are deactivated.
+    After read2cdsSolver, alns with no mapping are deactivated. 
+    """
+    num_act_alns = 0
+    for cds_aln in cds_aln_container.cds_repository.values():
+        for aln_reg in cds_aln.aligned_regions.values():
+            if aln_reg.active:
+                num_act_alns += 1
+    return num_act_alns
             
 
 
@@ -138,3 +172,27 @@ def calc_average_cds_coverage(cds_aln_container):
     return (average, deviation)
     
 
+
+def num_cdss(cds_aln_container):
+    """
+    @param (CdsAlnContainer) cds_aln_container
+    @return (int) Number of cdss in cds_aln_container.
+    """
+    return len(cds_aln_container.cds_repository)
+
+
+def num_cdss_with_no_alns(cds_aln_container):
+    """
+    @param (CdsAlnContainer) cds_aln_container
+    @return (int) Number of cdss in cds_aln_container with no active aligned regions.
+    """
+    num_cds = 0
+    for cds_aln in cds_aln_container.cds_repository.values():
+        is_empty = True
+        for aln_reg in cds_aln.aligned_regions.values():
+            if aln_reg.active:
+                is_empty = False
+        if is_empty:
+            num_cds += 1
+    return num_cds
+        
