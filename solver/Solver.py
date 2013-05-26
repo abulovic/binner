@@ -59,6 +59,8 @@ class Solver (object):
         print "read populate cdss over"
         read_cnt = len(read_container.fetch_all_reads(format=list))
 
+        print record_container.get_num_missing_records_stats()
+
         print "determining host"
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
