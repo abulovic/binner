@@ -36,10 +36,16 @@ CdsAlnContainer
 .. automodule:: data.containers.cdsaln
 .. autoclass:: CdsAlnContainer
     :members:
-    
+
 ---------------
 RecordContainer
 ---------------
 .. automodule:: data.containers.record
 .. autoclass:: RecordContainer
     :members:
+    
+---------------
+Loading methods
+---------------
+.. automodule:: data.containers.load
+.. autofunction:: fill_containers
