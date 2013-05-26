@@ -59,7 +59,12 @@ class Solver (object):
         print "read populate cdss over"
         read_cnt = len(read_container.fetch_all_reads(format=list))
 
+        # for logging data BEGIN
+        protein_ids = read_container.get_protein_ids();
+        print protein_ids
+        print len(protein_ids)
         print record_container.get_num_missing_records_stats()
+        # for logging data END
 
         print "determining host"
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
@@ -72,6 +77,12 @@ class Solver (object):
         # Populate CDS container 
         cds_aln_container.populate(read_container)
         log.info("Cds Aln Container populated!")
+
+        # for logging data BEGIN
+        protein_ids = read_container.get_protein_ids(True)
+        print protein_ids
+        print len(protein_ids)
+        # for logging data END
 
         # Map each read to one CDS (greedy)
         self.read2cds_solver.map_reads_2_cdss(cds_aln_container)
