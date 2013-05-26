@@ -50,8 +50,7 @@ class ReadContainer (object):
         Prerequisite: record container has been populated with all records
         mentioned in the alignment file
 
-        :param record_container: :class:`data.containers.record.RecordContainer` which
-        has already been populated
+        :param record_container: :class:`data.containers.record.RecordContainer` which has already been populated
         '''
         
         # -------------------------------- Sorting CDSs ---------------------------- #
@@ -102,8 +101,7 @@ class ReadContainer (object):
         Fetch all read objects (:class:`data.read.Read`) that have been stored in the container
         during the populate phase.
 
-        :param format: format in which all the reads will be returned. All default
-        python collection formats are allowed (list, set), including the iterator
+        :param format: format in which all the reads will be returned. All default python collection formats are allowed (list, set), including the iterator
         :rtype: format(list of Reads)
         '''
         return format(self.read_repository.values())
