@@ -18,10 +18,22 @@ Read object
 -------------------------
 Alignment related objects
 -------------------------
+
 .. automodule:: data.alignment
+-------------
+Cds Alignment
+-------------
 .. autoclass:: CdsAlignment
     :members:
+
+-------------------------
+Cds Alignment Sublocation
+-------------------------
 .. autoclass:: CdsAlnSublocation
     :members:
+
+-----------------------
+Read Alignment Location
+-----------------------
 .. autoclass:: ReadAlnLocation
     :members:
