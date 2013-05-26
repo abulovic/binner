@@ -1,13 +1,21 @@
 import statistics.statistics as stats
+import cPickle as pickle
 
 class SolverStatistics:
-    def __init__(self):
+    """ Stores statistical data about solver, for different phases (5 of them).
+    (dict) phaseData  Dictionary where key is phase number(int) and value is (StatData). 
+                      phaseData[i] contains statistical data from phase i.
+    """
+
+    def __init__(self, filepath=None):
+        """ If file path is given then statistical data is loaded from file.
+        @param (string) filepath
         """
-        self.phaseData: dictionary where key is phase number(int)
-                        and value is (StatData). phaseData[i] contains
-                        statistic data from phase i.
-        """
-        self.phaseData = dict()
+        if (filepath == None):
+            self.phaseData = dict()
+        else:
+            infile = open(filepath, 'r')
+            self.phaseData = pickle.load(infile)
 
 
     def collectPhaseData(self, phase, record_cont, read_cont, cds_aln_cont):
@@ -46,6 +54,14 @@ class SolverStatistics:
 
         self.phaseData[phase] = statData
 
+
+    def toFile(self, filepath):
+        """ Statistical data is saved to file.
+        @param (string) filepath
+        """
+        outfile = open(filepath, 'w')
+        pickle.dump(self.phaseData, outfile)
+
     
     
     class StatData:
@@ -72,6 +88,7 @@ class SolverStatistics:
         (int) num_cds_alns  Only in phases 2, 3, 4.
                             Number of active aligned regions in all cdss.
         """
+
         def __init__(self):
             self.time                   = None    # TODO: should set itself automatically in this line.
 
