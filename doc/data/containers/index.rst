@@ -43,9 +43,11 @@ RecordContainer
 .. automodule:: data.containers.record
 .. autoclass:: RecordContainer
     :members:
-    
----------------
+
+=================
 Loading methods
----------------
+=================
+Containers can all be populated with a single function call.
+
 .. automodule:: data.containers.load
 .. autofunction:: fill_containers
