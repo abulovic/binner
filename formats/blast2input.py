@@ -11,14 +11,15 @@ class BLASTParser (object):
     Usage example::
         blast_format = "qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore"
         parser = BlastParser(blast_format)
-        parser.convert_file(blast_aln_file)
+        parser.convert_file(blast_aln_file, binner_input_file)
 
     '''
     def __init__ (self, output_format = None):
-        ''' @param output_format: BLAST output format. 
-            If none provided, standard output is taken.
-            Standard output format is:
-            qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
+        ''' 
+        :param output_format: Optional aprameter for BLAST output format (check blastn -help for format specs)
+        If none provided, default format is:
+
+        qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
         '''
         if not output_format:
             output_format = "qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore"
@@ -28,8 +29,9 @@ class BLASTParser (object):
     
     ############ ############ ##############
     def _set_up_parser (self, output_format):
-        ''' Takes output format specification and sets up
-            the parser for the specific format parsing
+        ''' 
+        Takes output format specification and sets up
+        the parser for the specific format parsing.
         '''
         self.fmt_values = {}
         values = output_format.strip().split()
@@ -40,6 +42,12 @@ class BLASTParser (object):
          
     ############ ############ ##############
     def convert_file (self, blast_output_fname, output_fname):
+        '''
+        Converts BLAST alignment file to Binner input format file.
+
+        :param blast_output_fname: path to BLAST alignment file
+        :param output_fname: path to Binner input file
+        '''
         blast_output_file = open(blast_output_fname)
         output_file       = open(output_fname, 'w')
         lines       = iter(blast_output_file.readlines())
@@ -89,7 +97,10 @@ class BLASTParser (object):
     
 
 class AlignmentData (object):
-    
+    '''
+    Placeholder class for BLAST parser. Holds all relevant information 
+    from BLAST output.
+    '''
     def __init__ (self, nucleotide_accession, db_source, gi, score, start, stop):
         self.nucleotide_accession   = nucleotide_accession
         self.db_source              = db_source
