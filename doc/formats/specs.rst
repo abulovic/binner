@@ -1,7 +1,12 @@
 I/O Format specification
 ************************
 
-Input file:
+=================
+Input file format
+=================
+
+Input file consists of X lines, each of format:
+
 <read_id><n>;<nucl_acc>,<db_source>,<gi>,<score>,<start>,<stop>,<strand>;{n}
 
 * read_id:      identification assiged to read from sequencing machine
@@ -13,3 +18,8 @@ Input file:
 * start:        staring location of the alignment on the nucleotide chain
 * stop:         end location
 * strand:       +/- strand of the nucleotide chain
+
+==================
+Output file format
+==================
+

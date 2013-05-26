@@ -1,8 +1,18 @@
-
+'''
+:Date: 12.5.2013.
+Author: Ana Bulovic <bulovic.ana@gmail.com>
+'''
 
 
 class BLASTParser (object):
-    ''' Enables BLAST to input format parsing
+    ''' 
+    | Enables BLAST to input format parsing. Only BLAST tab
+    delimited formats are supported.
+    |Usage example::
+        blast_format = "qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore"
+        parser = BlastParser(blast_format)
+        parser.convert_file(blast_aln_file)
+
     '''
     def __init__ (self, output_format = None):
         ''' @param output_format: BLAST output format. 
