@@ -1,3 +1,8 @@
+'''
+:Date: 20.05.2013.
+:Author: Ana Bulovic <bulovic.ana@gmail.com>
+'''
+
 from collections            import defaultdict
 
 from data.containers.record import RecordContainer
@@ -20,15 +25,15 @@ class CdsAlnContainer (object):
 
     def populate (self, read_cont):
         '''
-        Populates CDS container from read container. 
-        Iterates through every read, and for each read it goes through 
-        all the read alignments. For each alignment, it goes through all the
-        locations where the alignments intersects a CDS.
-        Each intersected cds will be contained within a CdsALignment object
-        where all the reads mapped to the particular cds are contained. 
-        It is possible to extract cds alignment by using cds as a key, and
-        it is also possible to find all the CdsAlignments cointaining a 
-        particular read using the read identifier as a key.
+        | Populates CDS container from read container. 
+        | Iterates through every read, and for each read it goes through 
+            all the read alignments. For each alignment, it goes through all the
+            locations where the alignments intersects a CDS.
+        | Each intersected cds will be contained within a CdsALignment object
+            where all the reads mapped to the particular cds are contained. 
+        | It is possible to extract cds alignment by using cds as a key, and
+            it is also possible to find all the CdsAlignments cointaining a 
+            particular read using the read identifier as a key.
 
         :param read_cont: :class:`data.containers.read.ReadContainer` which has 
             gone through both stages of populating.
