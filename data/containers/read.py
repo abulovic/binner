@@ -32,6 +32,7 @@ class ReadContainer (object):
         
         # -------------------------------- Sorting CDSs ---------------------------- #
 
+        '''
         start = time.time()
 
         # Sort cdss of each record by start
@@ -45,6 +46,7 @@ class ReadContainer (object):
         end = time.time()
         elapsed_time = end - start
         print ("Sorting CDSs - elapsed time: %.2f" % elapsed_time)
+        '''
 
         # ---------------------------------------------------------------------------- #
 
@@ -52,7 +54,7 @@ class ReadContainer (object):
 
         for read in self.fetch_all_reads(format=iter):
             for read_alignment in read.get_alignments(format=iter):
-                read_alignment.determine_coding_seqs_optimal(record_container)
+                read_alignment.determine_coding_seqs(record_container)
 
         end = time.time()
         elapsed_time = end - start
