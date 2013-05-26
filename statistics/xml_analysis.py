@@ -5,8 +5,11 @@ datasets from different files.
 import sys, os 
 sys.path.append(os.getcwd())
 import xml.etree.ElementTree as ET
+import argparse
 
+from utils.logger import Logger
 from utils.autoassign import autoassign
+from ncbi.db.access import DbQuery
 
 
 class Organism (object):
@@ -88,13 +91,16 @@ def get_organism_data (xml_root):
         # <taxonomy taxon_id="315393">Viruses, dsDNA viruses, no RNA stage, Mimiviridae, Mimivirus</taxonomy>
         tax_node = organism.find('taxonomy')
         taxonomy = tax_node.text
-        tax_id   = int(tax_node.attrib['taxon_id'])
+        if tax_node.attrib.has_key('taxon_id'):
+            tax_id   = int(tax_node.attrib['taxon_id'])
+        else:
+            tax_id = None
         # <nearestNeighbor>Enterobacteriaceae</nearestNeighbor>
         neighbor_node    = organism.find('nearestNeighbor')
-        nearest_neighbor = neighbor_node.text if neighbor_node else None 
+        nearest_neighbor = neighbor_node.text if neighbor_node is not  None else None 
         # <organismName>Vaccinia virus</organismName>
         organism_node = organism.find('organismName')
-        organism_name = organism_node.text if organism_node else None
+        organism_name = organism_node.text if organism_node is not None else None
         # <genus>Vaccinia</genus>
         genus_node = organism.find('genus')
         genus      = genus_node.text if genus_node else None
@@ -139,27 +145,45 @@ def get_attribute_count (genes ):
             'ref_end': ref_end_cnt, 'gene_name': gene_name_cnt}
 
 
+def get_lineage_rank (organism_names, db_access):
+    '''
+    Fetches organism rank for each organism name in the lineage.
+    @param organism_names (list[str]) list of organism names (scientific)
+    @return (list[str]) list of ranks for the specified names
+    '''
+    ranks = []
+    for organism_name in organism_names:
+        if organism_name.endswith('.'):
+            organism_name = organism_name[0:-1]
+        rank = db_access.get_organism_rank(organism_name, by_name=True)
+        ranks.append(rank)
+    return ranks
+
+def analyze_lineages (organisms):
+    db_access = DbQuery()
+    for organism in organisms:
+        if not organism.taxonomy:
+            continue
+        org_names = organism.taxonomy.split('; ')
+        ranks = get_lineage_rank(org_names, db_access)
+        if organism.organism_name is not None:
+            print "ORG_NAME:", organism.organism_name
+        else:
+            print "NEIGHBOR:", organism.nearest_neighbor
+        print     "RANK:    ", ranks
 
 
 
 if __name__ == '__main__':
-    fpath1 = '/cygdrive/e/Projects/Metagenomics/data/binner_output/Example_output/Example1.21_05.2.xml'
-    fpath2 = '/cygdrive/e/Projects/Metagenomics/data/Example/Results/Example1.xml'
-    xml_root1 = load_as_xml(fpath1)
-    orgs1 = set(get_organism_data(xml_root1))
-    xml_root2 = load_as_xml(fpath2)
-    orgs2 = set(get_organism_data(xml_root2))
-    print len(orgs1)
-    print len(orgs2)
-    print len(orgs1 & orgs2)
-    genes1 = set(get_gene_data(xml_root1))
-    genes2 = set(get_gene_data(xml_root2))
-    print len(genes1)
-    print len(genes2)
-    print len(genes1 & genes2)
+    if len(sys.argv) < 2:
+        print "Usage: python xml_analysis.py <XML_BINNER_FILE> [XML_BINNER_FILE2] "
+        sys.exit(0)
 
-    gene_stats = get_attribute_count (genes1, False)
-    print gene_stats
-    gene_stats = get_attribute_count (genes2, False)
-    print gene_stats
-
+    fpath1 = sys.argv[1]
+    fpath2 = None
+    if len(sys.argv) == 3:
+        fpath2 = sys.argv[2]
+    
+    xml1 = load_as_xml(fpath1)
+    organisms = get_organism_data(xml1)
+    analyze_lineages(organisms)
