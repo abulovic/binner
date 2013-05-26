@@ -59,11 +59,14 @@ class Solver (object):
         print "read populate cdss over"
         read_cnt = len(read_container.fetch_all_reads(format=list))
 
-        # for logging data BEGIN
+        # for logging data BEGIN PHASE 1
+        print record_container.get_num_missing_records_stats()
         protein_ids = read_container.get_protein_ids();
         print protein_ids
         print len(protein_ids)
-        print record_container.get_num_missing_records_stats()
+        for (ncul_acc, record) in record_container.fetch_all_records(format=list):
+            if record is not None:
+                print record.sources[0].db_xref
         # for logging data END
 
         print "determining host"
