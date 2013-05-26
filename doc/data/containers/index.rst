@@ -5,6 +5,7 @@ for data objects. They all implement methods for self-populating, and
 fetching their stored items.
 
 They are usually used together::
+
     read_cont   = ReadContainer()
     record_cont = RecordContainer()
     record_cont.set_db_access(db_access)
