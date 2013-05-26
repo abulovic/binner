@@ -6,6 +6,9 @@ def convertLisaToInput (lisa_alignment_fname, output_fname):
     '''
     Converts LISA mapper output format to Binner input format.
 
+    :param lisa_alignment_fname: path to LISA generated alignment file 
+    :param output_fname: path to file where Binner input file will be stored
+
     Usage::
         python lisa2input.py <LISA_ALN_FILE> <OUTPUT_FILE_NAME>
 
