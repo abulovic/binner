@@ -64,9 +64,9 @@ class Solver (object):
         protein_ids = read_container.get_protein_ids();
         print protein_ids
         print len(protein_ids)
-        for (ncul_acc, record) in record_container.fetch_all_records(format=list):
-            if record is not None:
-                print record.sources[0].db_xref
+        #for (ncul_acc, record) in record_container.fetch_all_records(format=list):
+        #    if record is not None:
+        #        print record.sources[0].db_xref
         # for logging data END
 
         print "determining host"
