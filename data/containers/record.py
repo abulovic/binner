@@ -8,7 +8,16 @@ class RecordContainer (object):
 
     def __init__ (self):
         self.record_repository  = {}
-        
+        self.num_missing_records = 0
+    
+    def get_num_missing_records_stats(self):
+        missed_recs = self.num_missing_records 
+        all_recs = len(self.record_repository)
+        return {'num_missing_records':missed_recs,
+                'num_all_records':all_recs,
+                'missing_records_percentage':
+                '{0:.2f}'.format(missed_recs/float(all_recs)*100)+'%'}
+
     def set_db_access(self, db_query):
         '''
         @param: db_query (DbQuery, MockDbQuery)
@@ -60,3 +69,4 @@ class RecordContainer (object):
             except AttributeError:
                 log.info("No record with ID %s", str(record_id))
                 self.record_repository[record_id] = None
+                self.num_missing_records += 1

@@ -1,29 +1,29 @@
-rankss = ["no rank",
-        "superkingdom",
-        "genus",  
-        "species",
-        "order",
-        "family",
-        "subspecies",
-        "subfamily",
-        "tribe",
-        "phylum",
-        "class",
-        "forma",
-        "suborder",
-        "superclass",
-        "varietas",
-        "subclass",
-        "kingdom",
-        "superfamily",
-        "infraorder",
-        "subphylum",
-        "infraclass",
-        "superorder",
-        "subgenus",
-        "parvorder",
-        "superphylum",
-        "species group",
-        "species subgroup",
-        "subtribe",
-        "subkingdom"]
+ranks = [
+"superkingdom"
+"kingdom"
+"subkingdom"
+"superphylum"
+"phylum"
+"subphylum"
+"superclass"
+"class"
+"subclass"
+"infraclass"
+"superorder"
+"order"
+"suborder"
+"infraorder"
+"parvorder"
+"superfamily"
+"family"
+"subfamily"
+"tribe"
+"subtribe"
+"genus"
+"subgenus"
+"species"
+"species group"
+"subspecies"
+"species subgroup"
+"varietas"
+"forma"]
