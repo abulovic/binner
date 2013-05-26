@@ -10,8 +10,8 @@ def num_reads(read_container):
     return len(read_container.read_repository)
 
 
-def num_reads_with_no_alignments(read_container):
-    ''' Counts reads that have no alignment.
+def num_reads_with_no_alns(read_container):
+    ''' Counts reads that have no alignments.
 
         @param (ReadContainer) read_container   Holds reads
         @return Number of reads with 0 alignments
@@ -38,7 +38,7 @@ def num_reads_with_host_and_parasit_alignments(cds_aln_container):
     return num_reads
 
 
-def num_alignments(read_container):
+def num_read_alns(read_container):
     """
     @param (ReadContainer) read_container
     @return (int) Number of read alignments.
@@ -49,7 +49,7 @@ def num_alignments(read_container):
     return num_alignments
 
 # Novo -> dovrsiti
-def num_host_alignments(read_container):
+def num_host_read_alns(read_container):
     """ Should be called after determineHost().
     @param (ReadContainer) read_container
     @return (int) Number of read alignments that align to host.
