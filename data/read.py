@@ -2,9 +2,11 @@
 from data.alignment import ReadAlnLocation
 
 class Read (object):
-    """ Contains all the read-related information, 
+    """ 
+    | Contains all the read-related information, 
         such as the its identifier and the list of alignment
-        locations
+        locations. 
+    | It is constructed from a single line of Binner input alignment file.
     """
     def __init__ (self, read_id, read_length, alignment_locations):
         self.id                     = read_id
@@ -14,8 +16,13 @@ class Read (object):
     
     @staticmethod
     def from_read_str (read_str):
-        """ Parses the description string and creates a new read from it with 
-            accompanying alignment locations
+        """ 
+        Parses the description string and creates a new read from it with 
+        accompanying alignment locations.
+
+        :param read_str: one line from Binner input file as specified 
+            in docs.format.specs. 
+        :rtype: :class:`data.read.Read`
         """
         # Attributes for creating new read
         newRead_id       = None
@@ -62,16 +69,28 @@ class Read (object):
 
 
     def set_host_status(self, is_host_read):
+        '''
+        Declare this read a host read. 
+
+        :param is_host_read: boolean
+        '''
         self.is_host_read = is_host_read
 
     def get_alignments (self, format=list):
         '''
         Get read alignments for the read.
-        @param: format (collection or iterator) format in which to 
-        acquire the alignments
+
+        :param format: can be any built-in python collection format,
+            such as set, list, or can be an iterator
+        :rtype: collection of :class:`data.alignment.ReadAlnLocation`
         '''
         assert (format in [iter, list, set])
         return format(self.alignment_locations)
 
     def has_alignments (self):
+        '''
+        Checks if there are any reported alignments for this read.
+
+        :rtype: True if there are more than 0 alignment, False otherwise
+        '''
         return len(self.alignment_locations) > 0
