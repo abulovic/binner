@@ -45,8 +45,8 @@ class SolverStatistics:
         
         #if phase == 1:
         #    statData.num_missing_records   = ???  JERKO
-        #if phase == 2:
-        #    statData.num_host_read_alns = stats.num_host_read_alns(read_cont)   Martin dovrsiti
+        if phase == 2:
+            statData.num_host_read_alns = stats.num_inactive_read_alns(read_cont)
         if phase in [2,3,4]:
             statData.num_cdss = stats.num_cdss(cds_aln_cont)
             statData.num_cdss_with_no_alns = stats.num_cdss_with_no_alns(cds_aln_cont)

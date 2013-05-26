@@ -41,8 +41,9 @@ class StatisticsTest (unittest.TestCase):
 
 
     def testStatistics(self):
-        assert(num_alignments(self.read_cont) == 22)
+        assert(num_read_alns(self.read_cont) == 22)
         assert(num_active_aligned_regions(self.cds_aln_cont) == 22)
+        assert(num_inactive_read_alns(self.read_cont) == 0)
         
         self.bs_solver = BestScoreSolver()
         self.bs_solver.map_reads_2_cdss(self.cds_aln_cont)
