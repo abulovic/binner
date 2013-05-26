@@ -1,9 +1,18 @@
 
 class RecordContainer (object):
-    ''' Serves as a local Record Repository.
-        If a GenBank/EMBL/DDBJ record has already been 
-        fetched from the database, it can be fetched localy
-        from the record repository.
+    ''' 
+    Serves as a local Record Repository.
+    If a GenBank/EMBL/DDBJ record has already been 
+    fetched from the database, it can be fetched localy
+    from this record repository. Records are stored in a dictionary
+    where key is their nucleotide accession (NCBI), and value 
+    is object of type :class:`ncbi.db.genbank.Record` or :class:`ncbi.db.embl.Record`
+    It has to have a database access. Correct way to use RecordContainer is::
+
+        db_access = DbQuery()
+        record_cont = RecordContainer()
+        record_cont.set_db_access(db_access)
+        record_cont.populate(read_container)
     '''
 
     def __init__ (self):
@@ -20,7 +29,9 @@ class RecordContainer (object):
 
     def set_db_access(self, db_query):
         '''
-        @param: db_query (DbQuery, MockDbQuery)
+        Sets database access for RecordContainer
+
+        :param db_query: database access object :class:`ncbi.db.access.DbQuery`
         '''
         assert (hasattr(db_query, 'get_record'))
         self.db_query = db_query
@@ -28,7 +39,10 @@ class RecordContainer (object):
     def populate (self, read_container):
         '''
         Populates the record container with all the records 
-        that have produced significant alignments
+        that have produced significant alignments.
+
+        :param read_container: Instance of :class:`data.containers.read.ReadContainer` 
+            which has gone through the first stage of populating.
         '''
         reads = read_container.fetch_all_reads(format=iter)
         for read in reads:
@@ -37,24 +51,28 @@ class RecordContainer (object):
 
     def fetch_record (self, nucleotide_accession):
         '''
-        @param nucleotide_accession (str)
-        @return Record (ncbi/db/[genbank/embl])
+        Fetch record by nucleotide accession.
+        :param nucleotide_accession: string which corresponds to NCBI nucleotide accession
+        :rtype: :class:`ncbi.db.genbank.Record` or :class:`ncbi.db.embl.Record`
         '''
         self._add_record(nucleotide_accession)
         return self.record_repository[nucleotide_accession]
 
     def fetch_all_records (self, format=iter):
         '''
-        Fetches all loaded records in a specified format
-        @param: format (iter, list, set)
-        @return format(records)
+        Fetches all loaded records in a specified format.
+        :param format: all default python collection formats including iterator
+        :rtype: format(list of tuples (nucleotide_acession, Record))
         '''
         assert (format in [iter, list, set])
         return format(self.record_repository.items())
         
-    def _add_record (self, record_id):
-        ''' Adds the record from database if not already present
-	   If unable to find entry in database, stores None instead.
+    def _add_record (self, nucleotide_accession):
+        ''' 
+        Adds the record from database if not already present.
+	    If unable to find entry in database, stores None instead.
+
+        :param nucleotide_accession: string which corresponds to NCBI nucleotide accession
         '''
         try:
             getattr(self, 'db_query')

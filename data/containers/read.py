@@ -84,10 +84,10 @@ class ReadContainer (object):
     
     def fetch_read (self, read_id):
         '''
-        Fetch read (:class:`data.read.Read`) by read ID. Read ID is 
+        Fetch read (:class:`data.read.Read`) by read ID. Read id is 
         loaded from the alignment file.
 
-        :param read_id: Read ID, as stated in the alignment file
+        :param read_id: read id, as stated in the alignment file
         :rtype: :class:`data.read.Read`
         '''
         if self.read_repository.has_key(read_id):
