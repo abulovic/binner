@@ -52,6 +52,7 @@ class RecordContainer (object):
     def fetch_record (self, nucleotide_accession):
         '''
         Fetch record by nucleotide accession.
+
         :param nucleotide_accession: string which corresponds to NCBI nucleotide accession
         :rtype: :class:`ncbi.db.genbank.Record` or :class:`ncbi.db.embl.Record`
         '''
@@ -61,6 +62,7 @@ class RecordContainer (object):
     def fetch_all_records (self, format=iter):
         '''
         Fetches all loaded records in a specified format.
+        
         :param format: all default python collection formats including iterator
         :rtype: format(list of tuples (nucleotide_acession, Record))
         '''
