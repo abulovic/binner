@@ -50,7 +50,7 @@ class RecordContainer (object):
         @return format(records)
         '''
         assert (format in [iter, list, set])
-        return format(self.record_repository)
+        return format(self.record_repository.items())
         
     def _add_record (self, record_id):
         ''' Adds the record from database if not already present
