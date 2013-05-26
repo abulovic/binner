@@ -23,12 +23,23 @@ They are usually used together::
 =================
 Container classes
 =================
+-------------
+ReadContainer
+-------------
 .. automodule:: data.containers.read
 .. autoclass:: ReadContainer
     :members:
+
+---------------
+CdsAlnContainer
+---------------
 .. automodule:: data.containers.cdsaln
 .. autoclass:: CdsAlnContainer
     :members:
+    
+---------------
+RecordContainer
+---------------
 .. automodule:: data.containers.record
 .. autoclass:: RecordContainer
     :members:
