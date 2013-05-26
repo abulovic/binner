@@ -6,12 +6,19 @@
 Welcome to MetaBinner's documentation!
 ======================================
 
+MetaBinner is an application for catagorizing organisms from 
+a sequenced environmental sample, regardless of the sequencing method.
+The input to the application is an alignment file, as specified below.
+The output is an XML file with reads mapped to proteins, and thus, to
+organisms.
+
 Contents:
 
 
 .. toctree::
    :maxdepth: 2
 
+   formats/specs
    data/containers/index
    data/index
    formats/index
