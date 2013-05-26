@@ -21,6 +21,7 @@ Contents:
    formats/specs
    data/containers/index
    data/index
+   formats/specs
    formats/index
    ncbi/db/index
    ncbi/taxonomy/index
