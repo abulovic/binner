@@ -18,7 +18,6 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   formats/specs
    data/containers/index
    data/index
    formats/specs

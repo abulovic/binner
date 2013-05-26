@@ -1,5 +1,15 @@
-
+'''
+:Date: 11.05.2013.
+:Author: Ana Bulovic <bulovic.ana@gmail.com>
+'''
 def convertLisaToInput (lisa_alignment_fname, output_fname):
+    '''
+    Converts LISA mapper output format to Binner input format.
+
+    Usage::
+        python lisa2input.py <LISA_ALN_FILE> <OUTPUT_FILE_NAME>
+
+    '''
     input_fhandle = open (lisa_alignment_fname, 'r')
     output_fhandle = open (output_fname, 'w')
 

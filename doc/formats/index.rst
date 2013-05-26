@@ -1,20 +1,20 @@
 Format conversion support
 *************************
 
-========================================
-Blast to input format conversion support
-========================================
+=====================
+Blast to input format 
+=====================
 .. automodule:: formats.blast2input
 .. autoclass:: BLASTParser
     :members:
-==============================================
-LISA mapper to input format conversion support
-==============================================
+===========================
+LISA mapper to input format 
+===========================
 .. automodule:: formats.lisa2input
-    :members:
-==============================================
+.. autofunction:: convertLisaToInput
+====================
 Output XML generator
-==============================================
+====================
 .. automodule:: formats.xml_output
 .. autoclass:: XMLOutput
     :members:
