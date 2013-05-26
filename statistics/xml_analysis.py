@@ -11,7 +11,6 @@ from utils.logger import Logger
 from utils.autoassign import autoassign
 from ncbi.db.access import DbQuery
 
-
 class Organism (object):
     @autoassign
     def __init__ (self, count, relative_amount, tax_id, taxonomy, organism_name, nearest_neighbor, genus, species, strain):
@@ -91,10 +90,9 @@ def get_organism_data (xml_root):
         # <taxonomy taxon_id="315393">Viruses, dsDNA viruses, no RNA stage, Mimiviridae, Mimivirus</taxonomy>
         tax_node = organism.find('taxonomy')
         taxonomy = tax_node.text
-        if tax_node.attrib.has_key('taxon_id'):
+        # appears that in innocentive example results taxon_ids can be empty, so handling this
+        if 'taxon_id' in tax_node.attrib.keys():
             tax_id   = int(tax_node.attrib['taxon_id'])
-        else:
-            tax_id = None
         # <nearestNeighbor>Enterobacteriaceae</nearestNeighbor>
         neighbor_node    = organism.find('nearestNeighbor')
         nearest_neighbor = neighbor_node.text if neighbor_node is not  None else None 
@@ -116,7 +114,7 @@ def get_organism_data (xml_root):
 
     return org_list
 
-def get_attribute_count (genes ):
+def get_attribute_count (genes):
     '''
     Checks for each gene how many of the gene attributes 
     are specified. Optionally checks if any of the attributes 
@@ -143,6 +141,20 @@ def get_attribute_count (genes ):
     return {'protein_id':id_cnt, 'locus_tag': locus_tag_cnt, 
             'product':product_cnt, 'ref_name':ref_name_cnt, 'ref_start': ref_start_cnt,
             'ref_end': ref_end_cnt, 'gene_name': gene_name_cnt}
+
+def get_duplicate_locus_and_name_count (genes):
+    '''
+    Checks how many locus_tag and gene_name attributes of 
+    a same gene are identical
+    @param genes (list of Gene objects)
+    @return (dict, key=attribute name, value=int)
+    '''
+    same_cnt = 0
+    for gene in genes:
+        if gene.locus_tag == gene.gene_name: same_cnt += 1
+    return {'locus_tag_vs_gene_name_same_percantage':'{0:.2f}'.format(same_cnt/float(len(genes))*100)+"%",
+            'duplicates_cnt':same_cnt, 'all_gene_cnt':len(genes)}
+
 
 
 def get_lineage_rank (organism_names, db_access):
@@ -172,18 +184,29 @@ def analyze_lineages (organisms):
             print "NEIGHBOR:", organism.nearest_neighbor
         print     "RANK:    ", ranks
 
+    
+def get_organisms_stats (orgs1, orgs2):
+    
+    taxon_id_org1 = Set([])
+    for organism in orgs1:
+        taxon_id_org1.add(organism.tax_id)
+    
+    taxon_id_org2 = Set([])
+    for organism in orgs2:
+        taxon_id_org2.add(organism.tax_id)
 
+    similarity = '{0:.2f}'.format(float(len(taxon_id_org1 & taxon_id_org2)) / len(taxon_id_org1 | taxon_id_org2)*100)+"%"
+
+    return {'organisms_similarity_by_taxon_id':similarity}
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print "Usage: python xml_analysis.py <XML_BINNER_FILE> [XML_BINNER_FILE2] "
-        sys.exit(0)
 
-    fpath1 = sys.argv[1]
-    fpath2 = None
-    if len(sys.argv) == 3:
-        fpath2 = sys.argv[2]
+    if (len(sys.argv) < 3):
+        print "XML stats usage: python xml_analysis.py <XML_OUR_SOLUTION> <XML_INNOCENTIVE_SOLUTION>"
+        sys.exit(-1)
+
+    fpath1 = sys.argv[1] 
+    fpath2 = sys.argv[2]
+    xml_root1 = load_as_xml(fpath1)
+    xml_root2 = load_as_xml(fpath2)
     
-    xml1 = load_as_xml(fpath1)
-    organisms = get_organism_data(xml1)
-    analyze_lineages(organisms)

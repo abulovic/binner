@@ -1,4 +1,7 @@
 from data.read import Read
+from utils.location import Location
+
+import time
 
 class ReadContainer (object):
     ''' Contains all the reads loaded from an 
@@ -26,9 +29,35 @@ class ReadContainer (object):
         mentioned in the alignment file
         @param record_container (RecordContainer)
         '''
+        
+        # -------------------------------- Sorting CDSs ---------------------------- #
+
+        start = time.time()
+
+        # Sort cdss of each record by start
+        for record in record_container.record_repository.itervalues():
+            if (not record):
+                continue
+
+            # Is this slow, calculating key each time?
+            record.cdss.sort(key = lambda c : Location.from_location_str(c.location).start)
+
+        end = time.time()
+        elapsed_time = end - start
+        print ("Sorting CDSs - elapsed time: %.2f" % elapsed_time)
+
+        # ---------------------------------------------------------------------------- #
+
+        start = time.time()
+
         for read in self.fetch_all_reads(format=iter):
             for read_alignment in read.get_alignments(format=iter):
-                read_alignment.determine_coding_seqs(record_container)
+                read_alignment.determine_coding_seqs_optimal(record_container)
+
+        end = time.time()
+        elapsed_time = end - start
+        print ("Mapping aln -> [cds] - elapsed time: %.2f" % elapsed_time)
+
     
     def fetch_read (self, read_id):
         if self.read_repository.has_key(read_id):
