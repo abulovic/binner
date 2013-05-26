@@ -3,8 +3,11 @@ from utils.location import Location
 from utils.location import LoactionParsingException
 
 class ReadAlnLocation (object):
-    """ Contains information on alignment location on 
-        an NT nucleotide string
+    """ 
+    Contains information on read alignment on an NT database
+    nucleotide chain.
+    A list of ReadAlnLocation instances can be found in 
+    the :class:`data.read.Read` object.
     """
     
     def __init__ (self, read_id, nucleotide_accession, db_source, genome_index, score, 
@@ -23,29 +26,36 @@ class ReadAlnLocation (object):
         '''
         Sets active status for the read alignment.
         Inactive reads do not go into CDS alignments.
+
+        :param active: boolean
         '''
         self.active = active
 
     def set_potential_host_status (self, potential_host):
         '''
-        Set to true if organism is potential host [child of 
-        animalia kingdom]
-        @param potential_host (boolean) 
+        Set to true if organism is potential host. 
+
+        :param potential_host: boolean
         '''
         self.potential_host = potential_host
 
     def is_potential_host (self):
-        """ Returns true if organism is potential host 
-        (child of animalia kingdom), false otherwise.
-        @return (boolean)
+        """ 
+        Returns true if organism is potential host, false otherwise.
+
+        :rtype: boolean
         """
         return self.potential_host
 
     def determine_coding_seqs (self, record_container):
-        ''' Determines which of the CDSs in the record aligned_regions
-            aligned to the read.
-            @return list of tuples (cds, intersecting_location) if such exist, 
-            None if record is not available from the database
+        ''' 
+        Using read alignment location on a NT nucleotide chain, 
+        and metadata from NCBI database, determines if the alignment
+        intersects any of the coding regions on the nuc. chain, so called CDSs.
+
+        :param record_container: :class:`data.containers.RecordContainer` which has
+            already been populated
+        :rtype: list of tuples (:class:`ncbi.db.genbank.Cds`, :class:`utils.location.Location`) 
         '''
         self.aligned_cdss = []
         record = record_container.fetch_record (self.nucleotide_accession)
@@ -77,27 +87,29 @@ class ReadAlnLocation (object):
     # -------------------------------- Detrmine CDSs - Optimal ---------------------------- #
 
     def __overlap (self, cds_loc, aln_loc):
-        ''' Returns True if given CDS and alignment overlap.
-            Only (start, end) is taken in consideration (no sublocations)
+        ''' 
+        Returns True if given CDS and alignment overlap.
+        Only (start, end) is taken in consideration (no sublocations)
 
-            @param   (Location)  cds_loc CDS Location
-            @param   (Location)  aln_loc Alignment Location
-            @return  (Boolean)   True if CDS overlaps with alignment
+        :param cds_loc: CDS location (:class:`utils.location.Location`)
+        :param aln_loc: Alignment Location (from input)
+        :rtype: boolean, True if CDS overlaps with alignment, False otherwise
         '''
         return not (cds_loc.end < aln_loc.start or cds_loc.start > aln_loc.end)
 
     # ---------- #
 
     def __get_cds_rel_pos (self, cdss, cds_id, aln_loc): 
-        '''Returns position of CDS relative to alignment.
+        '''
+        Returns position of CDS relative to alignment.
 
-            @param  [Cds]       List of CDSs
-            @param  (Location)  cds_id CDS we are looking at
-            @param  (Location)  aln_loc Alignment Location
+        :param cdss: List of Cds objects (:class:`ncbi.db.genbank.Cds`, :class:`ncbi.db.embl.Cds`)
+        :param  cds_id: int (id from database)
+        :param aln_loc: Alignment Location
 
-            @return (string)    LEFT_OF_ALN  - fully left of alignment      
-                                RIGHT_OF_ALN - fully right or not first which overlaps 
-                                FIRST        - first to overlap
+        :rtype: (string)    LEFT_OF_ALN  - fully left of alignment      
+                            RIGHT_OF_ALN - fully right or not first which overlaps 
+                            FIRST        - first to overlap
         '''
         cds_loc = Location.from_location_str(cdss[cds_id].location)
 
@@ -214,10 +226,12 @@ class ReadAlnLocation (object):
 
 
 class CdsAlignment (object):
-    ''' Contains all the alignment information for a single
-        CDS, meaning: 
-        - all the reads mapped to that CDS and
-        - their corresponding sublocations
+    ''' 
+    Contains all the alignment information for a single
+    CDS, meaning: 
+
+    * all the reads that have been mapped to that CDS and
+    * their corresponding sublocations
     '''
     
     def __init__ (self, cds):
@@ -233,12 +247,15 @@ class CdsAlignment (object):
         return (self.cds.record_id, self.cds.location) == (other.cds.record_id, other.cds.location)
 
     def add_aligned_sublocation (self, read_id, aligned_location, score):
-        ''' Adds an aligned region to the cds unless it comes 
-            from the read already present in the aligned regions
-            @param read_id read id 
-            @param (Location) aligned_location intersection between the CDS and the 
-                    alignment location
-            @param score alignment score for this read
+        ''' 
+        Adds an aligned region to the cds unless it comes 
+        from the read already present in the aligned regions
+
+        :param read_id: read id (str)
+        :param aligned_location intersection between the CDS and the 
+                alignment location, of type :class:`utils.location.Location`
+        :param score: alignment score for this read generated by the select
+            alignment tool
         '''
         
         # if the CDS has already been covered by the same read in the past,
@@ -254,6 +271,8 @@ class CdsAlignment (object):
         Checks whether CDS alignment is active. 
         If all the CDSAlnSublocations are inactive, then the whole CdsAlignment
         is inactive.
+
+        :rtype: boolean, True if CDS alignment is active, False otherwise.
         '''
         for cds_aln_subloc in self.aligned_regions.values():
             if cds_aln_subloc.active:
@@ -264,7 +283,8 @@ class CdsAlignment (object):
         '''
         Counts the number of CdsAlnSublocations which
         have been marked as active
-        @return (int) number of active alignments
+
+        :rtype: int, number of active alignments
         '''
         active_sublocations = 0
         for cds_aln_subloc in self.aligned_regions.values():
@@ -276,8 +296,11 @@ class CdsAlignment (object):
         pass
         
     def contains_read (self, read_id):
-        ''' Determines whether this CDS alignment contains 
-            a subalignment mapped to the specified read.
+        ''' 
+        Determines whether there exists an alignment of the 
+        specified read and this Cds.
+
+        :rtype: boolean
         '''
         return True if self.aligned_regions.has_key(read_id) else False
         
@@ -293,15 +316,18 @@ class CdsAlignment (object):
 
     
 class CdsAlnSublocation (object):
-    ''' Represents the sublocation of a CDS covered
-        by a single read.
+    ''' 
+    Represents the sublocation of a CDS covered
+    by a single read.
     '''
         
     def __init__ (self, read_id, location, score, active=True):
-        ''' @param read_id read ID 
-            @param (Location) location intersection location 
-            @param score alignment score
-            @param (boolean) active If active than it maps to CDS that contains it.
+        ''' 
+        :param read_id: read ID 
+        :param location: intersection location (:class:`utils.location.Location`)
+        :param score: alignment score
+        :param active: (boolean) If inactive, the alignment doesn't contribute to 
+            the CDS total coverage by reads.
         '''
         self.read_id    = read_id
         self.location   = location
