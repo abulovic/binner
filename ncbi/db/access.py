@@ -3,54 +3,47 @@ from sqlalchemy.orm.scoping import scoped_session
 from sqlalchemy.orm.session import sessionmaker
 import _mysql
 
-import ncbi.db.genbank as gb
-import ncbi.db.embl as embl
+from ncbi.db.unity import UnityRecord, UnityCDS
 
 class DbQuery(object):
     '''Serves as a database query utility.'''
-    def __init__(self, genbank_db_url=None, embl_db_url=None, ncbitax_db_url=None):
-        if not genbank_db_url:
-            genbank_db_url = "mysql+mysqldb://root:root@localhost/genbank"
-        self.genbank_db_url = genbank_db_url
-        if not embl_db_url:
-            embl_db_url = "mysql+mysqldb://root:root@localhost/embl"
-        self.embl_db_url = embl_db_url
+    def __init__(self, unity_db_url=None, ncbitax_db_url=None):
+        if not unity_db_url:
+            unity_db_url = "mysql+mysqldb://root:root@localhost/unity"
+        self.unity_db_url = unity_db_url
         if not ncbitax_db_url:
             ncbitax_db_url = "mysql+mysqldb://root:root@localhost/ncbitax"
         self.ncbitax_db_url = ncbitax_db_url
         self._create_sessions()
 
 
-    def get_record (self, record_id, db_source='gb'):
+    def get_record (self, version):
         ''' 
-        @param record_id GenBank/EMBL/DDBJ record ID
-        @param db_source source database, can be gb(GenBank),
-               emb(EMBL), dbj(DDBJ)
+        @param record_id GenBank/EMBL/DDBJ/RefSeq Accesion.Version
         @return Record object with specified id,
                 None if no object with that id is present in database
         '''
-        if db_source == 'gb':
-            result = self.genbank_session.query(gb.Record).filter(gb.Record.name==record_id).first()
-        elif db_source == 'embl':
-            result = self.embl_session.query(embl.Record).filter(embl.Record.name==record_id).first()
-        else:
-            raise ValueError('db_source: %s not supported', str(db_source))
+        records = self.unity_session.execute("""
+        
+            SELECT id, db, version, nucl_gi, taxon, location,
+                protein_id, locus_tag, product, gene, prot_gi
+            FROM cds
+            WHERE version LIKE :version;
+        """,
+        {
+            'version': version
+         })
 
-        return result
+        record = None
 
-
-    def get_cdss   (self, record_id, location, complement=False, db_source='gb'):
-        ''' 
-        @param location location tuple (start, stop)
-        @param complement True if cds is on the complementary strand
-        @return List of Cds objects from the record specified
-                by the record_id for the specified location
-        '''
-        record = self.get_record(record_id, db_source)
-        if record:
-            return record.matches(location, complement)
-        else:
-            return []
+        for r in records:
+            if not record:
+                record = UnityRecord(r['version'])
+            cds = UnityCDS(dict(r))
+            record.add_cds(cds)
+    
+        return record
+        
 
     def get_taxids (self, gis, format=dict):
         '''
@@ -145,19 +138,12 @@ class DbQuery(object):
 
     def _create_sessions(self):
         ''' Creates database sessions '''
-        genbank_engine = create_engine (self.genbank_db_url, echo=False, 
+        unity_engine = create_engine (self.unity_db_url, echo=False, 
                                 convert_unicode=True, encoding='utf-8')
-        genbank_session = scoped_session(sessionmaker(bind = genbank_engine, autocommit=False, autoflush=False))
+        unity_session = scoped_session(sessionmaker(
+                        bind=unity_engine, autocommit=False, autoflush=False))
         
-        gb.init_db(genbank_engine)
-        self.genbank_session = genbank_session()
-        
-        embl_engine = create_engine (self.embl_db_url, echo=False, 
-                                convert_unicode=True, encoding='utf-8')
-        embl_session = scoped_session(sessionmaker(bind = embl_engine, autocommit=False, autoflush=False))
-        
-        embl.init_db(embl_engine)
-        self.embl_session = embl_session()
+        self.unity_session = unity_session()
 
         self.ncbitax_db = _mysql.connect('localhost', 'root', 'root', 'ncbitax')
 

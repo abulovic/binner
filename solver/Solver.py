@@ -7,6 +7,8 @@ from data.containers.cdsaln import CdsAlnContainer
 from ncbi.db.access         import DbQuery
 from ncbi.taxonomy.tree     import TaxTree
 
+from statistics.SolverStatistics import SolverStatistics
+
 from formats.xml_output     import *
 # import logging
 
@@ -39,6 +41,9 @@ class Solver (object):
         ''' Main UI method.
             Generates XML file containing solution.
         '''
+        # Create holder for statistical data
+        stats = SolverStatistics()
+
         # Initialize containers
         read_container = ReadContainer()
         record_container = RecordContainer()
@@ -59,7 +64,14 @@ class Solver (object):
         log.info("read populate cdss over")
         read_cnt = len(read_container.fetch_all_reads(format=list))
 
-        print record_container.get_num_missing_records_stats()
+        # for logging data BEGIN PHASE 1
+        # taxon ids - very slow!!!
+        #for (ncul_acc, record) in record_container.fetch_all_records(format=list):
+        #    if record is not None:
+        #        print record.sources[0].db_xref
+        # for logging data END
+
+        stats.collectPhaseData(1, record_container, read_container)
 
         print "determining host"
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
@@ -73,20 +85,37 @@ class Solver (object):
         cds_aln_container.populate(read_container)
         log.info("Cds Aln Container populated!")
 
+        stats.collectPhaseData(2, record_container, read_container, cds_aln_container)
+
         # Map each read to one CDS (greedy)
         self.read2cds_solver.map_reads_2_cdss(cds_aln_container)
         log.info("Reads mapped to CDSS.")
+
+        stats.collectPhaseData(3, record_container, read_container, cds_aln_container)
 
         # Determine species
         taxid2cdss = self.taxonomy_solver.map_cdss_2_species (db_access, tax_tree, read_container, cds_aln_container)
         log.info("Taxonomy determined.")
 
+        stats.collectPhaseData(4, record_container, read_container, cds_aln_container)        
+        
         # Generate XML file
         self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree, dataset_xml_file, output_solution_filename)
 
+        stats.collectPhaseData(5, record_container, read_container, cds_aln_container)
+        
         log.info("Proba 0: funkcija generateXML prosla!")
 
+        #Test stats
+        print stats
+        stats.toFile("stats")
+        stats_ = SolverStatistics("stats");
+        print stats_
+
         pass
+
+
+
 
     def generateXML (self, host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container,  db_access, tax_tree, dataset_xml_file, output_solution_filename):
 

@@ -22,6 +22,17 @@ class ReadContainer (object):
         for line in aln_file.readlines():
             self._add_read_from_str(line)
 
+    def get_protein_ids(self, exclude_host=False):
+        protein_ids = set([])
+        for read in self.read_repository.values():
+            if exclude_host:
+                if read.is_host_read:
+                    continue
+            for readAln in read.alignment_locations:
+                for (cds, alignment_location) in readAln.aligned_cdss:
+                    protein_ids.add(cds.protein_id)
+        return protein_ids
+
     def populate_cdss (self, record_container):
         '''
         Coding sequences are determined and stored for every read alignment.
