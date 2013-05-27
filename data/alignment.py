@@ -57,7 +57,7 @@ class ReadAlnLocation (object):
         (start,stop) = self.location_span
         try:
             location = Location.from_location_str("%d..%d" % (start, stop))
-        except LocationParsingException, e:
+        except LoactionParsingException, e:
             print "ReadAlignment/determine_coding_seqs:", e
             self.aligned_cdss = []
             return self.aligned_cdss
@@ -65,7 +65,7 @@ class ReadAlnLocation (object):
         for cds in record.cdss:
             try:
                 cds_location = Location.from_location_str(cds.location)
-            except LocationParsingException, e: 
+            except LoactionParsingException, e: 
                 print "ReadAlignment/determine_coding_seqs:", e
                 continue
             location_intersection = cds_location.find_intersection (location)
@@ -178,7 +178,7 @@ class ReadAlnLocation (object):
         (start, stop) = self.location_span
         try:
             aln_location = Location.from_location_str("%d..%d" % (start, stop))
-        except LocationParsingException, e:
+        except LoactionParsingException, e:
             print "ReadAlignment/determine_coding_seqs:", e
             self.aligned_cdss = []
             return self.aligned_cdss
