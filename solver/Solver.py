@@ -65,10 +65,7 @@ class Solver (object):
         read_cnt = len(read_container.fetch_all_reads(format=list))
 
         # for logging data BEGIN PHASE 1
-        print record_container.get_num_missing_records_stats()
-        protein_ids = read_container.get_protein_ids();
-        print protein_ids
-        print len(protein_ids)
+        # taxon ids - very slow!!!
         #for (ncul_acc, record) in record_container.fetch_all_records(format=list):
         #    if record is not None:
         #        print record.sources[0].db_xref
@@ -87,12 +84,6 @@ class Solver (object):
         # Populate CDS container 
         cds_aln_container.populate(read_container)
         log.info("Cds Aln Container populated!")
-
-        # for logging data BEGIN
-        protein_ids = read_container.get_protein_ids(True)
-        print protein_ids
-        print len(protein_ids)
-        # for logging data END
 
         stats.collectPhaseData(2, record_container, read_container, cds_aln_container)
 

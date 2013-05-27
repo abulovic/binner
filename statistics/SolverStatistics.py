@@ -86,14 +86,15 @@ class SolverStatistics:
         
         statData.num_reads              = stats.num_reads(read_cont)
         statData.num_reads_with_no_alns = stats.num_reads_with_no_alns(read_cont)
-        #statData.proteins              = ???  JERKO
-        #statData.taxs                  = ???  JERKO
+        statData.proteins               = read_cont.get_protein_ids(phase != 1)
+        #statData.taxs                  = ???  JERKO - nacin na koji zasad dohvacam prespor
         #statData.record_alns           = ???  Matija
         #statData.cds_alns              = ???  Matija, zar ovo moze u prvoj fazi?
         statData.num_read_alns          = stats.num_read_alns(read_cont)
         
-        #if phase == 1:
-        #    statData.num_missing_records   = ???  JERKO
+        if phase == 1:
+            statData.num_missing_records = record_cont.get_num_missing_records_stats()
+            statData.proteins = read_cont.get_protein_ids()
         if phase == 2:
             statData.num_host_read_alns = stats.num_inactive_read_alns(read_cont)
         if phase in [2,3,4]:
@@ -123,7 +124,8 @@ class SolverStatistics:
             for attr in ["num_reads", "num_reads_with_no_alns", 
                          "num_read_alns", "num_host_read_alns",
                          "num_cdss", "num_cdss_with_no_alns",
-                         "num_cds_alns"]:
+                         "num_cds_alns", "num_missing_records", 
+                         "proteins"]:
                 if getattr(statData, attr) != None:
                     res += tab + attr + ": " + str(getattr(statData, attr)) + "\n"
         return res
