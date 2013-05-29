@@ -23,7 +23,7 @@ argparser.add_argument('-l', '--log', type=str, help='Path to log file', nargs=1
 args = argparser.parse_args()
 print args
 
-Logger(args.log)
+Logger(args.log[0])
 log.info('BINNER RUN')
 log.info("Input: %s" % args.input[0])
 log.info("Xml template: %s" % args.descr[0])
