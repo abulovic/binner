@@ -2,9 +2,9 @@ import logging
 import logging.config
 import argparse
 import sys,os
-from utils import timing
-
 sys.path.append(os.getcwd())
+
+from utils import timing
 
 from solver.Solver import Solver
 from solver.taxonomy.SimpleTaxonomySolver       import SimpleTaxonomySolver
