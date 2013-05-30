@@ -164,7 +164,7 @@ class DbQuery(object):
             record = records.first()
     
             if record:
-                return int(record['rank'])
+                return record['rank']
                     
             return None
         
