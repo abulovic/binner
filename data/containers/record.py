@@ -63,7 +63,7 @@ class RecordContainer (object):
         if not self.record_repository.has_key(record_id):
             record = self.db_query.get_record(record_id)
             try :
-                getattr(record, 'name')
+                getattr(record, 'version')
                 self.record_repository[record_id] = record
             except AttributeError:
                 log.info("No record with ID %s", str(record_id))
