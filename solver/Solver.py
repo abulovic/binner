@@ -106,9 +106,10 @@ class Solver (object):
         
         log.info("Proba 0: funkcija generateXML prosla!")
 
-        #Test stats
         print stats
-        stats.toFile("stats")
+        # Write stats to files
+        stats.writeToFiles()
+        
         pass
 
 

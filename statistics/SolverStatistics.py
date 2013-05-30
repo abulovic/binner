@@ -1,5 +1,6 @@
 import statistics as stats
 import cPickle as pickle
+import os
 
 
 class StatData:
@@ -26,6 +27,7 @@ class StatData:
     (int) num_cds_alns  Only in phases 2, 3, 4.
     Number of active aligned regions in all cdss.
     """
+    
 
     def __init__(self):
         self.time                   = None    # TODO: should set itself automatically in this line.
@@ -43,6 +45,28 @@ class StatData:
         self.num_cdss_with_no_alns  = None    # Jel to ono sto zelimo?
         self.num_cds_alns           = None
 
+    def shortStr(self):
+        """ Returns string representation containing only simple sttributes,
+        which can be easily read.
+        """
+        res = ""
+        for attr in ["num_reads", "num_reads_with_no_alns", 
+                     "num_read_alns", "num_host_read_alns",
+                     "num_cdss", "num_cdss_with_no_alns",
+                     "num_cds_alns", "num_missing_records", 
+                     "proteins"]:
+            if getattr(self, attr) != None:
+                res += attr + ": " + str(getattr(self, attr)) + "\n"
+        return res
+        
+
+    def __str__(self):
+        res = self.shortStr()
+        res += "\n// ---------------------- Number of alignments to each record -------------------- //\n\n"
+        # Matija - number of alignments to each record and CDS
+        for record_stats in self.num_alns_to_record_and_cds.values():
+            res += str(record_stats) + "\n"
+        return res
 
 
 
@@ -105,9 +129,10 @@ class SolverStatistics:
 
 
 
-    
     def toFile(self, filepath):
-        """ Statistical data is saved to file.
+        """ Statistical data is saved to file using pickle.
+        It can be reconstructed from that file if filepath
+        is passed to constructor.
         @param (string) filepath
         """
         outfile = open(filepath, 'w')
@@ -115,21 +140,20 @@ class SolverStatistics:
 
     def __str__(self):
         res = ""
-        tab = " "*4
         for (phase, statData) in self.phaseData.items():
             res += "Phase " + str(phase) + ":\n"
-            for attr in ["num_reads", "num_reads_with_no_alns", 
-                         "num_read_alns", "num_host_read_alns",
-                         "num_cdss", "num_cdss_with_no_alns",
-                         "num_cds_alns", "num_missing_records", 
-                         "proteins"]:
-                if getattr(statData, attr) != None:
-                    res += tab + attr + ": " + str(getattr(statData, attr)) + "\n"
-            
-            res += "\n// ---------------------- Number of alignments to each record -------------------- //\n\n"
-            # Matija - number of alignments to each record and CDS
-            for record_stats in statData.num_alns_to_record_and_cds.values():
-                res += str(record_stats) + "\n"
-
+            res += statData.shortStr()
         return res
+
+    def writeToFiles(self):
+        """ Creates a directory and in it one file for each phase.
+        In each file statistic data for that phase is written in human readable format.
+        """
+        stats_dir = "solver_stats"
+        if not os.path.isdir(stats_dir):
+            os.makedirs(stats_dir)
+        for (phase, statData) in self.phaseData.items():
+            txt_file = open(stats_dir + "/phase_" + str(phase) + ".txt", "w")
+            txt_file.write(str(statData))
+            txt_file.close()
 
