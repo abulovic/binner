@@ -8,7 +8,7 @@ Created on May 27, 2013
 standard_fields =[
     'id',
     'db'
-    'location',
+    'version',
     'nucl_gi',
     'taxon',
     'location',
