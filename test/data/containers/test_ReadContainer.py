@@ -46,6 +46,8 @@ class ReadContainerTest(unittest.TestCase):
             line = nextline()
             if not line: break
             read_id = line.split(',')[0]
+            if read_id.startswith('@'):
+                read_id = read_id[1:]
             read_ids.append(read_id)
         aln_fhandle.close()
         return read_ids
