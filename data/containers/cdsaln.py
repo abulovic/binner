@@ -68,10 +68,10 @@ class CdsAlnContainer (object):
         return ret
 
 
-    def fetch_all_cds_alns (self):
+    def fetch_all_cds_alns (self, format=iter):
         '''
         Fetches iterator over all cds alignments from the
         cds alignment repository
         '''
-        return iter(self.cds_repository.values())
+        return format(self.cds_repository.values())
 
