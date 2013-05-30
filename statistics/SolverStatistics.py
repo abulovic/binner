@@ -88,8 +88,6 @@ class SolverStatistics:
         statData.num_reads_with_no_alns = stats.num_reads_with_no_alns(read_cont)
         statData.proteins               = read_cont.get_protein_ids(phase != 1)
         #statData.taxs                  = ???  JERKO - nacin na koji zasad dohvacam prespor
-        #statData.record_alns           = ???  Matija
-        #statData.cds_alns              = ???  Matija, zar ovo moze u prvoj fazi?
         statData.num_read_alns          = stats.num_read_alns(read_cont)
         statData.num_alns_to_record_and_cds      = stats.count_alns_to_record_and_cds(read_cont)
 
@@ -115,8 +113,6 @@ class SolverStatistics:
         outfile = open(filepath, 'w')
         pickle.dump(self.phaseData, outfile)
 
-
-
     def __str__(self):
         res = ""
         tab = " "*4
@@ -129,5 +125,11 @@ class SolverStatistics:
                          "proteins"]:
                 if getattr(statData, attr) != None:
                     res += tab + attr + ": " + str(getattr(statData, attr)) + "\n"
+            
+            res += "\n// ---------------------- Number of alignments to each record -------------------- //\n\n"
+            # Matija - number of alignments to each record and CDS
+            for record_stats in statData.num_alns_to_record_and_cds.values():
+                res += str(record_stats) + "\n"
+
         return res
 

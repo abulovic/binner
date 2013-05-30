@@ -226,6 +226,14 @@ class RecordStats (object):
         for cds_id, aln_num in self.cdss.items():
             print "%s : %d\n" % (cds_id, aln_num)
         
+    def __str__(self):
+        ret = ""
+        tab = " "*4
+        ret += self.record_id + " : " + str(self.aln_count) + "\n"
+        for cds_id, aln_num in self.cdss.items():
+            ret += tab + cds_id + " : " + str(aln_num) + "\n"
+
+        return ret
 
 def count_alns_to_record_and_cds(read_container):
     ''' For each record is counted  how much alignments aligned to it.
