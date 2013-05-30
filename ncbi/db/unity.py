@@ -26,7 +26,7 @@ class UnityRecord(object):
         self.cds = []
     
     def add_cds(self, cds):
-        self.cds = cds
+        self.cds.append(cds)
 
 class UnityCDS(object):
     def __init__(self, attributes={}):
