@@ -1,9 +1,17 @@
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm.scoping import scoped_session
 from sqlalchemy.orm.session import sessionmaker
-import _mysql
+from sqlalchemy import Table, MetaData, Column, Integer
 
 from ncbi.db.unity import UnityRecord, UnityCDS
+from sqlalchemy.sql.expression import select
+
+_metadata = MetaData()
+
+table_gi_taxid_nuc = Table('gi_taxid_nuc', _metadata,
+    Column('gi', Integer, primary_key=True),
+    Column('tax_id', Integer),
+)
 
 class DbQuery(object):
     '''Serves as a database query utility.'''
@@ -18,31 +26,38 @@ class DbQuery(object):
 
 
     def get_record (self, version):
-        ''' 
-        @param record_id GenBank/EMBL/DDBJ/RefSeq Accesion.Version
-        @return Record object with specified id,
-                None if no object with that id is present in database
         '''
-        records = self.unity_session.execute("""
+        Returns the record associated with the given accession.version.
         
-            SELECT id, db, version, nucl_gi, taxon, location,
-                protein_id, locus_tag, product, gene, prot_gi
-            FROM cds
-            WHERE version LIKE :version;
-        """,
-        {
-            'version': version
-         })
-
-        record = None
-
-        for r in records:
-            if not record:
-                record = UnityRecord(r['version'])
-            cds = UnityCDS(dict(r))
-            record.add_cds(cds)
+        :param version: string - GenBank/EMBL/DDBJ/RefSeq Accesion.Version
+        :returns: UnityRecord - record associated with the given 
+                  accession.version. None if no record is found
+        '''
+        sess = self.unity_session()
+        try:
+            
+            records = sess.execute("""
+            
+                SELECT id, db, version, nucl_gi, taxon, location,
+                    protein_id, locus_tag, product, gene, prot_gi
+                FROM cds
+                WHERE version LIKE :version;
+            """,
+            {
+                'version': version
+             })
     
-        return record
+            record = None
+    
+            for r in records:
+                if not record:
+                    record = UnityRecord(r['version'])
+                cds = UnityCDS(dict(r))
+                record.add_cds(cds)
+        
+            return record
+        finally:
+            self.unity_session.remove()
         
 
     def get_taxids (self, gis, format=dict):
@@ -54,30 +69,35 @@ class DbQuery(object):
         tax IDs or a dictionary mapping gis to tax ids. List can 
         contain duplicates.
         '''
+        
         if not gis:
             return format()
-        sql_query = "SELECT * FROM gi_taxid_nuc WHERE gi IN %s" % ( '(' + str(gis)[1:-1] + ')' )
-        self.ncbitax_db.query(sql_query)
-        result = self.ncbitax_db.use_result()
-
-        gi2taxid_list = result.fetch_row(maxrows=0)
-
-        if format == dict:
-            gi2taxid_dict = {}
-            for (gi, taxid) in gi2taxid_list:
-                gi2taxid_dict[int(gi)] = int(taxid)
-
-            return gi2taxid_dict
-
-        elif format == list:
-            taxid_list = []
-            for (gi, taxid) in gi2taxid_list:
-                taxid_list.append (int(taxid))
-
-            return taxid_list
-
-        else:
-            return None
+        
+        sess = self.ncbitax_session()
+        try:
+            s = select([table_gi_taxid_nuc.c.gi, table_gi_taxid_nuc.c.tax_id]
+                       ).where(table_gi_taxid_nuc.c.gi.in_(gis))
+            records = sess.execute(s)
+    
+            if format == dict:
+                gi2taxid_dict = {}
+                for (gi, taxid) in records:
+                    gi2taxid_dict[int(gi)] = int(taxid)
+    
+                return gi2taxid_dict
+    
+            elif format == list:
+                taxid_list = []
+                for (gi, taxid) in records:
+                    taxid_list.append (int(taxid))
+    
+                return taxid_list
+    
+            else:
+                return None
+        finally:
+            self.ncbitax_session.remove()
+        
 
     def get_organism_name (self, taxid, name_class='scientific name'):
         ''' 
@@ -87,13 +107,29 @@ class DbQuery(object):
         name, authority
         @return organism name (str)
         '''
-        self.ncbitax_db.query('SELECT name_txt FROM ncbi_names WHERE tax_id=%d and name_class="%s"'
-                                % (taxid, name_class))
-        result = self.ncbitax_db.use_result()
-        org_name = result.fetch_row()
-        if org_name:
-            ((org_name,),) = org_name
-        return org_name
+        
+        sess = self.ncbitax_session()
+        try:
+            
+            records = sess.execute("""
+                SELECT name_txt 
+                FROM ncbi_names 
+                WHERE name_class=:nameClass AND tax_id=:taxId;
+            """,
+            {
+                'nameClass': name_class,
+                'taxId': taxid
+             })
+    
+            record = records.first()
+    
+            if record:
+                return int(record['name_txt'])
+                    
+            return None
+        
+        finally:
+            self.ncbitax_session.remove()
 
     def get_organism_rank (self, query, by_name=False):
         '''
@@ -112,39 +148,77 @@ class DbQuery(object):
             return None
 
         tax_id = int(tax_id)
-        sql = 'SELECT rank FROM ncbi_nodes WHERE tax_id=%d'
-        self.ncbitax_db.query(sql % tax_id)
-        result = self.ncbitax_db.use_result()
-        rank = result.fetch_row()
-        if rank:
-            ((rank,),) = rank
-        return rank
-
+        
+        sess = self.ncbitax_session()
+        try:
+            
+            records = sess.execute("""
+                SELECT rank 
+                FROM ncbi_nodes 
+                WHERE tax_id=:taxId;
+            """,
+            {
+                'taxId': tax_id
+             })
+    
+            record = records.first()
+    
+            if record:
+                return int(record['rank'])
+                    
+            return None
+        
+        finally:
+            self.ncbitax_session.remove()
+        
+  
     def get_organism_taxid (self, organism_name, name_class='scientific name'):
         '''
         Fetches organism taxid for the specified organism name.
         @param organism_name (str) organism nam
         @return taxid (int)
         '''
-        sql = 'SELECT tax_id FROM ncbi_names WHERE name_class="%s" AND name_txt="%s"'
-        self.ncbitax_db.query (sql % (name_class, organism_name))
-        result = self.ncbitax_db.use_result()
-        tax_id = result.fetch_row()
-        if tax_id:
-            ((tax_id,),) = tax_id
-            tax_id = int(tax_id)
-        return tax_id
+        sess = self.ncbitax_session()
+        try:
+            
+            records = sess.execute("""
+                SELECT tax_id 
+                FROM ncbi_names 
+                WHERE name_class=:nameClass AND name_txt=:nameText;
+            """,
+            {
+                'nameClass': name_class,
+                'nameText': organism_name
+             })
+    
+            record = records.first()
+    
+            if record:
+                return int(record['tax_id'])
+                    
+            return None
+        
+        finally:
+            self.ncbitax_session.remove()
 
 
     def _create_sessions(self):
         ''' Creates database sessions '''
         unity_engine = create_engine (self.unity_db_url, echo=False, 
-                                convert_unicode=True, encoding='utf-8')
+                                convert_unicode=True, encoding='utf-8',
+                                pool_recycle=3600)
         unity_session = scoped_session(sessionmaker(
                         bind=unity_engine, autocommit=False, autoflush=False))
         
-        self.unity_session = unity_session()
+        self.unity_session = unity_session
+        
+        ncbitax_engine = create_engine (self.ncbitax_db_url, echo=False, 
+                                convert_unicode=True, encoding='utf-8',
+                                pool_recycle=3600)
+        
+        ncbitax_session = scoped_session(sessionmaker(
+                        bind=ncbitax_engine, autocommit=False, autoflush=False))
 
-        self.ncbitax_db = _mysql.connect('localhost', 'root', 'root', 'ncbitax')
+        self.ncbitax_session = ncbitax_session
 
         
