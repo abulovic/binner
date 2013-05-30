@@ -109,11 +109,7 @@ class Solver (object):
         #Test stats
         print stats
         stats.toFile("stats")
-        stats_ = SolverStatistics("stats");
-        print stats_
-
         pass
-
 
 
 

@@ -11,9 +11,9 @@ class StatData:
     (int) num_reads_with_no_alns  Number of read with no read alignments.
     (?) proteins  Number of proteins and protein ids.
     (?) taxs  Num of taxes and tax ids.
-    (?) record_alns  For each record: Record id and number of 
-    read alignments for that record.
-    (?) cds_alns  For each cds: protein id and number of aligned regions.
+
+    ({record_id : RecordStats}) num_alns_to_record_and_cds  Number of alignments to each record and CDS.
+
     (int) num_read_alns  Number of read alignments.
     (int) num_host_read_alns  Only in phase 2.
     Number of read alignments that are determined
@@ -35,8 +35,8 @@ class StatData:
         self.num_reads_with_no_alns = None
         self.proteins               = None    # Ovo jerko sredit/popravit
         self.taxs                   = None    # Ovo jerko sredit/popravit
-        self.record_alns            = None    # Matija
-        self.cds_alns               = None    # Matija
+        self.num_alns_to_record_and_cds = None
+
         self.num_read_alns          = None
         self.num_host_read_alns     = None
         self.num_cdss               = None    # Jel to ono sto zelimo?
@@ -91,7 +91,8 @@ class SolverStatistics:
         #statData.record_alns           = ???  Matija
         #statData.cds_alns              = ???  Matija, zar ovo moze u prvoj fazi?
         statData.num_read_alns          = stats.num_read_alns(read_cont)
-        
+        statData.num_alns_to_record_and_cds      = stats.count_alns_to_record_and_cds(read_cont)
+
         if phase == 1:
             statData.num_missing_records = record_cont.get_num_missing_records_stats()
             statData.proteins = read_cont.get_protein_ids()

@@ -48,6 +48,11 @@ class StatisticsTest (unittest.TestCase):
         self.bs_solver = BestScoreSolver()
         self.bs_solver.map_reads_2_cdss(self.cds_aln_cont)
         
+        records_stats = count_alns_to_record_and_cds(self.read_cont)
+        print "Number of records for which we  have stats: %d\n" % len(records_stats)
+        for rec_stat in records_stats.values():
+            rec_stat.print_data()
+
         assert(num_active_aligned_regions(self.cds_aln_cont) == 16)
         
         assert(num_cdss(self.cds_aln_cont) == 4)

@@ -200,3 +200,68 @@ def num_cdss_with_no_alns(cds_aln_container):
             num_cds += 1
     return num_cds
         
+
+
+class RecordStats (object):
+    ''' Holds data for the record:
+            record_id
+            aln_count
+            {cds_id: cds_aln_count}
+    '''
+    def __init__(self, record_id):
+        self.record_id = record_id
+        self.aln_count = 0
+        self.cdss = {}
+
+    def inc_aln_count(self):
+        self.aln_count += 1
+        
+    def inc_aln_count_for_cds(self, cds_id):
+        if cds_id not in self.cdss:
+            self.cdss[cds_id] = 0
+        self.cdss[cds_id] += 1
+
+    def print_data(self):
+        print "%s : %d" % (self.record_id, self.aln_count)
+        for cds_id, aln_num in self.cdss.items():
+            print "%s : %d\n" % (cds_id, aln_num)
+        
+
+def count_alns_to_record_and_cds(read_container):
+    ''' For each record is counted  how much alignments aligned to it.
+        Also, for each CDS in a record is counted the same thing.
+
+        @param (ReadContainer) read_container
+        @return {record_id : RecordStats }
+    '''
+    records_stats = {}
+
+    for read in read_container.read_repository.values():
+        for read_aln in read.alignment_locations:
+            record_id = read_aln.nucleotide_accession
+
+            # If not already in dict, create new object
+            if record_id not in records_stats:
+                records_stats[record_id] = RecordStats(record_id)
+
+            records_stats[record_id].inc_aln_count()
+
+            # Go through all CDSs of aln
+            for (cds, loc) in read_aln.aligned_cdss:
+                records_stats[record_id].inc_aln_count_for_cds(cds.product)
+                
+    return records_stats
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
