@@ -61,8 +61,8 @@ class ReadAlnLocation (object):
             print "ReadAlignment/determine_coding_seqs:", e
             self.aligned_cdss = []
             return self.aligned_cdss
-            
-        for cds in record.cdss:
+        
+        for cds in record.cds:
             try:
                 cds_location = Location.from_location_str(cds.location)
             except LoactionParsingException, e: 
