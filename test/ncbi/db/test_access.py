@@ -26,6 +26,7 @@ class Test(unittest.TestCase):
     def testFindReturnsRecord(self):
         record = self.dbQuery.get_record('AB000181.1')
         self.assertIsNotNone(record, "Not found object AB000181 in Unity")
+        self.assertEqual(len(record.cds), 2)
         
        
     def testNcbitaxGi2TaxidQuery (self):
