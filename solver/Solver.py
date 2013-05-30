@@ -10,7 +10,7 @@ from ncbi.taxonomy.tree     import TaxTree
 from statistics.SolverStatistics import SolverStatistics
 
 from formats.xml_output     import *
-# import logging
+import logging
 
 class Solver (object):
 
@@ -27,7 +27,7 @@ class Solver (object):
         self.determine_host = determine_host
         self.read2cds_solver = read2cds_solver
         self.taxonomy_solver = taxonomy_solver
-        
+        self.log = logging.getLogger(__name__)
         # Populate readContainer
 
         # Do not populatea cdsAlnContainer before we removed host-reads!
@@ -55,13 +55,13 @@ class Solver (object):
         record_container.set_db_access(db_access)
         # Populate read container - NOT NOW NEEDED
         read_container.populate_from_aln_file (alignment_file)
-        log.info("Read container populated!")
+        self.log.info("Read container populated!")
         # Extract all records from database
         record_container.populate(read_container)
-        log.info("Record container populated!")
+        self.log.info("Record container populated!")
         # find intersecting cdss for read alignments
         read_container.populate_cdss(record_container)
-        log.info("read populate cdss over")
+        self.log.info("read populate cdss over")
         read_cnt = len(read_container.fetch_all_reads(format=list))
 
         # for logging data BEGIN PHASE 1
@@ -77,25 +77,25 @@ class Solver (object):
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
         (host_taxid, host_read_cnt, read_container) = self.determine_host(read_container)
-        log.info("host_taxid:%s host_read_cnt:%s", str(host_taxid), str(host_read_cnt))
+        self.log.info("host_taxid:%s host_read_cnt:%s", str(host_taxid), str(host_read_cnt))
         if host_taxid:
-            log.info("Host identified: %d!", (int(host_taxid)))
+            self.log.info("Host identified: %d!", (int(host_taxid)))
 
         # Populate CDS container 
         cds_aln_container.populate(read_container)
-        log.info("Cds Aln Container populated!")
+        self.log.info("Cds Aln Container populated!")
 
         stats.collectPhaseData(2, record_container, read_container, cds_aln_container)
 
         # Map each read to one CDS (greedy)
         self.read2cds_solver.map_reads_2_cdss(cds_aln_container)
-        log.info("Reads mapped to CDSS.")
+        self.log.info("Reads mapped to CDSS.")
 
         stats.collectPhaseData(3, record_container, read_container, cds_aln_container)
 
         # Determine species
         taxid2cdss = self.taxonomy_solver.map_cdss_2_species (db_access, tax_tree, read_container, cds_aln_container)
-        log.info("Taxonomy determined.")
+        self.log.info("Taxonomy determined.")
 
         stats.collectPhaseData(4, record_container, read_container, cds_aln_container)        
         
@@ -104,7 +104,7 @@ class Solver (object):
 
         stats.collectPhaseData(5, record_container, read_container, cds_aln_container)
         
-        log.info("Proba 0: funkcija generateXML prosla!")
+        self.log.info("Proba 0: funkcija generateXML prosla!")
 
         print stats
         # Write stats to files
@@ -132,7 +132,7 @@ class Solver (object):
         for (taxid, cdss) in taxid2cdss.items():
             organism_name    = db_access.get_organism_name (taxid)
             if not organism_name:
-                log.error("Unable to find name for taxid %d", taxid)
+                self.log.error("Unable to find name for taxid %d", taxid)
                 organism_name = ""
                 organism_lineage = ""
                 org_species = ""

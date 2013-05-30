@@ -1,5 +1,9 @@
+import logging
+import logging.config
 import argparse
 import sys,os
+from utils import timing
+
 sys.path.append(os.getcwd())
 
 from solver.Solver import Solver
@@ -9,42 +13,77 @@ from solver.read2cds.GreedySolver               import GreedySolver
 from solver.read2cds.BestScoreSolver            import BestScoreSolver
 from solver.determine_host                      import determine_host
 
-from utils.logger import Logger
+if __name__ == '__main__':
+    log = logging.getLogger(__name__)
 
+    argparser = argparse.ArgumentParser(
+        description='Reads input and desscription files and prodices output '
+        'file')
+    argparser.add_argument('input', help='Input alignment file', 
+                           type=str)
+    argparser.add_argument('descr', help='XML description schema', 
+                           type=str)
+    argparser.add_argument('output', help='Output XML file', 
+                           type=str)
+    argparser.add_argument('-ts', '--tax_solver', 
+                           help='Taxonomy solver type', 
+                           choices=['simple', 'simple_join'], 
+                           default='simple')
+    argparser.add_argument('-rs', '--read2cds_solver', 
+                           help='Read2CDS solver type', 
+                           choices=['greedy', 'best_score'], 
+                           default='greedy')
+    argparser.add_argument('-l', '--log_configuration',
+                           help='Logging configuration file', type=str,
+                           default='config' + os.path.sep + 'logging.ini')
 
-argparser = argparse.ArgumentParser()
-argparser.add_argument('-i', '--input', help='Input alignment file', type=str, nargs=1, dest='input')
-argparser.add_argument('-d', '--descr', help='XML description schema', type=str, nargs=1, dest='descr')
-argparser.add_argument('-o', '--out', help='Output XML file', type=str, nargs=1, dest='output')
-argparser.add_argument('-ts', '--tax_solver', help='Taxonomy solver type', choices=['simple', 'simple_join'], default='simple', nargs=1, dest='tax_solver')
-argparser.add_argument('-rs', '--read2cds_solver', help='Read2CDS solver type', choices=['greedy', 'best_score'], default='greedy', nargs=1, dest='read2cds_solver')
-argparser.add_argument('-l', '--log', type=str, help='Path to log file', nargs=1, dest='log', default='binner.log')
+    args = argparser.parse_args()
+    
+    error = False
+    if not os.path.exists(os.path.expanduser(args.input)):
+        print "Input alignment file %s doesn't exist" % args.input
+        error = True
+    if not os.path.exists(os.path.expanduser(args.descr)):
+        print "XML description schema %s doesn't exist" % args.descr
+        error = True
+    if not os.path.exists(os.path.expanduser(args.log_configuration)):
+        print "Log configuration file %s doesn't exist" % args.log_configuration
+        error = True
+    if error:
+        exit(-1)
 
-args = argparser.parse_args()
-print args
+    # load the logging configuration
+    logging.config.fileConfig(args.log_configuration,
+                              disable_existing_loggers=False)
 
-Logger(args.log[0])
-log.info('BINNER RUN')
-log.info("Input: %s" % args.input[0])
-log.info("Xml template: %s" % args.descr[0])
-log.info("Output: %s" %  args.output[0])
-
-
-read2cds_solver = None
-log.info("read2cds solver: %s" % args.read2cds_solver[0])
-if args.read2cds_solver[0] == 'greedy':
-    read2cds_solver = GreedySolver()
-elif args.read2cds_solver[0] == 'best_score':
-    read2cds_solver = BestScoreSolver()
-
-tax_solver = None
-log.info("taxonomy solver: %s" % args.tax_solver[0])
-if args.tax_solver[0] == 'simple':
-    tax_solver = SimpleTaxonomySolver()
-elif args.tax_solver[0] == 'simple_join':
-    tax_solver = SimpleJoinTaxonomySolver()
-
-log.info("Started.")
-solver = Solver(determine_host, read2cds_solver, tax_solver)
-solver.generateSolutionXML(args.input[0], args.descr[0], args.output[0])
-log.info("Finished.")
+    log.info('BINNER RUN')
+    log.info("Input: %s" % args.input)
+    log.info("Xml template: %s" % args.descr)
+    log.info("Output: %s" %  args.output)
+    
+    
+    read2cds_solver = None
+    log.info("read2cds solver: %s" % args.read2cds_solver)
+    if args.read2cds_solver == 'greedy':
+        read2cds_solver = GreedySolver()
+    elif args.read2cds_solver == 'best_score':
+        read2cds_solver = BestScoreSolver()
+    
+    tax_solver = None
+    log.info("taxonomy solver: %s" % args.tax_solver)
+    if args.tax_solver == 'simple':
+        tax_solver = SimpleTaxonomySolver()
+    elif args.tax_solver == 'simple_join':
+        tax_solver = SimpleJoinTaxonomySolver()
+    
+    log.info("Started.")
+    processing_start = timing.start()
+    
+    solver = Solver(determine_host, read2cds_solver, tax_solver)
+    solver.generateSolutionXML(args.input, args.descr, args.output)
+    
+    processing_delta = timing.end(processing_start)
+    log.info("Processing done in %s", 
+        timing.humanize(processing_delta))
+    
+    log.info("Finished.")
