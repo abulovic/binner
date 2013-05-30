@@ -124,7 +124,7 @@ class DbQuery(object):
             record = records.first()
     
             if record:
-                return int(record['name_txt'])
+                return record['name_txt']
                     
             return None
         
