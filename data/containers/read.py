@@ -24,6 +24,7 @@ class ReadContainer (object):
             self._add_read_from_str(line)
             read_num += 1
         self.read_num = read_num
+        aln_file.close()
 
     def get_protein_ids(self, exclude_host=False):
         protein_ids = set([])
