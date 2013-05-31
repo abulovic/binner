@@ -109,6 +109,7 @@ class Solver (object):
         print stats
         # Write stats to files
         stats.writeToFiles()
+        stats.toFile("solver_stats.pickled")
         
         pass
 

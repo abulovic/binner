@@ -1,0 +1,15 @@
+2013-05-31 18:33:19,016 INFO I got the input file!
+2013-05-31 18:33:21,385 INFO Read container populated!
+2013-05-31 18:33:21,397 INFO No record with ID Z46231.1
+2013-05-31 18:33:21,549 INFO No record with ID AP012495.1
+2013-05-31 18:33:21,555 INFO No record with ID AY337720.1
+2013-05-31 18:33:21,556 INFO No record with ID Z32524.1
+2013-05-31 18:33:23,146 INFO Record container populated!
+2013-05-31 18:33:23,867 INFO read populate cdss over
+2013-05-31 18:33:27,184 INFO host_taxid:None host_read_cnt:0
+2013-05-31 18:33:27,184 INFO Cds Aln Container populated!
+2013-05-31 18:33:27,186 INFO Reads mapped to CDSS.
+2013-05-31 18:33:27,191 INFO Taxonomy determined.
+2013-05-31 18:33:27,283 ERROR Unable to find name for taxid 1204342
+2013-05-31 18:33:27,286 INFO Proba 0: funkcija generateXML prosla!
+2013-05-31 18:33:27,411 INFO Successfully initialized solver!

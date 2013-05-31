@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<organismsReport>
+  <dataset>
+    <datasetName>Example1.fq</datasetName>
+    <hostGenus>Homo</hostGenus>
+    <hostSpecies>sapiens</hostSpecies>
+    <commonName>human</commonName>
+    <taxonomy taxon_id="9606">Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae; Homo.</taxonomy>
+    <sampleSource>Whole Blood</sampleSource>
+    <sampleType>DNA</sampleType>
+    <sequencer method="single-end">Roche 454</sequencer>
+  </dataset>
+  <organisms>
+    <organism>
+      <relativeAmount count="0">0.000</relativeAmount>
+      <taxonomy taxon_id="9606">Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae; Homo.</taxonomy>
+      <organismName>Host</organismName>
+    </organism>
+    <organism>
+      <relativeAmount count="1">50.000</relativeAmount>
+      <taxonomy taxon_id="566546">cellular organisms; Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales; Enterobacteriaceae; Escherichia; Escherichia coli; Escherichia coli W</taxonomy>
+      <organismName>Escherichia coli W</organismName>
+      <genus>Escherichia</genus>
+      <species>coli</species>
+      <genes>
+        <gene protein_id ="AFH10709.1" locus_tag="WFL_05225" product="DNA helicase IV" ref_name="AFH10709.1">helD</gene>
+      </genes>
+      <reads>
+        <sequence>m120524_193437_00128_c100334332550000001523018909161211_s2_p0/7317/268_856</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">50.000</relativeAmount>
+      <taxonomy taxon_id="1204342"></taxonomy>
+      <genes>
+        <gene protein_id ="BAM57522.1" locus_tag="BEST7003_1321" product="beta-lactamase" ref_name="BAM57522.1">penP</gene>
+      </genes>
+      <reads>
+        <sequence>m120619_110522_00128_c100362262550000001523027210041265_s2_p0/79307/0_1759</sequence>
+      </reads>
+    </organism>
+  </organisms>
+</organismsReport>
