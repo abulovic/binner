@@ -19,4 +19,16 @@ class TaxonomySolver (object):
         '''
         pass
 
-
+    def _get_taxid_from_gi (self, cds_aln, db_access):
+        tax_id = None
+        try:
+            tax_id = cds_aln.cds.taxon
+        except AttributeError, e:
+            # no taxon attribute, fallback to GI
+            pass
+        gi = cds_aln.cds.gi
+        try:
+            [tax_id] = db_access.get_taxids([gi], format=list)
+        except ValueError, e:
+            log.info ("TaxSolver: unable to fetch tax_id from gi = %d", gi)
+        return tax_id

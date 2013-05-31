@@ -21,27 +21,10 @@ class SimpleTaxonomySolver (TaxonomySolver):
 
         for cds_aln in cds_alns:
             if cds_aln.is_active():
-                cds = cds_aln.cds
-                record = cds.record
-                # try to fetch taxid from record data. If that fails,
-                # find taxid through GI from record
-                try:
-                    gi = record.gi
-                except AttributeError:
-                    print "Cannot find GI for {0}. (SimpleTaxonomySolver)".format(cds_aln)
+                taxid = self._get_taxid_from_gi (cds_aln, db_access)
+                if not taxid:
                     continue
-                try:
-                    [taxid] = db_access.get_taxids ([int(gi)], format=list)
-                except TypeError:
-                    # could not find GI in the database:
-                    print "Cannot find taxid for GI {0}. (SimpleTaxonomySolver)".format(gi)
-                    continue
-		except ValueError:
-		    print "Cannot find taxid for GI {0}. (SimpleTaxonomySolver)".format(gi)
-                    continue
-
                 assigned_taxids[taxid].append(cds_aln)
-                
         return assigned_taxids
 
 

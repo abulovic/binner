@@ -19,8 +19,7 @@ class SimpleJoinTaxonomySolver (TaxonomySolver):
             if cds_aln.is_active():
                 
                 # 1. fetch taxonomy ID
-                taxid = self.get_taxid(cds_aln, db_access)
-# >>>>>>>>>>> LOG THIS
+                taxid = self._get_taxid_from_gi (cds_aln, db_access)
                 if not taxid:
                     continue
                 # 2. determine tax ID to which this taxid maps
@@ -33,19 +32,6 @@ class SimpleJoinTaxonomySolver (TaxonomySolver):
                 assigned_taxids[ref_taxid].append(cds_aln)
 
         return assigned_taxids
-
-    def get_taxid (self, cds_aln, db_access):
-        record = cds_aln.cds.record
-        taxid = None
-        try:
-            gi = record.gi
-        except AttributeError, e:
-            print "SimpleJoinTaxonomySolver", e
-        try:
-            [taxid] = db_access.get_taxids([int(gi)], format=list)
-        except TypeError, e:
-            print "SimpleJoinTaxonomySolver", e
-        return taxid
 
     def get_ref_taxid(self, taxid, db_access, tax_tree):
         organism_name = db_access.get_organism_name (taxid)
