@@ -8,7 +8,7 @@ Created on May 27, 2013
 standard_fields =[
     'id',
     'db'
-    'location',
+    'version',
     'nucl_gi',
     'taxon',
     'location',
@@ -32,6 +32,7 @@ class UnityCDS(object):
     def __init__(self, attributes={}):
         self.attributes = attributes
         self.origin = None
+        self.record_id = self.version #Added because of compatibility with older code
         
     def __getattr__(self, name):
         if self.attributes.has_key(name):

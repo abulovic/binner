@@ -1,4 +1,6 @@
 
+import logging
+
 class RecordContainer (object):
     ''' Serves as a local Record Repository.
         If a GenBank/EMBL/DDBJ record has already been 
@@ -9,6 +11,7 @@ class RecordContainer (object):
     def __init__ (self):
         self.record_repository  = {}
         self.num_missing_records = 0
+        self.log = logging.getLogger(__name__)
     
     def get_num_missing_records_stats(self):
         missed_recs = self.num_missing_records 
@@ -66,6 +69,6 @@ class RecordContainer (object):
                 getattr(record, 'version')
                 self.record_repository[record_id] = record
             except AttributeError:
-                log.info("No record with ID %s", str(record_id))
+                self.log.info("No record with ID %s", str(record_id))
                 self.record_repository[record_id] = None
                 self.num_missing_records += 1

@@ -1,5 +1,8 @@
 
 from data.alignment import ReadAlnLocation
+import logging
+
+log = logging.getLogger(__name__)
 
 class Read (object):
     """ Contains all the read-related information, 
@@ -11,6 +14,7 @@ class Read (object):
         self.length                 = read_length
         self.alignment_locations    = alignment_locations
         self.is_host_read           = False
+        
     
     @staticmethod
     def from_read_str (read_str):
@@ -56,7 +60,7 @@ class Read (object):
                                            (start, stop),   complement);
                 newRead_aln_locs.append(newAlignInfo)
             except Exception as e:
-                log.error("Location parsing error.")
+                log.error("Location parsing error.", exc_info=True)
 
         return Read(newRead_id, newRead_length, newRead_aln_locs)
 
