@@ -26,7 +26,7 @@ class TaxonomySolver (object):
         except AttributeError, e:
             # no taxon attribute, fallback to GI
             pass
-        gi = cds_aln.cds.gi
+        gi = cds_aln.cds.nucl_gi
         try:
             [tax_id] = db_access.get_taxids([gi], format=list)
         except ValueError, e:
