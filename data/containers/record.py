@@ -1,5 +1,6 @@
 
 import logging
+from utils import progressbar
 
 class RecordContainer (object):
     ''' Serves as a local Record Repository.
@@ -33,10 +34,15 @@ class RecordContainer (object):
         Populates the record container with all the records 
         that have produced significant alignments
         '''
+        one_perc = int(read_container.read_num/100.)
+        read_num = 0
         reads = read_container.fetch_all_reads(format=iter)
         for read in reads:
             for read_alignment in read.get_alignments(format=iter):
                 self.fetch_record(read_alignment.nucleotide_accession)
+            read_num += 1
+            if read_num % one_perc == 0:
+                progressbar.print_progress(int (float(read_num)/read_container.read_num) * 100)
 
     def fetch_record (self, nucleotide_accession):
         '''

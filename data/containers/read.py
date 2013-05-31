@@ -18,9 +18,12 @@ class ReadContainer (object):
             read repository.
             This is the first stage of filling the read container.
         '''
+        read_num = 0
         aln_file = open(read_alignment_file, 'r')
         for line in aln_file.readlines():
             self._add_read_from_str(line)
+            read_num += 1
+        self.read_num = read_num
 
     def get_protein_ids(self, exclude_host=False):
         protein_ids = set([])
