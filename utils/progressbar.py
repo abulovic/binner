@@ -1,5 +1,5 @@
 import sys
-from fraction import Fraction
+from fractions import Fraction
 
 def determine_step (total):
     if total <= 100:
