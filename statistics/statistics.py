@@ -231,7 +231,7 @@ class RecordStats (object):
         tab = " "*4
         ret += self.record_id + " : " + str(self.aln_count) + "\n"
         for cds_id, aln_num in self.cdss.items():
-            ret += tab + cds_id + " : " + str(aln_num) + "\n"
+            ret += tab + str(cds_id) + " : " + str(aln_num) + "\n"
 
         return ret
 
@@ -256,7 +256,7 @@ def count_alns_to_record_and_cds(read_container):
 
             # Go through all CDSs of aln
             for (cds, loc) in read_aln.aligned_cdss:
-                records_stats[record_id].inc_aln_count_for_cds(cds.product)
+                records_stats[record_id].inc_aln_count_for_cds(cds.version)
                 
     return records_stats
 
