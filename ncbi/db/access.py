@@ -41,7 +41,7 @@ class DbQuery(object):
                 SELECT id, db, version, nucl_gi, taxon, location,
                     protein_id, locus_tag, product, gene, prot_gi
                 FROM cds
-                WHERE version LIKE :version;
+                WHERE version=:version;
             """,
             {
                 'version': version
