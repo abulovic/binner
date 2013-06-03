@@ -217,6 +217,126 @@ class Test(unittest.TestCase):
         self.assertEqual(loc2.complement, intersection.complement,
                          "Complement intersection information doesn't match")
         
+    def testInstersectionWithoutComplementInformation(self):
+        l1 = Location.from_location_str('1..10')
+        l2 = Location.from_location_str('complement(5..15)')
+        
+        self.assertTrue(l1.intersects(l2, use_complement=False),
+                         'The locations should intersect')
+        self.assertFalse(l1.intersects(l2, use_complement=True),
+                         "The locations should't intersect")
+        
+    def testLocationContains(self):
+        l1 = Location.from_location_str('1..10')
+        l2 = Location.from_location_str('5..10')
+        
+        self.assertTrue(l1.contains(l2), 
+                        '1..10 should contain 5..10')
+        
+        l1 = Location.from_location_str('complement(<23..50)')
+        l2 = Location.from_location_str('complement(24..50)')
+        
+        self.assertTrue(l1.contains(l2), 
+                        'complement(<23..50) should contain ' 
+                        'complement(24..50)')
+        
+        l1 = Location.from_location_str('join(1..10,20..30)')
+        l2 = Location.from_location_str('join(2..8,25..28)')
+        
+        self.assertTrue(l1.contains(l2), 
+                        'join(1..10,20..30) should contain ' 
+                        'join(2..8,25..28)')
+        
+        l1 = Location.from_location_str(
+                        'join(complement(1..10),complement(20..30))')
+        l2 = Location.from_location_str(
+                        'join(complement(2..8),complement(25..28))')
+        
+        self.assertTrue(l1.contains(l2), 
+                'join(complement(1..10),complement(20..30)) should contain ' 
+                'join(complement(2..8),complement(25..28))')
+        
+        l1 = Location.from_location_str('1..10')
+        l2 = Location.from_location_str('4..20')
+        
+        self.assertFalse(l1.contains(l2), 
+                        '1..10 should not contain ' 
+                        '4..20')
+        
+        l1 = Location.from_location_str('1..10')
+        l2 = Location.from_location_str('15..20')
+        
+        self.assertFalse(l1.contains(l2), 
+                        '1..10 should not contain ' 
+                        '15..20')
+        
+        l1 = Location.from_location_str('complement(1..10)')
+        l2 = Location.from_location_str('complement(4..20)')
+        
+        self.assertFalse(l1.contains(l2), 
+                        'complement(1..10) should not contain ' 
+                        'complement(4..20)')
+        
+        l1 = Location.from_location_str('complement(1..10)')
+        l2 = Location.from_location_str('complement(15..20)')
+        
+        self.assertFalse(l1.contains(l2), 
+                        'complement(1..10) should not contain ' 
+                        'complement(15..20)')
+        
+        l1 = Location.from_location_str('1..10')
+        l2 = Location.from_location_str('complement(1..10)')
+        
+        self.assertFalse(l1.contains(l2), 
+                        '1..10 should not contain ' 
+                        'complement(1..10)')
+        
+        l1 = Location.from_location_str('1..10')
+        l2 = Location.from_location_str('complement(15..20)')
+        
+        self.assertFalse(l1.contains(l2), 
+                        '1..10 should not contain ' 
+                        'complement(15..20)')
+        
+        l1 = Location.from_location_str('join(1..10,11..50)')
+        l2 = Location.from_location_str('15..20')
+        
+        self.assertTrue(l1.contains(l2), 
+                        'join(1..10,11..50) should contain ' 
+                        '15..20')
+        
+        l1 = Location.from_location_str('join(1..10,11..50)')
+        l2 = Location.from_location_str('complement(15..20)')
+        
+        self.assertTrue(l1.contains(l2, use_complement=False), 
+                        'join(1..10,11..50) should contain ' 
+                        'complement(15..20) without complement information')
+        
+        l1 = Location.from_location_str('REF1:1..10')
+        l2 = Location.from_location_str('5..10')
+        
+        self.assertFalse(l1.contains(l2), 
+                        'REF1:1..10 should contain 5..10')
+        
+        l1 = Location.from_location_str('REF1:1..10')
+        l2 = Location.from_location_str('REF2:5..10')
+        
+        self.assertFalse(l1.contains(l2), 
+                        '1..10 should contain 5..10')
+    
+    def testLocationMinimum(self):
+        l1 = Location.from_location_str('join(1..10,11..50)')
+        l2 = Location.from_location_str('complement(15..20)')
+        l3 = Location.from_location_str('REF2:5..10')
+        l4 = Location.from_location_str('complement(join(1..10,11..50))')
+        l5 = Location.from_location_str('complement(join(15..20,1..2))')
+        
+        self.assertEqual(l1.min(), 1, 'Minimum should be 1')
+        self.assertEqual(l2.min(), 15, 'Minimum should be 15')
+        self.assertEqual(l3.min(), 5, 'Minimum should be 5')
+        self.assertEqual(l4.min(), 1, 'Minimum should be 1')
+        self.assertEqual(l5.min(), 1, 'Minimum should be 1')
+        
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testIntersections']
     unittest.main()

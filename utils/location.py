@@ -5,6 +5,7 @@ Created on May 11, 2013
 @author: marin
 '''
 import re
+import sys
 
 #Regular expressions for location parsing
 _solo_location = r"[<>]?\d+"
@@ -235,6 +236,43 @@ def _intersections(l1,l2):
     
     return intersections
 
+def _contains(l1, l2):
+    '''
+    Utility function used to determine if the first location contains the 
+    second one
+
+    .. note:
+    
+    The strand information is not used, only start/stop properties.
+    
+    :param l1: First location
+    :param l2: Second location
+    :returns: bool - True if the first location contains the 
+              second one, False otherwise
+    '''
+    if not l1.sublocations and not l2.sublocations:
+        if l1.ref != l2.ref:
+            return False
+        #simple case
+        return l1.start <= l2.start and l2.end <= l1.end
+    elif not l1.sublocations: #l2 has multiple sublocations
+        contains = True
+        for sub_l2 in l2.sublocations:
+            contains = contains and _contains(l1, sub_l2)
+        return contains
+    elif not l2.sublocations: #l1 has multiple sublocations
+        contains = False
+        for sub_l1 in l1.sublocations:
+            contains = contains or _contains(sub_l1, l2)
+        return contains
+    else: #both have mutiple sublocations
+        contains = True
+        for sub_l2 in l2.sublocations:
+            sub_contains = False
+            for sub_l1 in l1.sublocations:
+                sub_contains = sub_contains or _contains(sub_l1, sub_l2)
+            contains = contains and sub_contains
+        return contains
 
 class LoactionParsingException(Exception):
     '''
@@ -261,24 +299,59 @@ class Location(object):
             strand *= self.sub_strand
         return strand==-1
     
-    def intersects(self, location):
+    def intersects(self, location, use_complement=True):
         '''
         Determines if the the locations intersect with itself
         
         :param location: Location to search for intersections
+        :param use_complement: bool True if strand information is used to
+               determine intersections, False otherwise.
         :returns: bool True if locations intersect, False otherwise
         '''
-        
-        if location.complement != self.complement:
+        if use_complement and location.complement != self.complement:
             return False
         return _intersects(self, location)
     
+    def contains(self, location, use_complement=True):
+        '''
+        Determines if the the given locations is contained within this one
+        
+        :param location: Location to check for containment
+        :param use_complement: bool True if strand information is used to
+               determine containment, False otherwise.
+        :returns: bool True if the given location is contained within this one,
+               False otherwise
+        '''
+        if use_complement and location.complement != self.complement:
+            return False
+        return _contains(self, location)
+    
     def references(self):
+        '''
+        Returns a list of references to other records used in this location
+        
+        :returns: list List of location references
+        '''
         refs = []
         if self.ref:
             refs.append(self.ref)
         refs.extend([l.ref for l in self.sublocations if l.ref])
         return refs
+    
+    def min(self):
+        '''
+        Returns the minimum start value for this location.
+         
+        :returns: int Minimum start value of this location
+        '''
+        if self.start:
+            return self.start
+        else:
+            m = reduce(lambda x, y: min(x,y), 
+                           map(lambda x: x.min(),
+                               self.sublocations),
+                           sys.maxint)
+            return m
     
     @classmethod
     def from_location_str(cls, location_str, tolerance=0):
