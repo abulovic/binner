@@ -37,9 +37,15 @@ class Solver (object):
 
     # Here should go some User Interface methods like getXML(), solve() and similar
 
-    def generateSolutionXML(self, alignment_file, dataset_xml_file, output_solution_filename):
+    def generateSolutionXML(self, alignment_file, dataset_xml_file, output_solution_filename, stats_dir):
         ''' Main UI method.
             Generates XML file containing solution.
+            @param (String) alignment_file  Filepath to file containing read alignments.
+            @param (String) dataset_xml_file  Filepath to dataset xml file
+            @param (String) output_solution_filename  Filepath where xml output is stored.
+            @param (String) stats_dir  Path to directory where statistics will be stored.
+                                       Path must be specified without / at the end.
+                                       If directory does not exist, it will be created.
         '''
         # Create holder for statistical data
         stats = SolverStatistics()
@@ -108,8 +114,7 @@ class Solver (object):
 
         print stats
         # Write stats to files
-        stats.writeToFiles()
-        stats.toFile("solver_stats.pickled")
+        stats.writeToFiles(stats_dir)
         
         pass
 
