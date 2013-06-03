@@ -80,6 +80,8 @@ assert not _re_simple_compound.match("join(complement(149815..150200),complement
 assert not _re_complex_location.match("join(complement(149815..150200),complement(293787..295573),NC_016402.1:6618..6676,181647..181905)")
 assert not _re_simple_location.match("join(complement(149815..150200),complement(293787..295573),NC_016402.1:6618..6676,181647..181905)")
 
+_fast_min_pattern = re.compile('([\w]+:)|([\D_]+)')
+
 def _point(line, tolerance=0):
     '''
     Utility function used to calculate the exact point.
@@ -460,6 +462,14 @@ class Location(object):
         else:
             loc.end = location_tuple[1]
         return loc
+    
+    @classmethod
+    def fast_min_str(cls, location_str):
+        positions = [int(p) for p in _fast_min_pattern.sub(
+                     ' ', location_str).split()]
+        return reduce(lambda x, y: min(x,y), 
+                           positions,
+                           sys.maxint)
     
     
     def find_intersection (self, location):

@@ -4,6 +4,8 @@ Created on May 27, 2013
 
 @author: marin
 '''
+import sys
+from utils.location import Location
 
 standard_fields =[
     'id',
@@ -33,6 +35,10 @@ class UnityCDS(object):
         self.attributes = attributes
         self.origin = None
         self.record_id = self.version #Added because of compatibility with older code
+        if self.location:
+            self.location_min = Location.fast_min_str(self.location)
+        else:
+            self.location_min = sys.maxint
         
     def __getattr__(self, name):
         if self.attributes.has_key(name):

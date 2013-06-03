@@ -337,6 +337,19 @@ class Test(unittest.TestCase):
         self.assertEqual(l4.min(), 1, 'Minimum should be 1')
         self.assertEqual(l5.min(), 1, 'Minimum should be 1')
         
+    def testFastMinimum(self):
+        l1 = Location.fast_min_str('join(1..10,11..50)')
+        l2 = Location.fast_min_str('complement(15..20)')
+        l3 = Location.fast_min_str('REF2:5..10')
+        l4 = Location.fast_min_str('complement(join(1..10,11..50))')
+        l5 = Location.fast_min_str('complement(join(15..20,1..2))')
+        
+        self.assertEqual(l1, 1, 'Minimum should be 1')
+        self.assertEqual(l2, 15, 'Minimum should be 15')
+        self.assertEqual(l3, 5, 'Minimum should be 5')
+        self.assertEqual(l4, 1, 'Minimum should be 1')
+        self.assertEqual(l5, 1, 'Minimum should be 1')        
+        
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testIntersections']
     unittest.main()
