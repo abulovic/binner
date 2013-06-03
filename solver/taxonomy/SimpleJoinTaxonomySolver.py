@@ -8,7 +8,7 @@ class SimpleJoinTaxonomySolver (TaxonomySolver):
     a specific sequencing ID), it is pushed up in the taxonomy tree
     to the first species node.
     '''
-
+    
     def map_cdss_2_species (self, db_access, tax_tree, read_container, cds_aln_container):
 
         assigned_taxids = defaultdict(list)
@@ -30,7 +30,7 @@ class SimpleJoinTaxonomySolver (TaxonomySolver):
                     ref_taxids[taxid] = ref_taxid
                 # 3. report this cds for referent taxid
                 assigned_taxids[ref_taxid].append(cds_aln)
-
+                
         return assigned_taxids
 
     def get_ref_taxid(self, taxid, db_access, tax_tree):

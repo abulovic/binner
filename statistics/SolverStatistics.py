@@ -35,8 +35,8 @@ class StatData:
         self.num_missing_records    = None
         self.num_reads              = None
         self.num_reads_with_no_alns = None
-        self.proteins               = None    # Ovo jerko sredit/popravit
-        self.taxs                   = None    # Ovo jerko sredit/popravit
+        self.proteins               = None
+        self.taxs                   = None
         self.num_alns_to_record_and_cds = None
 
         self.num_read_alns          = None
@@ -54,7 +54,7 @@ class StatData:
                      "num_read_alns", "num_host_read_alns",
                      "num_cdss", "num_cdss_with_no_alns",
                      "num_cds_alns", "num_missing_records", 
-                     "proteins"]:
+                     "proteins", "taxs"]:
             if getattr(self, attr) != None:
                 res += attr + ": " + str(getattr(self, attr)) + "\n"
         return res
@@ -88,7 +88,7 @@ class SolverStatistics:
          
 
 
-    def collectPhaseData(self, phase, record_cont, read_cont, cds_aln_cont=None):
+    def collectPhaseData(self, phase, record_cont, read_cont, cds_aln_cont=None, tax_solver=None, db_access=None):
         """ Collects statistical data specific for certain phase in Solver.
         Data for specific phase is stored in .phaseData[phase].
         There are 5 phases, which means that this functions should be called 5 times during Solver.
@@ -111,7 +111,7 @@ class SolverStatistics:
         statData.num_reads              = stats.num_reads(read_cont)
         statData.num_reads_with_no_alns = stats.num_reads_with_no_alns(read_cont)
         statData.proteins               = read_cont.get_protein_ids(phase != 1)
-        #statData.taxs                  = ???  JERKO - nacin na koji zasad dohvacam prespor
+        #statData.taxs                  = zasad se dohvaca samo u fazi 4
         statData.num_read_alns          = stats.num_read_alns(read_cont)
         statData.num_alns_to_record_and_cds      = stats.count_alns_to_record_and_cds(read_cont)
 
@@ -124,6 +124,8 @@ class SolverStatistics:
             statData.num_cdss = stats.num_cdss(cds_aln_cont)
             statData.num_cdss_with_no_alns = stats.num_cdss_with_no_alns(cds_aln_cont)
             statData.num_cds_alns = stats.num_active_aligned_regions(cds_aln_cont)
+        if phase == 4:
+            statData.taxs = tax_solver.stats_tax_ids(db_access, read_cont, cds_aln_cont)
 
         self.phaseData[phase] = statData
 

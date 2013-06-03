@@ -97,7 +97,7 @@ class Solver (object):
         taxid2cdss = self.taxonomy_solver.map_cdss_2_species (db_access, tax_tree, read_container, cds_aln_container)
         self.log.info("Taxonomy determined.")
 
-        stats.collectPhaseData(4, record_container, read_container, cds_aln_container)        
+        stats.collectPhaseData(4, record_container, read_container, cds_aln_container, self.taxonomy_solver, db_access)        
         
         # Generate XML file
         self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree, dataset_xml_file, output_solution_filename)

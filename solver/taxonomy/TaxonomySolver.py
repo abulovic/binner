@@ -5,6 +5,20 @@ class TaxonomySolver (object):
     """
     pass
 
+    def stats_tax_ids (self, db_access, read_container, cds_aln_container):
+        
+        cds_alns = cds_aln_container.fetch_all_cds_alns()
+        tax_ids = set([])
+        
+        for cds_aln in cds_alns:
+            if cds_aln.is_active():
+                taxid = self._get_taxid_from_gi (cds_aln, db_access)
+                if not taxid:
+                    continue
+                tax_ids.add(taxid)
+         
+        return tax_ids
+
     def map_cdss_2_species (self, db_access, tax_tree, read_container, cds_aln_container):
         '''
         Maps CDS to species. 
