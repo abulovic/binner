@@ -41,8 +41,8 @@ class StatData:
 
         self.num_read_alns          = None
         self.num_host_read_alns     = None
-        self.num_cdss               = None    # Jel to ono sto zelimo?
-        self.num_cdss_with_no_alns  = None    # Jel to ono sto zelimo?
+        self.num_cdss               = None
+        self.num_cdss_with_no_alns  = None
         self.num_cds_alns           = None
 
     def shortStr(self):
@@ -53,15 +53,20 @@ class StatData:
         for attr in ["num_reads", "num_reads_with_no_alns", 
                      "num_read_alns", "num_host_read_alns",
                      "num_cdss", "num_cdss_with_no_alns",
-                     "num_cds_alns", "num_missing_records", 
-                     "proteins", "taxs"]:
+                     "num_cds_alns", "num_missing_records"]:
             if getattr(self, attr) != None:
                 res += attr + ": " + str(getattr(self, attr)) + "\n"
+        for attr in ["proteins", "taxs"]:
+            if getattr(self, attr) != None:
+                res += "num_" + attr + ": " + str(len(getattr(self, attr))) + "\n"
         return res
         
 
     def __str__(self):
         res = self.shortStr()
+        for attr in ["proteins", "taxs"]:
+            if getattr(self, attr) != None:
+                res += attr + ": " + str(getattr(self, attr)) + "\n"
         res += "\n// ---------------------- Number of alignments to each record -------------------- //\n\n"
         # Matija - number of alignments to each record and CDS
         for record_stats in self.num_alns_to_record_and_cds.values():
