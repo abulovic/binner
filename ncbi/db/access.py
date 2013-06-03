@@ -55,8 +55,9 @@ class DbQuery(object):
                     record = UnityRecord(r['version'])
                 cds = UnityCDS(dict(r))
                 record.add_cds(cds)
-        
-            record.cds.sort(key=lambda x: x.location_min)
+
+            if record:        
+                record.cds.sort(key=lambda x: x.location_min)
         
             return record
         finally:
