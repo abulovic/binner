@@ -5,6 +5,7 @@ from sqlalchemy import Table, MetaData, Column, Integer
 
 from ncbi.db.unity import UnityRecord, UnityCDS
 from sqlalchemy.sql.expression import select
+from utils.location import Location
 
 _metadata = MetaData()
 
@@ -54,6 +55,9 @@ class DbQuery(object):
                     record = UnityRecord(r['version'])
                 cds = UnityCDS(dict(r))
                 record.add_cds(cds)
+        
+            record.cds.sort(key=lambda x: Location.from_location_str(
+                                x.location).min())
         
             return record
         finally:
