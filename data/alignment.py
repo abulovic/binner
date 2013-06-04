@@ -184,15 +184,15 @@ class ReadAlnLocation (object):
             return self.aligned_cdss
 
         # Determine first overlapping CDS - binary search
-        first_ovp_id = self.__find_first_overlapping_CDS_id (aln_location, record.cdss) 
+        first_ovp_id = self.__find_first_overlapping_CDS_id (aln_location, record.cds) 
 
         # No CDS from the list overlaps - return []
         if (first_ovp_id == None):
             return self.aligned_cdss
 
         # Determine following overlapping CDSs - loop while overlaps
-        for i in range(first_ovp_id, len(record.cdss)):
-            cds = record.cdss[i]
+        for i in range(first_ovp_id, len(record.cds)):
+            cds = record.cds[i]
             cds_location = Location.from_location_str(cds.location)
 
             # If this one does not overlap, the others also won't because it's sorted

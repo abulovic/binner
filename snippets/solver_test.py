@@ -15,6 +15,7 @@ from solver.determine_host import determine_host
 
 import statistics.statistics as stats
 from utils.logger import Logger
+import time
 
 if __name__ == '__main__':
 
@@ -53,10 +54,15 @@ if __name__ == '__main__':
                         
 
         # ---------------------- Run Solver --------------------- #
+    start_total = time.time()
     
     solver.generateSolutionXML(aln_file, dataset_xml_file, solution_xml_output_file)
 
     log.info("Successfully initialized solver!")
+
+    end_total = time.time()
+    elapsed_time_total = end_total - start_total
+    print ("TOTAL - \t\telapsed time: %.2f" % elapsed_time_total)
         
 	# fill_containers (aln_file)
 

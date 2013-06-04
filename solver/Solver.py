@@ -11,6 +11,7 @@ from statistics.SolverStatistics import SolverStatistics
 
 from formats.xml_output     import *
 import logging
+import time
 
 class Solver (object):
 
@@ -53,15 +54,42 @@ class Solver (object):
         # Create database access
         db_access = DbQuery()
         record_container.set_db_access(db_access)
+
+        # --------------------------- #
+        start = time.time()
+
         # Populate read container - NOT NOW NEEDED
         read_container.populate_from_aln_file (alignment_file)
         self.log.info("Read container populated!")
+
+        end = time.time()
+        elapsed_time = end - start
+        print ("Populate read container - \telapsed time: %.2f" % elapsed_time)
+        
+        # --------------------------- #
+        start = time.time()
+
         # Extract all records from database
         record_container.populate(read_container)
         self.log.info("Record container populated!")
+
+        end = time.time()
+        elapsed_time = end - start
+        print ("Populate record container - \telapsed time: %.2f" % elapsed_time)
+
+        # --------------------------- #
+        start = time.time()
+
         # find intersecting cdss for read alignments
         read_container.populate_cdss(record_container)
         self.log.info("read populate cdss over")
+
+        end = time.time()
+        elapsed_time = end - start
+        print ("Populate cdss - \t\telapsed time: %.2f" % elapsed_time)
+
+        # --------------------------- #
+
         read_cnt = len(read_container.fetch_all_reads(format=list))
 
         # for logging data BEGIN PHASE 1
@@ -73,7 +101,9 @@ class Solver (object):
 
         stats.collectPhaseData(1, record_container, read_container)
 
-        print "determining host"
+        # --------------------------- #
+        start = time.time()
+
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
         (host_taxid, host_read_cnt, read_container) = self.determine_host(read_container)
@@ -81,36 +111,83 @@ class Solver (object):
         if host_taxid:
             self.log.info("Host identified: %d!", (int(host_taxid)))
 
+        end = time.time()
+        elapsed_time = end - start
+        print ("Determine host - \t\telapsed time: %.2f" % elapsed_time)
+
+        # --------------------------- #
+        start = time.time()
+
         # Populate CDS container 
         cds_aln_container.populate(read_container)
         self.log.info("Cds Aln Container populated!")
 
+        end = time.time()
+        elapsed_time = end - start
+        print ("Populate CDS container - \telapsed time: %.2f" % elapsed_time)
+
+        # --------------------------- #
+
         stats.collectPhaseData(2, record_container, read_container, cds_aln_container)
+
+        # --------------------------- #
+        start = time.time()
 
         # Map each read to one CDS (greedy)
         self.read2cds_solver.map_reads_2_cdss(cds_aln_container)
         self.log.info("Reads mapped to CDSS.")
 
+        end = time.time()
+        elapsed_time = end - start
+        print ("Greedy - \t\t\telapsed time: %.2f" % elapsed_time)
+
+        # --------------------------- #
+
         stats.collectPhaseData(3, record_container, read_container, cds_aln_container)
+
+        # --------------------------- #
+        start = time.time()
 
         # Determine species
         taxid2cdss = self.taxonomy_solver.map_cdss_2_species (db_access, tax_tree, read_container, cds_aln_container)
         self.log.info("Taxonomy determined.")
 
+        end = time.time()
+        elapsed_time = end - start
+        print ("Determine species - \t\telapsed time: %.2f" % elapsed_time)
+        # --------------------------- #
+
         stats.collectPhaseData(4, record_container, read_container, cds_aln_container, self.taxonomy_solver, db_access)        
         
+        # --------------------------- #
+        start = time.time()
+
         # Generate XML file
         self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree, dataset_xml_file, output_solution_filename)
+
+        end = time.time()
+        elapsed_time = end - start
+        print ("Generate XML file - \t\telapsed time: %.2f" % elapsed_time)
+
+        # --------------------------- #
 
         stats.collectPhaseData(5, record_container, read_container, cds_aln_container)
         
         self.log.info("Proba 0: funkcija generateXML prosla!")
 
-        print stats
+        # --------------------------- #
+        start = time.time()
+
+        # print stats
         # Write stats to files
         stats.writeToFiles()
         stats.toFile("solver_stats.pickled")
-        
+
+        end = time.time()
+        elapsed_time = end - start
+        print ("Write stats to file - \t\telapsed time: %.2f" % elapsed_time)
+
+        # --------------------------- #
         pass
 
 

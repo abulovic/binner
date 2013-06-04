@@ -61,15 +61,9 @@ class ReadContainer (object):
 
         # ---------------------------------------------------------------------------- #
 
-        start = time.time()
-
         for read in self.fetch_all_reads(format=iter):
             for read_alignment in read.get_alignments(format=iter):
-                read_alignment.determine_coding_seqs(record_container)
-
-        end = time.time()
-        elapsed_time = end - start
-        print ("Mapping aln -> [cds] - elapsed time: %.2f" % elapsed_time)
+                read_alignment.determine_coding_seqs_optimal(record_container)
 
     
     def fetch_read (self, read_id):
