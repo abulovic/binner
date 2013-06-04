@@ -41,7 +41,7 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
         # set all host alignments inactive
         for read_aln in read_alignments:
      	    if not gi2taxid.has_key(read_aln.genome_index):
-                print "NOT IN NCBITAX: %d" % read_aln.genome_index
+                # print "NOT IN NCBITAX: %d" % read_aln.genome_index    # I think this is not needed
                 read_aln.set_active(False)
                 continue
 
