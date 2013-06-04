@@ -20,7 +20,7 @@ class StatData:
     Number of read alignments that are determined
     as host alignments.
     (int) num_cdss  Only in phases 2, 3, 4.
-    Number of cdss in cds alignment container.    IS THIS WHAT WE REALLY WANT/NEED?
+    Number of cdss in cds alignment container.    
     (int) num_cdss_with_no_alns  Only in phases 2, 3, 4.
     Number of cdss in cds alignment container
     with no active aligned regions.
@@ -41,8 +41,8 @@ class StatData:
 
         self.num_read_alns          = None
         self.num_host_read_alns     = None
-        self.num_cdss               = None    # Jel to ono sto zelimo?
-        self.num_cdss_with_no_alns  = None    # Jel to ono sto zelimo?
+        self.num_cdss               = None
+        self.num_cdss_with_no_alns  = None
         self.num_cds_alns           = None
 
     def shortStr(self):
@@ -53,15 +53,20 @@ class StatData:
         for attr in ["num_reads", "num_reads_with_no_alns", 
                      "num_read_alns", "num_host_read_alns",
                      "num_cdss", "num_cdss_with_no_alns",
-                     "num_cds_alns", "num_missing_records", 
-                     "proteins", "taxs"]:
+                     "num_cds_alns", "num_missing_records"]:
             if getattr(self, attr) != None:
                 res += attr + ": " + str(getattr(self, attr)) + "\n"
+        for attr in ["proteins", "taxs"]:
+            if getattr(self, attr) != None:
+                res += "num_" + attr + ": " + str(len(getattr(self, attr))) + "\n"
         return res
         
 
     def __str__(self):
         res = self.shortStr()
+        for attr in ["proteins", "taxs"]:
+            if getattr(self, attr) != None:
+                res += attr + ": " + str(getattr(self, attr)) + "\n"
         res += "\n// ---------------------- Number of alignments to each record -------------------- //\n\n"
         # Matija - number of alignments to each record and CDS
         for record_stats in self.num_alns_to_record_and_cds.values():
@@ -75,6 +80,8 @@ class SolverStatistics:
     (dict) phaseData  Dictionary where key is phase number(int) and value is (StatData). 
                       phaseData[i] contains statistical data from phase i.
     """
+    phaseDescr = ("after preprocess", "after determine host", "after Read2cdsSolver", 
+                  "after TaxonomySolver", "after generating xml output")
 
     def __init__(self, filepath=None):
         """ If file path is given then statistical data is loaded from file.
@@ -143,19 +150,22 @@ class SolverStatistics:
     def __str__(self):
         res = ""
         for (phase, statData) in self.phaseData.items():
-            res += "Phase " + str(phase) + ":\n"
+            res += "Phase " + str(phase) + " (" + SolverStatistics.phaseDescr[phase-1] + "):\n"
             res += statData.shortStr()
         return res
 
-    def writeToFiles(self):
+    def writeToFiles(self, stats_dir):
         """ Creates a directory and in it one file for each phase.
         In each file statistic data for that phase is written in human readable format.
+        Also creates file solver_stats.pickled in that directory whose filepath can 
+        then be passed to constructor of SolverStatistics.
+        @param (String) stats_dir Directory name (Can be path).
         """
-        stats_dir = "solver_stats"
         if not os.path.isdir(stats_dir):
             os.makedirs(stats_dir)
         for (phase, statData) in self.phaseData.items():
             txt_file = open(stats_dir + "/phase_" + str(phase) + ".txt", "w")
             txt_file.write(str(statData))
             txt_file.close()
+        self.toFile(stats_dir + "/solver_stats.pickled")
 

@@ -21,30 +21,16 @@ if __name__ == '__main__':
 
     Logger("LOGFILE")
 
-    if (len(sys.argv) < 4):
-        print "Solver usage: python populate_containers.py <INPUT_ALN_FILE> <DATASET_DESC_XML_FILE> <SOLUTION_XML_OUTPUT_FILE>"
+    if (len(sys.argv) < 5):
+        print "Solver usage: python populate_containers.py <INPUT_ALN_FILE> <DATASET_DESC_XML_FILE> <SOLUTION_XML_OUTPUT_FILE> <STATS_OUTPUT_DIRECTORY>"
         sys.exit(-1)
     aln_file = sys.argv[1]
     dataset_xml_file = sys.argv[2]
     solution_xml_output_file = sys.argv[3]
+    stats_dir = sys.argv[4]
 
     log.info("I got the input file!")
 
-        # # ---------------------- Initialize containers --------------------- #
-
-        # # Enable database access
-        # dbQuery = DbQuery()
-
-        # # Create containers
-        # recordCont = RecordContainer.Instance()
-        # recordCont.set_db_access(dbQuery)
-
-        # readCont   = ReadContainer.Instance()
-        # cdsAlnCont = CdsAlnContainer.Instance()
-
-        # readCont.populate_from_aln_file(aln_file)
-
-        # print "passed container initialization!"
         
         # ---------------------- Initialize Solver --------------------- #
 
@@ -56,7 +42,7 @@ if __name__ == '__main__':
         # ---------------------- Run Solver --------------------- #
     start_total = time.time()
     
-    solver.generateSolutionXML(aln_file, dataset_xml_file, solution_xml_output_file)
+    solver.generateSolutionXML(aln_file, dataset_xml_file, solution_xml_output_file, stats_dir)
 
     log.info("Successfully initialized solver!")
 

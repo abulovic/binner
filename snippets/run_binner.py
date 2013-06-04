@@ -25,6 +25,9 @@ if __name__ == '__main__':
                            type=str)
     argparser.add_argument('output', help='Output XML file', 
                            type=str)
+    argparser.add_argument('stats_out_dir', help='Statistics output directory. '+
+                           'Will be created if it does not exist.',
+                           type=str)
     argparser.add_argument('-ts', '--tax_solver', 
                            help='Taxonomy solver type', 
                            choices=['simple', 'simple_join'], 
@@ -60,6 +63,7 @@ if __name__ == '__main__':
     log.info("Input: %s" % args.input)
     log.info("Xml template: %s" % args.descr)
     log.info("Output: %s" %  args.output)
+    log.info("Statistics output directory: %s" % args.stats_out_dir)
     
     
     read2cds_solver = None
@@ -80,7 +84,7 @@ if __name__ == '__main__':
     processing_start = timing.start()
     
     solver = Solver(determine_host, read2cds_solver, tax_solver)
-    solver.generateSolutionXML(args.input, args.descr, args.output)
+    solver.generateSolutionXML(args.input, args.descr, args.output, args.stats_out_dir)
     
     processing_delta = timing.end(processing_start)
     log.info("Processing done in %s", 
