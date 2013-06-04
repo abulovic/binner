@@ -18,7 +18,7 @@ class UnityRecord(object):
 class UnityCDS(object):
     __slots__ =  (
         'id',
-        'db'
+        'db',
         'version',
         'nucl_gi',
         'taxon',
