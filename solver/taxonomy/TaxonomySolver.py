@@ -8,6 +8,7 @@ class TaxonomySolver (object):
     """
     pass
 
+    # Not used anywhere
     def stats_tax_ids (self, db_access, read_container, cds_aln_container):
         
         cds_alns = cds_aln_container.fetch_all_cds_alns()

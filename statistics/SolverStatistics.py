@@ -26,6 +26,9 @@ class StatData:
     with no active aligned regions.
     (int) num_cds_alns  Only in phases 2, 3, 4.
     Number of active aligned regions in all cdss.
+    (dict) taxid2cdss  Only in phase 4.
+                       Output of taxonomy solver.
+                       Key is referent taxid, value is list of CdsAlignment that map to that taxid.
     """
     
 
@@ -45,6 +48,8 @@ class StatData:
         self.num_cdss_with_no_alns  = None
         self.num_cds_alns           = None
 
+        self.taxid2cdss             = None
+
     def shortStr(self):
         """ Returns string representation containing only simple sttributes,
         which can be easily read.
@@ -56,7 +61,7 @@ class StatData:
                      "num_cds_alns", "num_missing_records"]:
             if getattr(self, attr) != None:
                 res += attr + ": " + str(getattr(self, attr)) + "\n"
-        for attr in ["proteins", "taxs"]:
+        for attr in ["proteins", "taxid2cdss"]:
             if getattr(self, attr) != None:
                 res += "num_" + attr + ": " + str(len(getattr(self, attr))) + "\n"
         return res
@@ -64,7 +69,7 @@ class StatData:
 
     def __str__(self):
         res = self.shortStr()
-        for attr in ["proteins", "taxs"]:
+        for attr in ["proteins", "taxid2cdss"]:
             if getattr(self, attr) != None:
                 res += attr + ": " + str(getattr(self, attr)) + "\n"
         res += "\n// ---------------------- Number of alignments to each record -------------------- //\n\n"
@@ -95,7 +100,8 @@ class SolverStatistics:
          
 
 
-    def collectPhaseData(self, phase, record_cont, read_cont, cds_aln_cont=None, tax_solver=None, db_access=None):
+    def collectPhaseData(self, phase, record_cont, read_cont, cds_aln_cont=None,
+                         taxid2cdss=None):
         """ Collects statistical data specific for certain phase in Solver.
         Data for specific phase is stored in .phaseData[phase].
         There are 5 phases, which means that this functions should be called 5 times during Solver.
@@ -109,6 +115,7 @@ class SolverStatistics:
         @param (RecordContainer) record_cont
         @param (ReadContainer) read_cont
         @param (CdsAlnContainer) cds_aln_cont  Should and can be None for phase 1.
+        @param (dict) taxid2cdss  Only in phase 4.
         """        
         if (cds_aln_cont == None and phase != 1):
             raise ValueError("cds_aln_container can be None only for phase 1!")
@@ -118,7 +125,7 @@ class SolverStatistics:
         statData.num_reads              = stats.num_reads(read_cont)
         statData.num_reads_with_no_alns = stats.num_reads_with_no_alns(read_cont)
         statData.proteins               = read_cont.get_protein_ids(phase != 1)
-        #statData.taxs                  = zasad se dohvaca samo u fazi 4
+        #statData.taxs                  = NIJE IMPLEMENTIRANO
         statData.num_read_alns          = stats.num_read_alns(read_cont)
         statData.num_alns_to_record_and_cds      = stats.count_alns_to_record_and_cds(read_cont)
 
@@ -132,7 +139,7 @@ class SolverStatistics:
             statData.num_cdss_with_no_alns = stats.num_cdss_with_no_alns(cds_aln_cont)
             statData.num_cds_alns = stats.num_active_aligned_regions(cds_aln_cont)
         if phase == 4:
-            statData.taxs = tax_solver.stats_tax_ids(db_access, read_cont, cds_aln_cont)
+            statData.taxid2cdss = taxid2cdss
 
         self.phaseData[phase] = statData
 

@@ -75,3 +75,12 @@ class CdsAlnContainer (object):
         '''
         return format(self.cds_repository.values())
 
+    def fetch_all_active_cds_alns(self):
+        """ Fetches all active cds alignments.
+        Cds alignment is considered active if it has
+        at least one active aligned region.
+        @return (dict)   Subset of .cds_repository..
+        """
+        return dict((k, cds_aln) for k, cds_aln in self.cds_repository.items() if cds_aln.is_active())
+        
+

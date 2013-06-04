@@ -163,7 +163,7 @@ class Solver (object):
         print ("Determine species - \t\telapsed time: %.2f" % elapsed_time)
         # --------------------------- #
 
-        stats.collectPhaseData(4, record_container, read_container, cds_aln_container, self.taxonomy_solver, db_access)        
+        stats.collectPhaseData(4, record_container, read_container, cds_aln_container, taxid2cdss)        
         
         # --------------------------- #
         start = time.time()
@@ -184,10 +184,9 @@ class Solver (object):
         # --------------------------- #
         start = time.time()
 
-        # print stats
+        print stats
         # Write stats to files
         stats.writeToFiles(stats_dir)
-        stats.toFile("solver_stats.pickled")
 
         end = time.time()
         elapsed_time = end - start
