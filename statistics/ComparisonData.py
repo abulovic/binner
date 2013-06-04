@@ -3,10 +3,9 @@ class ComparisonData (object):
         one of solver phases.
     """
 
-    def __init__(self, stat_data, solution_data):
-        """ Takes statistic data of solver phase and solution data,
+    def __init__(self, solution_data, ostali_potrebni_parametri_idu_ovdje):
+        """ Takes solution data and data that represents current state of solver,
         compares them and stores comparison result in self.
-        @param (StatData) stat_data  Contains data of specific phase.
         @param (SolutionData) solution_data  Contains solution data.
         """
         # Ovdje izracunati rezultate usporedbe i pospremiti u atribute.
