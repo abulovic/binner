@@ -39,11 +39,7 @@ class UnityCDS(object):
         self.id = attributes.get('id')
         self.db = attributes.get('db')
         self.version = attributes.get('version')
-<<<<<<< HEAD
-        self.nucl_gi = attributes('nucl_gi')
-=======
         self.nucl_gi = attributes.get('nucl_gi')
->>>>>>> d7e16f275a469adb39533a6ebb4295026063a0a2
         self.taxon = attributes.get('taxon')
         self.location = attributes.get('location')
         self.protein_if = attributes.get('protein_id')
