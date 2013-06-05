@@ -13,6 +13,8 @@ from formats.xml_output     import *
 import logging
 import time
 
+import utils.fastamemory as unity_mem
+
 class Solver (object):
 
     """ Solver uses other components (determineHost,
@@ -60,6 +62,9 @@ class Solver (object):
         # Create database access
         db_access = DbQuery()
         record_container.set_db_access(db_access)
+
+        record_container.load_fasta('/share/db/unity_2013_06_02.fasta')
+        #record_container.load_fasta('mali.fasta')
 
         # --------------------------- #
         start = time.time()

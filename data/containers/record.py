@@ -1,5 +1,6 @@
-
+import utils.fastamemory as mem
 import logging
+import time
 
 class RecordContainer (object):
     ''' Serves as a local Record Repository.
@@ -8,10 +9,20 @@ class RecordContainer (object):
         from the record repository.
     '''
 
+    def load_fasta(self, input_file):
+        start = time.time()
+        #print len(mem.unity_mem)
+        mem.load_fasta(input_file)        
+        #print len(mem.unity_mem)
+        elapsed_time = time.time() - start
+        print("Loading fasta into memory - \telapsed time: %.2f" % elapsed_time)
+        pass
+
     def __init__ (self):
         self.record_repository  = {}
         self.num_missing_records = 0
         self.log = logging.getLogger(__name__)
+        
     
     def get_num_missing_records_stats(self):
         missed_recs = self.num_missing_records 
@@ -43,7 +54,7 @@ class RecordContainer (object):
         @param nucleotide_accession (str)
         @return Record (ncbi/db/[genbank/embl])
         '''
-        self._add_record(nucleotide_accession)
+        self._add_record_new(nucleotide_accession)
         return self.record_repository[nucleotide_accession]
 
     def fetch_all_records (self, format=iter):
@@ -54,7 +65,16 @@ class RecordContainer (object):
         '''
         assert (format in [iter, list, set])
         return format(self.record_repository.items())
-        
+       
+    def _add_record_new (self, record_id):
+        if not self.record_repository.has_key(record_id):
+            record = mem.unity_mem.get(record_id)
+            if record:
+                self.record_repository[record_id] = record
+            else:
+                self.record_repository[record_id] = None
+        pass
+
     def _add_record (self, record_id):
         ''' Adds the record from database if not already present
 	   If unable to find entry in database, stores None instead.
