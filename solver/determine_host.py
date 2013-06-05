@@ -30,7 +30,7 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
         best_aln = sorted_alignments[0]
         try:
             best_aln_taxid = gi2taxid [best_aln.genome_index]
-            if (tax_tree.get_relevant_taxid(best_aln_taxid) == tax_tree.animalia)
+            if (tax_tree.get_relevant_taxid(best_aln_taxid) == tax_tree.animalia):
                 # del read_container.read_repository[read.id]
                 read.set_host_status(True)
                 host_read_cnt += 1
