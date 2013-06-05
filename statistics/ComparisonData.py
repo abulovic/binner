@@ -50,6 +50,9 @@ class ComparisonData (object):
                 taxon_id = gene2org[cds_aln.cds.protein_id]
                 org_stats[taxon_id][1] += 1
 
+ # TODO: take read container as argument, and if cds cont is not given,
+ #       use read container to calculate result
+                
         return org_stats
                 
             
