@@ -1,5 +1,6 @@
 from  collections       import defaultdict
-import os
+import os,sys 
+sys.path.append(os.getcwd())
 
 
 class TaxTree ():
@@ -20,7 +21,8 @@ class TaxTree ():
         self.load(nodes_file) 
         
         #--------- RELEVANT TAXONOMY ASSIGNMENTS ----------#
-        self._h_relevant_taxonomy_assignments()   
+        self._h_set_relevant_taxonomy_assignments()   
+        self._h_map_taxids_to_relevant_tax_nodes()
 
     def load (self, nodes_file):
         self.parent_nodes   = self._h_get_tax_nodes(nodes_file)
@@ -114,6 +116,9 @@ class TaxTree ():
                 lineage_org_names.append (organism_name)
 
         return lineage_org_names
+
+    def get_relevant_taxid (self, tax_id):
+        return self.tax2relevantTax[tax_id]
         
 
     def _h_get_tax_nodes        (self, nodes_file):
@@ -163,7 +168,7 @@ class TaxTree ():
             child_nodes[parent].append(child)
         return child_nodes
 
-    def _h_relevant_taxonomy_assignments (self):
+    def _h_set_relevant_taxonomy_assignments (self):
         ''' Sets some of the more important taxonomy 
             assignments which can help in checking which kingdom
             an organism belongs to.
@@ -199,6 +204,45 @@ class TaxTree ():
                                 self.neocallimastigomycota]
 
 
+    def _h_map_taxids_to_relevant_tax_nodes(self):
+        host_nodes = list(self.potential_hosts)
+        microbe_nodes = list(self.microbes)
+
+        self.tax2relevantTax = {}       
+        for microbe_node in self.microbes:
+            microbe_children = self._h_list_all_children(microbe_node)
+            for child in microbe_children:
+                self.tax2relevantTax[child] = microbe_node
+
+        for host_node in self.potential_hosts:
+            host_children = self._h_list_all_children(host_node)
+            for child in host_children:
+                self.tax2relevantTax[child] = host_node
+
+        tagged_nodes    = self.tax2relevantTax.keys()
+        all_nodes       = self.parent_nodes.keys()
+        untagged_nodes  = set(all_nodes).difference(tagged_nodes)
+        for node in untagged_nodes:
+            self.tax2relevantTax[node] = -1
+
+    def _h_list_all_children(self, tax_id):
+        if not self.child_nodes.has_key(tax_id):
+            return []
+        one_step_children = self.child_nodes[tax_id]
+        all_children = []
+        while (True):
+            if not one_step_children:
+                break
+            new_one_step_children = []
+            all_children.extend(one_step_children)
+            for child in one_step_children:
+                if self.child_nodes.has_key(child):
+                    new_one_step_children.extend(self.child_nodes[child])
+            one_step_children = new_one_step_children
+        return all_children
+
+
+
 class TaxNode (object):
     '''
     Contains information relevant to LCA
@@ -214,3 +258,4 @@ class TaxNode (object):
 
         self.taxid              = taxid
         self.num_traversed      = num_traversed
+
