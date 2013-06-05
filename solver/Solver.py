@@ -13,6 +13,9 @@ from formats.xml_output     import *
 import logging
 import time
 
+from statistics.ComparisonData import ComparisonData
+from statistics.solutiondata import loadOrganismData
+
 class Solver (object):
 
     """ Solver uses other components (determineHost,
@@ -50,6 +53,9 @@ class Solver (object):
         '''
         # Create holder for statistical data
         stats = SolverStatistics()
+
+        # HARDCODED, JUST FOR TESTING!!!!:
+        solution_data = loadOrganismData("solution.xml")
 
         # Initialize containers
         read_container = ReadContainer()
@@ -135,6 +141,9 @@ class Solver (object):
         # --------------------------- #
 
         stats.collectPhaseData(2, record_container, read_container, cds_aln_container)
+
+        compData = ComparisonData(solution_data, record_container, read_container, cds_aln_container)
+        print compData.cds_comparison
 
         # --------------------------- #
         start = time.time()

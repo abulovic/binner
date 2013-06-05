@@ -1,3 +1,8 @@
+import sys, os
+sys.path.append(os.getcwd())
+
+from solutiondata import *
+
 class ComparisonData (object):
     """ This class contains data comparison between final result and
         one of solver phases.
@@ -16,24 +21,27 @@ class ComparisonData (object):
 
         # Ovdje izracunati rezultate usporedbe i pospremiti u atribute.
         # One koji se ne mogu izracunati jer fale podaci postavi se na None.
-        self.cds_comparison = cds_comparison(solution_data, cds_aln_cont)
+        self.cds_comparison = None
         self.organism_comparison = None
 
+        if not (cds_aln_cont is None):
+            self.cds_comparison = ComparisonData.cds_comparison(solution_data, cds_aln_cont)
+
     @classmethod
-    def cds_comparison(solution_data, cds_aln_cont):
+    def cds_comparison(cls, solution_data, cds_aln_cont):
         """ 
         """
         gene2org = dict() # Key is protein_id, value is taxon_id
         for org in solution_data:
             for gene in org.genes:
-                gene2org[protein_id] = org.taxon_id
+                gene2org[gene.protein_id] = org.taxon_id
 
         # This is what we will calculate.
-        # Key is taxon_id, value is (number of cds in solution,
-        # num of cds in solution that are active in container)
+        # Key is taxon_id, value is [number of cds in solution,
+        # num of cds in solution that are active in container]
         org_stats = dict() 
         for org in solution_data:
-            org_stats[org.taxon_id] = (len(org.genes), 0)
+            org_stats[org.taxon_id] = [len(org.genes), 0]
 
         # Count for each organism active cdss in container 
         # that are also contained in solution_data
