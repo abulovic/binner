@@ -57,19 +57,19 @@ def remove_host_reads (read_container, tax_tree, gi2taxid):
     return (read_container, host_read_cnt)
 
 def _count_reported_taxids (reads, db_query):
-    gis_cnt = defaultdict(int)
-    taxids_cnt = defaultdict(int)
+    gis_container = defaultdict(int)
+    taxids_container = defaultdict(int)
     # find out how many times each GI is reported
     # in the alignments
     for read in reads:
         for read_aln in read.alignment_locations:
-            gis_cnt[read_aln.genome_index] += 1
+            gis_container[read_aln.genome_index] += 1
     # find gi <-> taxid mapping using ncbi database
-    gi2taxid = db_query.get_taxids (gis_cnt.keys(), format=dict)
+    gi2taxid = db_query.get_taxids (gis_container.keys(), format=dict)
     # calculate how many times each taxid is reported
     for (gi, taxid) in gi2taxid.items():
-        taxids_cnt[taxid] += gis_cnt[gi]
-    return (gi2taxid, gis_cnt, taxids_cnt)
+        taxids_container[taxid] += gis_container[gi]
+    return (gi2taxid, taxids_container)
 
 
 def determine_host(read_container):
@@ -87,14 +87,14 @@ def determine_host(read_container):
 
     reads      = read_container.fetch_all_reads(format=iter)
     # how many times each taxid has been reported
-    (gi2taxid, gis_cnt, taxids_cnt)  = _count_reported_taxids(reads, dbquery)
+    (gi2taxid, taxids_container)  = _count_reported_taxids(reads, dbquery)
     # deactivate reads that map to potential host
     (read_container, host_read_cnt) =  remove_host_reads (read_container, tax_tree, gi2taxid)
     
     # find the most frequent taxid from animalia kingdom
     host_taxid = None
     # sort taxids by occurence 
-    sorted_taxid_cnt = sorted (taxids_cnt.items(), key= lambda x: x[1], reverse=True)
+    sorted_taxid_cnt = sorted (taxids_container.items(), key= lambda x: x[1], reverse=True)
     for (taxid, cnt)  in sorted_taxid_cnt:
     	if tax_tree.is_child(taxid, tax_tree.animalia):
             host_taxid = taxid
