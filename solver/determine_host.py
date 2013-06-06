@@ -100,4 +100,4 @@ def determine_host(read_container):
             host_taxid = taxid
             break
 
-    return (host_taxid, host_read_count, read_container)
+    return (host_taxid, host_read_count)

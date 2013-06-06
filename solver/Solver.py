@@ -124,8 +124,8 @@ class Solver (object):
 
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
-        (host_taxid, host_read_cnt, read_container) = self.determine_host(read_container)
-        self.log.info("host_taxid:%s host_read_cnt:%s", str(host_taxid), str(host_read_cnt))
+        (host_taxid, host_read_count) = self.determine_host(read_container)
+        self.log.info("host_taxid:%s host_read_count:%s", str(host_taxid), str(host_read_count))
         if host_taxid:
             self.log.info("Host identified: %d!", (int(host_taxid)))
 
@@ -185,7 +185,7 @@ class Solver (object):
         start = time.time()
 
         # Generate XML file
-        self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree, dataset_xml_file, output_solution_filename)
+        self.generateXML (host_taxid, host_read_count, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree, dataset_xml_file, output_solution_filename)
 
         end = time.time()
         elapsed_time = end - start
@@ -214,7 +214,7 @@ class Solver (object):
 
 
 
-    def generateXML (self, host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container,  db_access, tax_tree, dataset_xml_file, output_solution_filename):
+    def generateXML (self, host_taxid, host_read_count, read_cnt, taxid2cdss, cds_aln_container,  db_access, tax_tree, dataset_xml_file, output_solution_filename):
 
 #        tax_tree     = TaxTree()
 
@@ -223,8 +223,8 @@ class Solver (object):
         all_organisms = []
 
         #-------------------------------- HOST -------------------------------#
-        host_relative_amount = float(host_read_cnt)/read_cnt
-        host = Organism (host_read_cnt, host_relative_amount, None, None, "Host",
+        host_relative_amount = float(host_read_count)/read_cnt
+        host = Organism (host_read_count, host_relative_amount, None, None, "Host",
                  None, None, [], [], [], is_host=True)
         all_organisms.append(host)
 
