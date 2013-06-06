@@ -41,21 +41,27 @@ class Solver (object):
 
     # Here should go some User Interface methods like getXML(), solve() and similar
 
-    def generateSolutionXML(self, alignment_file, dataset_xml_file, output_solution_filename, stats_dir):
+    def generateSolutionXML(self, alignment_file, dataset_xml_file, output_solution_filename,
+                            stats_dir=None, solution_file=None):
         ''' Main UI method.
             Generates XML file containing solution.
             @param (String) alignment_file  Filepath to file containing read alignments.
             @param (String) dataset_xml_file  Filepath to dataset xml file
             @param (String) output_solution_filename  Filepath where xml output is stored.
-            @param (String) stats_dir  Path to directory where statistics will be stored.
+            @param (String) stats_dir  Path to directory where statistics and comparison with solution
+                                       will be stored.
                                        Path must be specified without / at the end.
                                        If directory does not exist, it will be created.
+                                       If None, statistics are not stored.
+            @param (String) solution_file  Path to file containing solution xml.
+                                           If given, all phases will be compared to solution.
         '''
         # Create holder for statistical data
         stats = SolverStatistics()
 
         # HARDCODED, JUST FOR TESTING!!!!:
-        solution_data = loadOrganismData("solution.xml")
+        if (solution_file is not None):
+            solution_data = loadOrganismData("solution.xml")
 
         # Initialize containers
         read_container = ReadContainer()
@@ -142,8 +148,9 @@ class Solver (object):
 
         stats.collectPhaseData(2, record_container, read_container, cds_aln_container)
 
-        compData = ComparisonData(solution_data, record_container, read_container, cds_aln_container)
-        print compData.cds_comparison
+        if (solution_file is not None):
+            compData = ComparisonData(solution_data, record_container, read_container, cds_aln_container)
+            print compData.cds_comparison
 
         # --------------------------- #
         start = time.time()
@@ -190,18 +197,19 @@ class Solver (object):
         
         self.log.info("Proba 0: funkcija generateXML prosla!")
 
-        # --------------------------- #
-        start = time.time()
-
         print stats
-        # Write stats to files
-        stats.writeToFiles(stats_dir)
-
-        end = time.time()
-        elapsed_time = end - start
-        print ("Write stats to file - \t\telapsed time: %.2f" % elapsed_time)
-
         # --------------------------- #
+        if (stats_dir is not None):
+            start = time.time()
+
+            # Write stats to files
+            stats.writeToFiles(stats_dir)
+
+            end = time.time()
+            elapsed_time = end - start
+            print ("Write stats to file - \t\telapsed time: %.2f" % elapsed_time)
+        # --------------------------- #
+
         pass
 
 
