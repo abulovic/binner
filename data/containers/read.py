@@ -76,6 +76,22 @@ class ReadContainer (object):
     def fetch_all_reads (self, format=iter):
         return format(self.read_repository.values())
     
+    def fetch_all_reads_versions(self):
+        '''
+        Returns an iterator returning all versions of all reads in this
+        container
+        
+        .. note::
+            Duplicate values are not filtered out
+            
+        :returns: iterator returning versions of reads
+        '''
+        reads = self.fetch_all_reads(format=iter)
+        for read in reads:
+            for read_alignment in read.get_alignments(format=iter):
+                yield read_alignment.nucleotide_accession
+        
+    
     def _add_read_from_str (self, read_str):
         read = Read.from_read_str(read_str)
         assert (not self.read_repository.has_key(read.id))
