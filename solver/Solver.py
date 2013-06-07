@@ -41,7 +41,7 @@ class Solver (object):
 
     # Here should go some User Interface methods like getXML(), solve() and similar
 
-    def generateSolutionXML(self, alignment_file, dataset_xml_file, output_solution_filename,
+    def generateSolutionXML(self, read_container, dataset_xml_file, output_solution_filename,
                             stats_dir=None, solution_file=None):
         ''' Main UI method.
             Generates XML file containing solution.
@@ -64,7 +64,6 @@ class Solver (object):
             solution_data = loadOrganismData("solution.xml")
 
         # Initialize containers
-        read_container = ReadContainer()
         record_container = RecordContainer()
         cds_aln_container = CdsAlnContainer()
         # create taxonomy tree
@@ -73,17 +72,6 @@ class Solver (object):
         db_access = DbQuery()
         record_container.set_db_access(db_access)
 
-        # --------------------------- #
-        start = time.time()
-
-        # Populate read container - NOT NOW NEEDED
-        read_container.populate_from_aln_file (alignment_file)
-        self.log.info("Read container populated!")
-
-        end = time.time()
-        elapsed_time = end - start
-        print ("Populate read container - \telapsed time: %.2f" % elapsed_time)
-        
         # --------------------------- #
         start = time.time()
 

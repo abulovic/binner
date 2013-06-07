@@ -3,6 +3,7 @@ import logging.config
 import argparse
 import sys,os
 sys.path.append(os.getcwd())
+from data.containers.read import ReadContainer
 
 from utils import timing
 
@@ -86,7 +87,20 @@ if __name__ == '__main__':
     processing_start = timing.start()
     
     solver = Solver(determine_host, read2cds_solver, tax_solver)
-    solver.generateSolutionXML(args.input, args.descr, args.output, args.stats_dir, args.solution_file)
+
+    # Populate read container
+    # The read container type can now be determined from the input parameters
+    # and injected into the Solver
+    start = timing.start()
+    read_container = ReadContainer()
+    read_container.populate_from_aln_file(read_alignment_file=args.input)
+    elapsed_time = timing.end(start)
+    log.info("Populate read container - elapsed time: %s", 
+             timing.humanize(elapsed_time))    
+    
+    solver.generateSolutionXML(read_container=read_container,
+                               args.descr, args.output, args.stats_dir,
+                               args.solution_file)
     
     processing_delta = timing.end(processing_start)
     log.info("Processing done in %s", 
