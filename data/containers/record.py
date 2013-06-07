@@ -43,6 +43,13 @@ class RecordContainer (object):
         '''
         self._add_record(nucleotide_accession)
         return self.record_repository[nucleotide_accession]
+    
+    def fetch_existing_record (self, nucleotide_accession):
+        '''
+        @param nucleotide_accession (str)
+        @return UnityRecord (ncbi/db/[genbank/embl])
+        '''
+        return self.record_repository.get(nucleotide_accession)
 
     def fetch_all_records (self, format=iter):
         '''

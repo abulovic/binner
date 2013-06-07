@@ -29,6 +29,10 @@ class RecordContainerTest (unittest.TestCase):
             self.read_container.fetch_all_reads_versions())
         records = self.record_container.fetch_all_records(format=list)
         self.assertEqual (len(db_access.records), len(records))
+        
+    def testReturnsNoneForNonexistentRecord(self):
+        record = self.record_container.fetch_existing_record("XXX")
+        self.assertIsNone(record, "No record with version XXX should be found")
 
 
 if __name__ == '__main__':
