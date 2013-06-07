@@ -106,8 +106,14 @@ if __name__ == '__main__':
     # Populate record container
     # The record container type can now be determine from the input parameters
     # and injected into the Solver
+    start = timing.start()
     record_container = RecordContainer()
     record_container.set_db_access(db_access)
+    # Extract all records from database
+    record_container.populate(read_container.fetch_all_reads_versions())
+    elapsed_time = timing.end(start)
+    log.info("Populate record container - elapsed time: %s", 
+             timing.humanize(elapsed_time)) 
    
     solver.generateSolutionXML(read_container=read_container,
                                record_container=record_container,

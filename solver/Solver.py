@@ -76,17 +76,6 @@ class Solver (object):
         # --------------------------- #
         start = time.time()
 
-        # Extract all records from database
-        record_container.populate(read_container)
-        self.log.info("Record container populated!")
-
-        end = time.time()
-        elapsed_time = end - start
-        print ("Populate record container - \telapsed time: %.2f" % elapsed_time)
-
-        # --------------------------- #
-        start = time.time()
-
         # find intersecting cdss for read alignments
         read_container.populate_cdss(record_container)
         self.log.info("read populate cdss over")
