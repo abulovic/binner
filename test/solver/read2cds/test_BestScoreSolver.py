@@ -33,7 +33,7 @@ class BestScoreSolverTest (unittest.TestCase):
         self.db_query = MockDbQuery (self.mock_db_fpath)
         self.record_cont = RecordContainer()
         self.record_cont.set_db_access(self.db_query)
-        self.record_cont.populate(self.read_cont)
+        self.record_cont.populate(self.read_cont.fetch_all_reads_versions())
         self.read_cont.populate_cdss(self.record_cont)
 #       Initialize and fill up cds aln container
         self.cds_aln_cont = CdsAlnContainer()
