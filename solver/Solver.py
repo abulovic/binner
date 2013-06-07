@@ -115,7 +115,7 @@ class Solver (object):
         start = time.time()
 
         # Populate CDS container 
-        cds_aln_container.populate(read_container)
+        cds_aln_container.populate(read_container.fetch_all_reads())
         self.log.info("Cds Aln Container populated!")
 
         end = time.time()

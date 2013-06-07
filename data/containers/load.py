@@ -21,6 +21,6 @@ def fill_containers (alignment_file, db_access):
 #   3. Find to which coding sequences reads map
     read_cont.populate_cdss(record_cont)
 #   4. Populate Cds Alignment container
-    cdsaln_cont.populate(read_cont)
+    cdsaln_cont.populate(read_cont.fetch_all_reads())
 
     return (read_cont, record_cont, cdsaln_cont)
