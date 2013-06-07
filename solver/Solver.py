@@ -41,11 +41,14 @@ class Solver (object):
 
     # Here should go some User Interface methods like getXML(), solve() and similar
 
-    def generateSolutionXML(self, read_container, dataset_xml_file, output_solution_filename,
+    def generateSolutionXML(self, read_container, record_container,
+                            dataset_xml_file, output_solution_filename,
                             stats_dir=None, solution_file=None):
         ''' Main UI method.
             Generates XML file containing solution.
-            @param (String) alignment_file  Filepath to file containing read alignments.
+            @param (ReadContainer) read_container Container with all the reads
+            @param (RecordContainer) record_container Container with all the 
+                records that will be used in the processing
             @param (String) dataset_xml_file  Filepath to dataset xml file
             @param (String) output_solution_filename  Filepath where xml output is stored.
             @param (String) stats_dir  Path to directory where statistics and comparison with solution
@@ -64,13 +67,11 @@ class Solver (object):
             solution_data = loadOrganismData("solution.xml")
 
         # Initialize containers
-        record_container = RecordContainer()
         cds_aln_container = CdsAlnContainer()
         # create taxonomy tree
         tax_tree = TaxTree()
         # Create database access
         db_access = DbQuery()
-        record_container.set_db_access(db_access)
 
         # --------------------------- #
         start = time.time()

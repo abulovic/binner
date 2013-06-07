@@ -4,6 +4,8 @@ import argparse
 import sys,os
 sys.path.append(os.getcwd())
 from data.containers.read import ReadContainer
+from data.containers.record import RecordContainer
+from ncbi.db.access import DbQuery
 
 from utils import timing
 
@@ -98,7 +100,17 @@ if __name__ == '__main__':
     log.info("Populate read container - elapsed time: %s", 
              timing.humanize(elapsed_time))    
     
+    # Create database access
+    db_access = DbQuery()
+        
+    # Populate record container
+    # The record container type can now be determine from the input parameters
+    # and injected into the Solver
+    record_container = RecordContainer()
+    record_container.set_db_access(db_access)
+   
     solver.generateSolutionXML(read_container=read_container,
+                               record_container=record_container,
                                args.descr, args.output, args.stats_dir,
                                args.solution_file)
     
