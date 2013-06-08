@@ -12,7 +12,7 @@ class Read (object):
     def __init__ (self, read_id, read_length, alignment_locations):
         self.id                     = read_id
         self.length                 = read_length
-        self.alignment_locations    = alignment_locations
+        self.alignment_locations    = alignment_locations  # Jel ovo [ReadAlnLocation]? Treba iskomentirati!!!
         self.is_host_read           = False
         
     

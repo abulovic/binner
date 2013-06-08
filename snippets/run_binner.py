@@ -115,8 +115,7 @@ if __name__ == '__main__':
     log.info("Populate record container - elapsed time: %s", 
              timing.humanize(elapsed_time)) 
    
-    solver.generateSolutionXML(read_container=read_container,
-                               record_container=record_container,
+    solver.generateSolutionXML(read_container, record_container,
                                args.descr, args.output, args.stats_dir,
                                args.solution_file)
     

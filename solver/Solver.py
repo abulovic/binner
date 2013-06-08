@@ -62,9 +62,9 @@ class Solver (object):
         # Create holder for statistical data
         stats = SolverStatistics()
 
-        # HARDCODED, JUST FOR TESTING!!!!:
+        # load solution file
         if (solution_file is not None):
-            solution_data = loadOrganismData("solution.xml")
+            solution_data = loadOrganismData(solution_file)
 
         # Initialize containers
         cds_aln_container = CdsAlnContainer()
@@ -96,6 +96,11 @@ class Solver (object):
         # for logging data END
 
         stats.collectPhaseData(1, record_container, read_container)
+
+        if (solution_file is not None):
+            compData = ComparisonData(solution_data, record_container, read_container)
+            print compData.cds_comparison
+
 
         # --------------------------- #
         start = time.time()
