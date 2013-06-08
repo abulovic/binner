@@ -6,6 +6,7 @@ sys.path.append(os.getcwd())
 from data.containers.read import ReadContainer
 from data.containers.record import RecordContainer
 from ncbi.db.access import DbQuery
+from ncbi.taxonomy.tree import TaxTree
 
 from utils import timing
 
@@ -14,7 +15,7 @@ from solver.taxonomy.SimpleTaxonomySolver       import SimpleTaxonomySolver
 from solver.taxonomy.SimpleJoinTaxonomySolver   import SimpleJoinTaxonomySolver
 from solver.read2cds.GreedySolver               import GreedySolver
 from solver.read2cds.BestScoreSolver            import BestScoreSolver
-from solver.determine_host                      import determine_host
+from solver.determine_host import HostDeterminator
 
 def parse_input_parameters():
     argparser = argparse.ArgumentParser(
@@ -76,9 +77,7 @@ def parse_input_parameters():
             print "CDS Fasta file %s doesn't exists" % args.descrargs.cds_fasta
     if error:
         exit(-1)
-    
-    print args
-    exit(1)
+
     return args
 
 if __name__ == '__main__':
@@ -110,10 +109,16 @@ if __name__ == '__main__':
     elif args.tax_solver == 'simple_join':
         tax_solver = SimpleJoinTaxonomySolver()
     
+    # Create database access
+    db_access = DbQuery()
+    tax_tree = TaxTree(args.tax_tree)
+    host_determinator = HostDeterminator(dbquery=db_access,
+                                         tax_tree=tax_tree)
+    
     log.info("Started.")
     processing_start = timing.start()
     
-    solver = Solver(determine_host, read2cds_solver, tax_solver)
+    solver = Solver(host_determinator, read2cds_solver, tax_solver)
 
     # Populate read container
     # The read container type can now be determined from the input parameters
@@ -125,9 +130,6 @@ if __name__ == '__main__':
     log.info("Populate read container - elapsed time: %s", 
              timing.humanize(elapsed_time))    
     
-    # Create database access
-    db_access = DbQuery()
-        
     # Populate record container
     # The record container type can now be determine from the input parameters
     # and injected into the Solver

@@ -1,7 +1,5 @@
 from collections            import defaultdict
 
-from data.containers.read   import ReadContainer
-from data.containers.record import RecordContainer
 from data.containers.cdsaln import CdsAlnContainer
 
 from ncbi.db.access         import DbQuery
@@ -22,13 +20,13 @@ class Solver (object):
     Read2CDSSolver, TaxonomySolver) to solve whole problem.
     """
 
-    def __init__ (self, determine_host, read2cds_solver, taxonomy_solver):
+    def __init__ (self, host_determinator, read2cds_solver, taxonomy_solver):
         """
-        @param (function)           determine_host (to be specified yet)
+        @param (HostDeterminator)   Determines host in reads
         @param (Read2CDSSolver)     read2cds_solver
         @param (TaxonomySolver)     taxonomy_solver
         """
-        self.determine_host = determine_host
+        self.host_determinator = host_determinator
         self.read2cds_solver = read2cds_solver
         self.taxonomy_solver = taxonomy_solver
         self.log = logging.getLogger(__name__)
@@ -107,7 +105,7 @@ class Solver (object):
 
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
-        (host_taxid, host_read_count) = self.determine_host(read_container)
+        (host_taxid, host_read_count) = self.host_determinator.determine_host(read_container)
         self.log.info("host_taxid:%s host_read_count:%s", str(host_taxid), str(host_read_count))
         if host_taxid:
             self.log.info("Host identified: %d!", (int(host_taxid)))
