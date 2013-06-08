@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<organismsReport>
+  <dataset>
+    <datasetName>Example1.fq</datasetName>
+    <hostGenus>Homo</hostGenus>
+    <hostSpecies>sapiens</hostSpecies>
+    <commonName>human</commonName>
+    <taxonomy taxon_id="9606">Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae; Homo.</taxonomy>
+    <sampleSource>Whole Blood</sampleSource>
+    <sampleType>DNA</sampleType>
+    <sequencer method="single-end">Roche 454</sequencer>
+  </dataset>
+  <organisms>
+    <organism>
+      <relativeAmount count="0">0.000</relativeAmount>
+      <taxonomy taxon_id="9606">Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae; Homo.</taxonomy>
+      <organismName>Host</organismName>
+    </organism>
+    <organism>
+      <relativeAmount count="2">1.000</relativeAmount>
+      <taxonomy taxon_id="29760">cellular organisms; Eukaryota; Viridiplantae; Streptophyta; Streptophytina; Embryophyta; Tracheophyta; Euphyllophyta; Spermatophyta; Magnoliophyta; eudicotyledons; core eudicotyledons; rosids; rosids incertae sedis; Vitales; Vitaceae; Vitis; Vitis vinifera</taxonomy>
+      <organismName>Vitis vinifera</organismName>
+      <genus>Vitis</genus>
+      <species>vinifera</species>
+      <genes>
+        <gene protein_id ="XP_002274950.1" product="uncharacterized protein LOC100258466" ref_name="XP_002274950.1">LOC100258466</gene>
+        <gene protein_id ="XP_002264197.1" product="uncharacterized protein LOC100252776" ref_name="XP_002264197.1">LOC100252776</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101CHB29</sequence>
+        <sequence>HT8EEZ101DP4Z9</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">0.500</relativeAmount>
+      <taxonomy taxon_id="353153">cellular organisms; Eukaryota; Euglenozoa; Kinetoplastida; Trypanosomatidae; Trypanosoma; Schizotrypanum; Trypanosoma cruzi; Trypanosoma cruzi strain CL Brener</taxonomy>
+      <organismName>Trypanosoma cruzi strain CL Brener</organismName>
+      <genus>Trypanosoma</genus>
+      <species>cruzi</species>
+      <genes>
+        <gene protein_id ="XP_806719.1" locus_tag="Tc00.1047053510183.30" product="hypothetical protein" ref_name="XP_806719.1">XP_806719.1</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101B04CF</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">0.500</relativeAmount>
+      <taxonomy taxon_id="412133">cellular organisms; Eukaryota; Parabasalia; Trichomonadida; Trichomonadidae; Trichomonas; Trichomonas vaginalis; Trichomonas vaginalis G3</taxonomy>
+      <organismName>Trichomonas vaginalis G3</organismName>
+      <genus>Trichomonas</genus>
+      <species>vaginalis</species>
+      <genes>
+        <gene protein_id ="XP_001325288.1" locus_tag="TVAG_212470" product="XPG N-terminal domain containing protein" ref_name="XP_001325288.1">XP_001325288.1</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101C0QI7</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="2">1.000</relativeAmount>
+      <taxonomy taxon_id="9606">cellular organisms; Eukaryota; Opisthokonta; Metazoa; Eumetazoa; Bilateria; Deuterostomia; Chordata; Craniata; Vertebrata; Gnathostomata; Teleostomi; Euteleostomi; Sarcopterygii; Tetrapoda; Amniota; Mammalia; Theria; Eutheria; Euarchontoglires; Primates; Haplorrhini; Simiiformes; Catarrhini; Hominoidea; Hominidae; Homininae; Homo; Homo sapiens</taxonomy>
+      <organismName>Homo sapiens</organismName>
+      <genus>Homo</genus>
+      <species>sapiens</species>
+      <genes>
+        <gene protein_id ="BAG57033.1" product="BAG57033.1" ref_name="BAG57033.1">BAG57033.1</gene>
+        <gene protein_id ="CAC88730.1" product="immunoglobulin heavy chain variable region" ref_name="CAC88730.1">IGVH</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101BW2PX</sequence>
+        <sequence>HT8EEZ101ECNJ3</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">0.500</relativeAmount>
+      <taxonomy taxon_id="31271">cellular organisms; Eukaryota; Alveolata; Apicomplexa; Aconoidasida; Haemosporida; Plasmodium; Plasmodium (Vinckeia); Plasmodium chabaudi; Plasmodium chabaudi chabaudi</taxonomy>
+      <organismName>Plasmodium chabaudi chabaudi</organismName>
+      <genus>Plasmodium</genus>
+      <species>chabaudi</species>
+      <genes>
+        <gene protein_id ="XP_743690.1" locus_tag="PC000056.03.0" product="hypothetical protein" ref_name="XP_743690.1">XP_743690.1</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101BY1KJ</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="2">1.000</relativeAmount>
+      <taxonomy taxon_id="121224">cellular organisms; Eukaryota; Opisthokonta; Metazoa; Eumetazoa; Bilateria; Protostomia; Panarthropoda; Arthropoda; Mandibulata; Pancrustacea; Hexapoda; Insecta; Dicondylia; Pterygota; Neoptera; Paraneoptera; Phthiraptera; Anoplura; Pediculidae; Pediculus; Pediculus humanus; Pediculus humanus corporis</taxonomy>
+      <organismName>Pediculus humanus corporis</organismName>
+      <genus>Pediculus</genus>
+      <species>humanus</species>
+      <genes>
+        <gene protein_id ="XP_002431018.1" locus_tag="Phum_PHUM507440" product="Oligodendrocyte transcription factor, putative" ref_name="XP_002431018.1">XP_002431018.1</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101DLSF3</sequence>
+        <sequence>HT8EEZ101B7KOK</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="2">1.000</relativeAmount>
+      <taxonomy taxon_id="649349">cellular organisms; Bacteria; Bacteroidetes/Chlorobi group; Bacteroidetes; Cytophagia; Cytophagales; Cytophagaceae; Leadbetterella; Leadbetterella byssophila; Leadbetterella byssophila DSM 17132</taxonomy>
+      <organismName>Leadbetterella byssophila DSM 17132</organismName>
+      <genus>Leadbetterella</genus>
+      <species>byssophila</species>
+      <genes>
+        <gene protein_id ="ADQ17975.1" locus_tag="Lbys_2298" product="methionyl-tRNA formyltransferase" ref_name="ADQ17975.1">ADQ17975.1</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101BP401</sequence>
+        <sequence>HT8EEZ101BCYNE</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">0.500</relativeAmount>
+      <taxonomy taxon_id="311402">cellular organisms; Bacteria; Proteobacteria; Alphaproteobacteria; Rhizobiales; Rhizobiaceae; Rhizobium/Agrobacterium group; Agrobacterium; Agrobacterium vitis; Agrobacterium vitis S4</taxonomy>
+      <organismName>Agrobacterium vitis S4</organismName>
+      <genus>Agrobacterium</genus>
+      <species>vitis</species>
+      <genes>
+        <gene protein_id ="ACM36314.1" locus_tag="Avi_1835" product="translation elongation factor G" ref_name="ACM36314.1">fusA</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101CT44R</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">0.500</relativeAmount>
+      <taxonomy taxon_id="10090">cellular organisms; Eukaryota; Opisthokonta; Metazoa; Eumetazoa; Bilateria; Deuterostomia; Chordata; Craniata; Vertebrata; Gnathostomata; Teleostomi; Euteleostomi; Sarcopterygii; Tetrapoda; Amniota; Mammalia; Theria; Eutheria; Euarchontoglires; Glires; Rodentia; Sciurognathi; Muroidea; Muridae; Murinae; Mus; Mus; Mus musculus</taxonomy>
+      <organismName>Mus musculus</organismName>
+      <genus>Mus</genus>
+      <species>musculus</species>
+      <genes>
+        <gene protein_id ="AAB60517.1" product="RNA1 homolog" ref_name="AAB60517.1">Fug1</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101BW4IT</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">0.500</relativeAmount>
+      <taxonomy taxon_id="4558">cellular organisms; Eukaryota; Viridiplantae; Streptophyta; Streptophytina; Embryophyta; Tracheophyta; Euphyllophyta; Spermatophyta; Magnoliophyta; Liliopsida; commelinids; Poales; Poaceae; PACMAD clade; Panicoideae; Andropogoneae; Sorghum; Sorghum bicolor</taxonomy>
+      <organismName>Sorghum bicolor</organismName>
+      <genus>Sorghum</genus>
+      <species>bicolor</species>
+      <genes>
+        <gene protein_id ="XP_002437407.1" locus_tag="SORBIDRAFT_10g026363" product="hypothetical protein" ref_name="XP_002437407.1">XP_002437407.1</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101A06ET</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">0.500</relativeAmount>
+      <taxonomy taxon_id="436017">cellular organisms; Eukaryota; Viridiplantae; Chlorophyta; Mamiellophyceae; Mamiellales; Ostreococcus; Ostreococcus 'lucimarinus'; Ostreococcus lucimarinus CCE9901</taxonomy>
+      <organismName>Ostreococcus lucimarinus CCE9901</organismName>
+      <genus>Ostreococcus</genus>
+      <species>lucimarinus</species>
+      <genes>
+        <gene protein_id ="ABO96426.1" locus_tag="OSTLU_24625" product="predicted protein" ref_name="ABO96426.1">ABO96426.1</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101DYAXR</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">0.500</relativeAmount>
+      <taxonomy taxon_id="1071378">cellular organisms; Eukaryota; Opisthokonta; Fungi; Dikarya; Ascomycota; saccharomyceta; Saccharomycotina; Saccharomycetes; Saccharomycetales; Saccharomycetaceae; Naumovozyma; Naumovozyma dairenensis; Naumovozyma dairenensis CBS 421</taxonomy>
+      <organismName>Naumovozyma dairenensis CBS 421</organismName>
+      <genus>Naumovozyma</genus>
+      <species>dairenensis</species>
+      <genes>
+        <gene protein_id ="XP_003670047.1" locus_tag="NDAI_0D04910" product="hypothetical protein" ref_name="XP_003670047.1">NDAI0D04910</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101A8GR4</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="2">1.000</relativeAmount>
+      <taxonomy taxon_id="9544">cellular organisms; Eukaryota; Opisthokonta; Metazoa; Eumetazoa; Bilateria; Deuterostomia; Chordata; Craniata; Vertebrata; Gnathostomata; Teleostomi; Euteleostomi; Sarcopterygii; Tetrapoda; Amniota; Mammalia; Theria; Eutheria; Euarchontoglires; Primates; Haplorrhini; Simiiformes; Catarrhini; Cercopithecoidea; Cercopithecidae; Cercopithecinae; Macaca; Macaca mulatta</taxonomy>
+      <organismName>Macaca mulatta</organismName>
+      <genus>Macaca</genus>
+      <species>mulatta</species>
+      <genes>
+        <gene protein_id ="XP_002798879.1" product="hypothetical protein LOC100426196" ref_name="XP_002798879.1">LOC100426196</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101CH8HA</sequence>
+        <sequence>HT8EEZ101DQFUR</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">0.500</relativeAmount>
+      <taxonomy taxon_id="7220">cellular organisms; Eukaryota; Opisthokonta; Metazoa; Eumetazoa; Bilateria; Protostomia; Panarthropoda; Arthropoda; Mandibulata; Pancrustacea; Hexapoda; Insecta; Dicondylia; Pterygota; Neoptera; Endopterygota; Diptera; Brachycera; Muscomorpha; Eremoneura; Cyclorrhapha; Schizophora; Acalyptratae; Ephydroidea; Drosophilidae; Drosophilinae; Drosophilini; Drosophilina; Drosophiliti; Drosophila; Sophophora; melanogaster group; melanogaster subgroup; Drosophila erecta</taxonomy>
+      <organismName>Drosophila erecta</organismName>
+      <genus>Drosophila</genus>
+      <species>erecta</species>
+      <genes>
+        <gene protein_id ="XP_001975484.1" locus_tag="Dere_GG22343" product="Dere\GG22343-PA" ref_name="XP_001975484.1">Dere\GG22343</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101BHPDQ</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="2">1.000</relativeAmount>
+      <taxonomy taxon_id="9646">cellular organisms; Eukaryota; Opisthokonta; Metazoa; Eumetazoa; Bilateria; Deuterostomia; Chordata; Craniata; Vertebrata; Gnathostomata; Teleostomi; Euteleostomi; Sarcopterygii; Tetrapoda; Amniota; Mammalia; Theria; Eutheria; Laurasiatheria; Carnivora; Caniformia; Ursidae; Ailuropoda; Ailuropoda melanoleuca</taxonomy>
+      <organismName>Ailuropoda melanoleuca</organismName>
+      <genus>Ailuropoda</genus>
+      <species>melanoleuca</species>
+      <genes>
+        <gene protein_id ="XP_002921902.1" product="s100P-binding protein-like" ref_name="XP_002921902.1">LOC100475652</gene>
+        <gene protein_id ="CAA53481.1" product="brevican" ref_name="CAA53481.1">brevican</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101EPB4E</sequence>
+        <sequence>HT8EEZ101C9ETS</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="4">2.000</relativeAmount>
+      <taxonomy taxon_id="4950">cellular organisms; Eukaryota; Opisthokonta; Fungi; Dikarya; Ascomycota; saccharomyceta; Saccharomycotina; Saccharomycetes; Saccharomycetales; Saccharomycetaceae; Torulaspora; Torulaspora delbrueckii</taxonomy>
+      <organismName>Torulaspora delbrueckii</organismName>
+      <genus>Torulaspora</genus>
+      <species>delbrueckii</species>
+      <genes>
+        <gene protein_id ="XP_003679618.1" locus_tag="TDEL_0B02780" product="hypothetical protein" ref_name="XP_003679618.1">TDEL0B02780</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101C1B2I</sequence>
+        <sequence>HT8EEZ101C5VWQ</sequence>
+        <sequence>HT8EEZ101C7TXN</sequence>
+        <sequence>HT8EEZ101B5Z6I</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="7">3.500</relativeAmount>
+      <taxonomy taxon_id="9913">cellular organisms; Eukaryota; Opisthokonta; Metazoa; Eumetazoa; Bilateria; Deuterostomia; Chordata; Craniata; Vertebrata; Gnathostomata; Teleostomi; Euteleostomi; Sarcopterygii; Tetrapoda; Amniota; Mammalia; Theria; Eutheria; Laurasiatheria; Cetartiodactyla; Ruminantia; Pecora; Bovidae; Bovinae; Bos; Bos taurus</taxonomy>
+      <organismName>Bos taurus</organismName>
+      <genus>Bos</genus>
+      <species>taurus</species>
+      <genes>
+        <gene protein_id ="CBK76098.1" locus_tag="CLS_02290" product="DNA polymerase III, delta' subunit" ref_name="CBK76098.1">CBK76098.1</gene>
+        <gene protein_id ="CAA36685.1" product="CAA36685.1" ref_name="CAA36685.1">CAA36685.1</gene>
+        <gene protein_id ="CAD21715.2" product="NADH dehydrogenase subunit 4" ref_name="CAD21715.2">NADH4</gene>
+        <gene protein_id ="CBN81642.1" locus_tag="DLA_Ib04840" product="'Protoheme IX farnesyltransferase, mitochondrial '" ref_name="CBN81642.1">COX10</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101DJOPS</sequence>
+        <sequence>HT8EEZ101B57I3</sequence>
+        <sequence>HT8EEZ101CWSRX</sequence>
+        <sequence>HT8EEZ101AQKG0</sequence>
+        <sequence>HT8EEZ101CISUF</sequence>
+        <sequence>HT8EEZ101AGNZ0</sequence>
+        <sequence>HT8EEZ101CVZHO</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">0.500</relativeAmount>
+      <taxonomy taxon_id="9078">cellular organisms; Eukaryota; Opisthokonta; Metazoa; Eumetazoa; Bilateria; Deuterostomia; Chordata; Craniata; Vertebrata; Gnathostomata; Teleostomi; Euteleostomi; Sarcopterygii; Tetrapoda; Amniota; Sauropsida; Sauria; Archosauria; Dinosauria; Saurischia; Theropoda; Coelurosauria; Aves; Neognathae; Galliformes; Phasianidae; Perdicinae; Alectoris; Alectoris chukar</taxonomy>
+      <organismName>Alectoris chukar</organismName>
+      <genus>Alectoris</genus>
+      <species>chukar</species>
+      <genes>
+        <gene protein_id ="ACJ37505.1" product="NADH dehydrogenase subunit 2" ref_name="ACJ37505.1">ND2</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101BDAEG</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="9">4.500</relativeAmount>
+      <taxonomy taxon_id="9597">cellular organisms; Eukaryota; Opisthokonta; Metazoa; Eumetazoa; Bilateria; Deuterostomia; Chordata; Craniata; Vertebrata; Gnathostomata; Teleostomi; Euteleostomi; Sarcopterygii; Tetrapoda; Amniota; Mammalia; Theria; Eutheria; Euarchontoglires; Primates; Haplorrhini; Simiiformes; Catarrhini; Hominoidea; Hominidae; Homininae; Pan; Pan paniscus</taxonomy>
+      <organismName>Pan paniscus</organismName>
+      <genus>Pan</genus>
+      <species>paniscus</species>
+      <genes>
+        <gene protein_id ="XP_003810242.1" product="phospholipase D2 isoform 2" ref_name="XP_003810242.1">PLD2</gene>
+        <gene protein_id ="XP_003821592.1" product="3-mercaptopyruvate sulfurtransferase isoform 3" ref_name="XP_003821592.1">MPST</gene>
+        <gene protein_id ="XP_003846201.1" product="LOW QUALITY PROTEIN: LON peptidase N-terminal domain and RING finger protein 1" ref_name="XP_003846201.1">LONRF1</gene>
+        <gene protein_id ="XP_003821327.1" product="LOW QUALITY PROTEIN: serine/threonine-protein kinase 35" ref_name="XP_003821327.1">STK35</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101D3XI3</sequence>
+        <sequence>HT8EEZ101A8VKI</sequence>
+        <sequence>HT8EEZ101AYMN4</sequence>
+        <sequence>HT8EEZ101C995X</sequence>
+        <sequence>HT8EEZ101EVXHK</sequence>
+        <sequence>HT8EEZ101CERIP</sequence>
+        <sequence>HT8EEZ101B4X0U</sequence>
+        <sequence>HT8EEZ101A4BII</sequence>
+        <sequence>HT8EEZ101CA1W7</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">0.500</relativeAmount>
+      <taxonomy taxon_id="15368">cellular organisms; Eukaryota; Viridiplantae; Streptophyta; Streptophytina; Embryophyta; Tracheophyta; Euphyllophyta; Spermatophyta; Magnoliophyta; Liliopsida; commelinids; Poales; Poaceae; BEP clade; Pooideae; Brachypodieae; Brachypodium; Brachypodium distachyon</taxonomy>
+      <organismName>Brachypodium distachyon</organismName>
+      <genus>Brachypodium</genus>
+      <species>distachyon</species>
+      <genes>
+        <gene protein_id ="XP_003576291.1" product="uncharacterized protein LOC100835259" ref_name="XP_003576291.1">LOC100835259</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101BAXYW</sequence>
+      </reads>
+    </organism>
+    <organism>
+      <relativeAmount count="1">0.500</relativeAmount>
+      <taxonomy taxon_id="5823">cellular organisms; Eukaryota; Alveolata; Apicomplexa; Aconoidasida; Haemosporida; Plasmodium; Plasmodium (Vinckeia); Plasmodium berghei; Plasmodium berghei ANKA</taxonomy>
+      <organismName>Plasmodium berghei ANKA</organismName>
+      <genus>Plasmodium</genus>
+      <species>berghei</species>
+      <genes>
+        <gene protein_id ="XP_675847.1" locus_tag="PB000616.00.0" product="PFG377 protein" ref_name="XP_675847.1">XP_675847.1</gene>
+      </genes>
+      <reads>
+        <sequence>HT8EEZ101ASXXZ</sequence>
+      </reads>
+    </organism>
+  </organisms>
+</organismsReport>
