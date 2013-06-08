@@ -147,7 +147,7 @@ class ComparisonData (object):
         for o, t in self.read_comparison.values():
             overlap += o
             total += t
-        ret = "Read overlap: " + str(overlap) + "/" + str(total) + "\n"
+        ret += "Read overlap: " + str(overlap) + "/" + str(total) + "\n"
 
         return ret
                 
