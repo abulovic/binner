@@ -1,8 +1,11 @@
 import sys, os
 sys.path.append(os.getcwd())
+import logging
 
 from solutiondata           import *
 from ncbi.db.access         import DbQuery
+
+log = logging.getLogger(__name__)
 
 class ComparisonData (object):
     """ This class contains data comparison between final result and
@@ -55,8 +58,42 @@ class ComparisonData (object):
         self.cds_comparison = ComparisonData.cds_comparison(solution_data, cds_aln_cont, read_cont)
 
     @classmethod
+    def taxid2cdss_comparison(cls, solution_data, taxid2cdss):
+        """
+        TO BE IMPLEMENTED
+        """
+        #---- Transform solution_data to be suitable for searching ----#
+        # Dictionary where each entry represents one gene:
+        # Key is gene.product, value is (org.taxon_id, gene)
+        gene_product2org = dict() 
+        # Dictionary where each entry represents one gene:
+        # Key is gene.name, value is (org.taxon_id, gene)
+        gene_name2org = dict()
+        for org in solution_data:
+            for gene in org.genes:
+                gene_product2org[gene.product]  = (org.taxon_id, gene)
+                gene_name2org[gene.name] = (org.taxon_id, gene)
+        #--------------------------------------------------------------#
+
+        # This is what we will calculate.
+        # Key is taxon_id, value is [number of cds in solution,
+        # num of cds that we reported for that organism that are in solution]
+        org_stats = dict() 
+        for org in solution_data:
+            org_stats[org.taxon_id] = [len(org.genes), 0]
+
+
+        for taxid, cdss in taxid2cdss.items():
+            genes_found = set()
+            for cds in cdss:
+                pass
+                
+            
+
+    @classmethod
     def cds_comparison(cls, solution_data, cds_aln_cont=None, read_cont=None):
         """ Does comparison between genes from solution and active cds from Solver.
+        read_cont is used only if cds_aln_cont is None.
         For each organism from solution we report:
          (1) number of genes from solution
          (2) number of genes from solution that have at least one corresponding
@@ -115,14 +152,13 @@ class ComparisonData (object):
             if cds.gene    in gene_name2org:
                 taxon_id, gene = gene_name2org[cds.gene]
             if not (taxon_id is None):
-                # Check if gene was already matched - it should never happen
                 if gene in genes_found:
-                    #print "WARNING: In solution comparison: CDS was matched to already matched gene."
+                    log.info("In solution comparison: CDS was matched to already matched gene.")
                     pass
                 else:
                     genes_found.add(gene)
                     org_stats[taxon_id][1] += 1
-                #print cds_aln.cds.product, cds_aln.cds.gene, cds_aln.cds.protein_id, cds_aln
+
         return org_stats
 
         
