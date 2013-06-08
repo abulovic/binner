@@ -166,8 +166,9 @@ class SolverStatistics:
     def __str__(self):
         res = ""
         for (phase, statData) in self.phaseData.items():
-            res += "Phase " + str(phase) + " (" + SolverStatistics.phaseDescr[phase-1] + "):\n"
+            res += "\nPhase " + str(phase) + " (" + SolverStatistics.phaseDescr[phase-1] + "):\n"
             res += statData.shortStr()
+            res += "---- Comparison data ----\n"
             if phase in self.comparison_data:
                 res += self.comparison_data[phase].shortStr()
         return res
