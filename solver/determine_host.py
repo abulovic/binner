@@ -4,7 +4,7 @@ from ncbi.taxonomy.tree import TaxTree
 from ncbi.db.access     import DbQuery 
 
 
-def mark_host_reads (read_container, tax_tree, gi2taxid):
+def _mark_host_reads (reads, tax_tree, gi2taxid):
     '''
     Mark host reads in the read container.
     Host reads are considered to be all the reads which
@@ -12,7 +12,7 @@ def mark_host_reads (read_container, tax_tree, gi2taxid):
     Potential host is any organism from animalia kingdom.
     Annotes all the read alignments as potential host
     alignments or not.
-    @param read_container (ReadContainer)
+    @param reads (iterator) Reads to check for host
     @param tax_tree (TaxTree)
     @param gi2taxid (dict) key: gi (int), value: taxid (int) 
     @return (host_read_count) (int)
@@ -20,7 +20,7 @@ def mark_host_reads (read_container, tax_tree, gi2taxid):
 
     host_read_count = 0
 
-    for read in read_container.fetch_all_reads(format=iter):
+    for read in reads:
         read_alignments = read.get_alignments()
         if not len(read_alignments):
             continue
@@ -77,22 +77,21 @@ class HostDeterminator(object):
         self.dbquery = dbquery
         self.tax_tree = tax_tree
 
-    def determine_host(self, read_container):
+    def determine_host(self, reads):
         ''' Method serves to determine host among all the read alignments.
             An organism is considered host if it is a descendent of kingdom Animalia.
             Method counts the most frequent organism and declares it host.
             Filters read container to remove all reads best aligned to potential host.
             Potential host is anything from animalia kingdom.
             ! Precondition: All the alignments have been loaded into read container.
-            @param (ReadContainer) read container (loaded with read data)
+            @param (iterator) reads (loaded with read data)
             @return (host_taxid, host_read_cnt) (int, int)
         '''
    
-        reads      = read_container.fetch_all_reads(format=iter)
         # how many times each taxid has been reported
         (gi2taxid, taxids_container)  = _count_reported_taxids(reads, self.dbquery)
         # deactivate reads that map to potential host
-        host_read_count =  mark_host_reads (read_container, self.tax_tree, gi2taxid)
+        host_read_count =  _mark_host_reads (reads, self.tax_tree, gi2taxid)
         
         # find the most frequent taxid from animalia kingdom
         host_taxid = None

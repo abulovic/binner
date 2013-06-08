@@ -105,7 +105,8 @@ class Solver (object):
 
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
-        (host_taxid, host_read_count) = self.host_determinator.determine_host(read_container)
+        reads = read_container.fetch_all_reads()
+        (host_taxid, host_read_count) = self.host_determinator.determine_host(reads)
         self.log.info("host_taxid:%s host_read_count:%s", str(host_taxid), str(host_read_count))
         if host_taxid:
             self.log.info("Host identified: %d!", (int(host_taxid)))
