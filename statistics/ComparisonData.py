@@ -48,7 +48,7 @@ class ComparisonData (object):
                 if organism.taxon_id in tax_ids:
                     reads_we_found += 1
 
-            organism_read_stats[organism.taxon_id] =  [total_reported_reads_in_organism, reads_we_found]
+            organism_read_stats[organism.taxon_id] =  [reads_we_found, total_reported_reads_in_organism]
 
         self.read_comparison = organism_read_stats
 
