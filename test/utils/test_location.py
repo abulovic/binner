@@ -348,7 +348,24 @@ class Test(unittest.TestCase):
         self.assertEqual(l2, 15, 'Minimum should be 15')
         self.assertEqual(l3, 5, 'Minimum should be 5')
         self.assertEqual(l4, 1, 'Minimum should be 1')
-        self.assertEqual(l5, 1, 'Minimum should be 1')        
+        self.assertEqual(l5, 1, 'Minimum should be 1')
+        
+    def testLocationOverlap(self):
+        l1 = Location.from_location_str('join(1..10,11..50)')
+        l2 = Location.from_location_str('complement(join(1..2,15..20))')
+        
+        self.assertEqual(1, l1.start, "Start should be 1")
+        self.assertEqual(50, l1.end, "End should be 50")
+        
+        self.assertEqual(1, l2.start, "Start should be 1")
+        self.assertEqual(20, l2.end, "End should be 20")
+        
+        self.assertTrue(l1.overlaps(l2, use_complement=False),
+                        'Locations should overlap')
+        
+        self.assertTrue(l1.overlaps(l2, use_complement=True),
+                        "Locations shouldn't overlap")
+        
         
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testIntersections']

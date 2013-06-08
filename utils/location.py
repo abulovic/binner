@@ -328,6 +328,28 @@ class Location(object):
             return False
         return _contains(self, location)
     
+    def overlaps(self, location, use_complement=True):
+        '''
+        Determines if the the given location overlaps with this one.
+        
+        .. note:: The overlapping is calculated using only the main locations
+            start and end positions. No sublocations are involved in the
+            calculation. Because of that, two location could be marked as
+            overlapping even if they do not share common base pairs.
+            Eg. join(1..10,100..200) and join(50..60,80..90) would be mark as
+            overlapped.
+        
+        :param location: Location to check for overlapping
+        :param use_complement: bool True if strand information is used to
+               determine overlapping, False otherwise.
+        :returns: bool True if the given location overlaps this one,
+               False otherwise
+        '''
+        if use_complement and location.complement != self.complement:
+            return False
+        else:
+            return not(self.start > location.end or location.start > self.end)
+    
     def references(self):
         '''
         Returns a list of references to other records used in this location
@@ -346,7 +368,7 @@ class Location(object):
          
         :returns: int Minimum start value of this location
         '''
-        if self.start:
+        if not self.sublocations:
             return self.start
         else:
             m = reduce(lambda x, y: min(x,y), 
@@ -384,13 +406,11 @@ class Location(object):
             location.operator = line[:i]
             #we can split on the comma because these are simple locations
             for part in line[i+1:-1].split(','):
-                s, e = part.split('..')
-                sub_loc = Location()
-                sub_loc.start = int(s)
-                sub_loc.end = int(e)
-                sub_loc.strand = strand
+                sub_loc = _loc(part, strand, tolerance)
                 location.sublocations.append(sub_loc)
 
+            location.start = location.sublocations[0].start
+            location.end = location.sublocations[-1].end
             return location
 
         #Handle the general case with more complex regular expressions
