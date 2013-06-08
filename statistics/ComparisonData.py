@@ -18,3 +18,25 @@ class ComparisonData (object):
         # One koji se ne mogu izracunati jer fale podaci postavi se na None.
         self.cds_comparison = None
         self.organism_comparison = None
+
+        # ----------------------------- Read stats for every organism ----------------------------- #
+
+        # For every organism
+            # Store total number of reported reads
+            # For every read reported in solution XML:
+                # If we potentially reported it -> counter ++
+
+        organism_read_stats = {};
+        total_reads_in_sol = 0;
+        total_reads_from_sol_we_found = 0;
+
+        for organism in solution_data:
+
+            total_reported_reads_in_organism = len(organism.reads)
+
+            for read_id in organism.reads:
+                for read_aln in read_cont.read_repository[read_id]:
+                    pass
+                
+
+
