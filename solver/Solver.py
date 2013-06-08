@@ -61,6 +61,7 @@ class Solver (object):
         stats = SolverStatistics()
 
         # load solution file
+        solution_data = None
         if (solution_file is not None):
             solution_data = loadOrganismData(solution_file)
 
@@ -93,12 +94,7 @@ class Solver (object):
         #        print record.sources[0].db_xref
         # for logging data END
 
-        stats.collectPhaseData(1, record_container, read_container)
-
-        if (solution_file is not None):
-            compData = ComparisonData(solution_data, record_container, read_container)
-            print compData.cds_comparison
-
+        stats.collectPhaseData(1, record_container, read_container, solution_data=solution_data)
 
         # --------------------------- #
         start = time.time()
@@ -128,11 +124,7 @@ class Solver (object):
 
         # --------------------------- #
 
-        stats.collectPhaseData(2, record_container, read_container, cds_aln_container)
-
-        if (solution_file is not None):
-            compData = ComparisonData(solution_data, record_container, read_container, cds_aln_container)
-            print compData.cds_comparison
+        stats.collectPhaseData(2, record_container, read_container, cds_aln_container, solution_data=solution_data)
 
         # --------------------------- #
         start = time.time()
@@ -147,7 +139,7 @@ class Solver (object):
 
         # --------------------------- #
 
-        stats.collectPhaseData(3, record_container, read_container, cds_aln_container)
+        stats.collectPhaseData(3, record_container, read_container, cds_aln_container, solution_data=solution_data)
 
         # --------------------------- #
         start = time.time()
@@ -161,7 +153,7 @@ class Solver (object):
         print ("Determine species - \t\telapsed time: %.2f" % elapsed_time)
         # --------------------------- #
 
-        stats.collectPhaseData(4, record_container, read_container, cds_aln_container, taxid2cdss)        
+        stats.collectPhaseData(4, record_container, read_container, cds_aln_container, taxid2cdss, solution_data=solution_data)        
         
         # --------------------------- #
         start = time.time()
@@ -175,7 +167,7 @@ class Solver (object):
 
         # --------------------------- #
 
-        stats.collectPhaseData(5, record_container, read_container, cds_aln_container)
+        stats.collectPhaseData(5, record_container, read_container, cds_aln_container, solution_data=solution_data)
         
         self.log.info("Proba 0: funkcija generateXML prosla!")
 
@@ -185,7 +177,9 @@ class Solver (object):
             start = time.time()
 
             # Write stats to files
-            stats.writeToFiles(stats_dir)
+            stats.toFile("solver_stats.pickled", stats_dir)
+            st = SolverStatistics(stats_dir+"/"+"solver_stats.pickled")
+            print st
 
             end = time.time()
             elapsed_time = end - start

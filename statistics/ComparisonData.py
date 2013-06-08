@@ -123,7 +123,8 @@ class ComparisonData (object):
             if not (taxon_id is None):
                 # Check if gene was already matched - it should never happen
                 if gene in genes_found:
-                    print "WARNING: In solution comparison: CDS was matched to already matched gene."
+                    #print "WARNING: In solution comparison: CDS was matched to already matched gene."
+                    pass
                 else:
                     genes_found.add(gene)
                     org_stats[taxon_id][1] += 1
@@ -141,7 +142,12 @@ class ComparisonData (object):
         """
         return cds.product == gene.product or cds.gene == gene.name
         
-        
+    def shortStr(self):
+        overlap, total = 0, 0
+        for o, t in self.cds_comparison.values():
+            overlap += o
+            total += t
+        return "Cds overlap: " + str(overlap) + "/" + str(total) + "\n"
                 
             
     
