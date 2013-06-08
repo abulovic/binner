@@ -37,7 +37,7 @@ class StatisticsTest (unittest.TestCase):
         self.read_cont.populate_cdss(self.record_cont)
 #       Initialize and fill up cds aln container
         self.cds_aln_cont = CdsAlnContainer()
-        self.cds_aln_cont.populate(self.read_cont)
+        self.cds_aln_cont.populate(self.read_cont.fetch_all_reads())
 
 
     def testStatistics(self):

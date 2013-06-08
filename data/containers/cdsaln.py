@@ -1,7 +1,5 @@
-from collections            import defaultdict
-
-from data.containers.record import RecordContainer
-from data.alignment         import CdsAlignment
+from collections import defaultdict
+from data.alignment import CdsAlignment
 
 class CdsAlnContainer (object):
     ''' CDS Alignment Container serves as the storage for all 
@@ -15,9 +13,9 @@ class CdsAlnContainer (object):
         self.cds_repository = {}
         self.read2cds       = defaultdict(list)    
 
-    def populate (self, read_cont):
+    def populate (self, reads):
         '''
-        Populates CDS container from read container. 
+        Populates CDS container from reads. 
         Iterates through every read, and for each read it goes through 
         all the read alignments. For each alignment, it goes through all the
         locations where the alignments intersects a CDS.
@@ -28,7 +26,7 @@ class CdsAlnContainer (object):
         particular read using the read identifier as a key.
         '''
         # Iterate through reads
-        for read in read_cont.read_repository.values():
+        for read in reads:
             # skip inactive (potential host) reads
             if read.is_host_read:
                 continue

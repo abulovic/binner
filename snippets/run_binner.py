@@ -16,10 +16,9 @@ from solver.read2cds.GreedySolver               import GreedySolver
 from solver.read2cds.BestScoreSolver            import BestScoreSolver
 from solver.determine_host                      import determine_host
 
-if __name__ == '__main__':
-    log = logging.getLogger(__name__)
-
+def parse_input_parameters():
     argparser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description='Reads input and desscription files and prodices output '
         'file')
     argparser.add_argument('input', help='Input alignment file', 
@@ -28,11 +27,13 @@ if __name__ == '__main__':
                            type=str)
     argparser.add_argument('output', help='Output XML file', 
                            type=str)
-    argparser.add_argument('-sd', '--stats_dir', help='Statistics output directory.'
-                           +' Will be created if it does not exist.',
+    argparser.add_argument('-sd', '--stats_dir', 
+                           help='Statistics output directory. ' +
+                           'Will be created if it does not exit.',
                            type=str, default=None)
-    argparser.add_argument('-sf', '--solution_file', help='Xml solution file.'
-                           +' If specified, comparison of solver phases and solution will be done.',
+    argparser.add_argument('-sf', '--solution_file', 
+                           help='Xml solution file. If specified, comparison ' +
+                           'of solver phases and solution will be done.',
                            type=str, default=None)
     argparser.add_argument('-ts', '--tax_solver', 
                            help='Taxonomy solver type', 
@@ -45,6 +46,18 @@ if __name__ == '__main__':
     argparser.add_argument('-l', '--log_configuration',
                            help='Logging configuration file', type=str,
                            default='config' + os.path.sep + 'logging.ini')
+    mutexgroup = argparser.add_mutually_exclusive_group()
+    mutexgroup.add_argument('--cds-db-connection', 
+        default='mysql+mysqldb://root:root@localhost/unity',
+        help='CDS database connection string')
+    mutexgroup.add_argument('--cds-fasta',
+        help='CDS fasta file location')
+    argparser.add_argument('--ncbitax-db-connection', 
+       default='mysql+mysqldb://root:root@localhost/ncbitax',
+        help='NCBI Taxonomy database connection string')
+    argparser.add_argument('-tt', '--tax-tree', 
+       help='Taxonomy tree location', 
+       default='./ncbi/taxonomy/.data/ncbi_tax_tree')
 
     args = argparser.parse_args()
     
@@ -58,8 +71,20 @@ if __name__ == '__main__':
     if not os.path.exists(os.path.expanduser(args.log_configuration)):
         print "Log configuration file %s doesn't exist" % args.log_configuration
         error = True
+    if args.cds_fasta is not None:
+        if not os.path.exists(os.path.expanduser(args.cds_fasta)):
+            print "CDS Fasta file %s doesn't exists" % args.descrargs.cds_fasta
     if error:
         exit(-1)
+    
+    print args
+    exit(1)
+    return args
+
+if __name__ == '__main__':
+    log = logging.getLogger(__name__)
+
+    args = parse_input_parameters()
 
     # load the logging configuration
     logging.config.fileConfig(args.log_configuration,
@@ -115,9 +140,12 @@ if __name__ == '__main__':
     log.info("Populate record container - elapsed time: %s", 
              timing.humanize(elapsed_time)) 
    
-    solver.generateSolutionXML(read_container, record_container,
-                               args.descr, args.output, args.stats_dir,
-                               args.solution_file)
+    solver.generateSolutionXML(read_container=read_container,
+                               record_container=record_container,
+                               dataset_xml_file=args.descr,
+                               output_solution_filename=args.output,
+                               stats_dir=args.stats_dir,
+                               solution_file=args.solution_file)
     
     processing_delta = timing.end(processing_start)
     log.info("Processing done in %s", 
