@@ -178,8 +178,6 @@ class Solver (object):
 
             # Write stats to files
             stats.toFile("solver_stats.pickled", stats_dir)
-            st = SolverStatistics(stats_dir+"/"+"solver_stats.pickled")
-            print st
 
             end = time.time()
             elapsed_time = end - start
