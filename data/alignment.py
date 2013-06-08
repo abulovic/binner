@@ -18,6 +18,7 @@ class ReadAlnLocation (object):
         self.complement             = complement
         self.active                 = active
         # self.determine_coding_seqs()
+        # Sto je sa .aligned_cdss? Navesti to negdje u komentarima ako postoji!
     
     def set_active (self, active):
         '''
@@ -158,17 +159,16 @@ class ReadAlnLocation (object):
 
     # ---------- #
 
-    def determine_coding_seqs_optimal (self, record_container):
+    def determine_coding_seqs_optimal (self, record):
         ''' Determines which of the CDSs in the record aligned_regions
             aligned to the read.
 
-            @param (RecordContainer) record_container Contains needed records
+            @param (UnityRecord) record Record that is used
             @return                  list of tuples (cds, intersecting_location) if such exist, 
                                      None if record is not available from the database
         '''
         
         self.aligned_cdss = []
-        record = record_container.fetch_record (self.nucleotide_accession)  # Already sorted
 
         # If not possible to fetch a record from the db, return None
         if not record:

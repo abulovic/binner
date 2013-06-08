@@ -28,15 +28,13 @@ class RecordContainer (object):
         assert (hasattr(db_query, 'get_record'))
         self.db_query = db_query
 
-    def populate (self, read_container):
+    def populate (self, versions):
         '''
         Populates the record container with all the records 
         that have produced significant alignments
         '''
-        reads = read_container.fetch_all_reads(format=iter)
-        for read in reads:
-            for read_alignment in read.get_alignments(format=iter):
-                self.fetch_record(read_alignment.nucleotide_accession)
+        for version in versions:
+            self.fetch_record(version)
 
     def fetch_record (self, nucleotide_accession):
         '''
@@ -45,6 +43,13 @@ class RecordContainer (object):
         '''
         self._add_record(nucleotide_accession)
         return self.record_repository[nucleotide_accession]
+    
+    def fetch_existing_record (self, nucleotide_accession):
+        '''
+        @param nucleotide_accession (str)
+        @return UnityRecord (ncbi/db/[genbank/embl])
+        '''
+        return self.record_repository.get(nucleotide_accession)
 
     def fetch_all_records (self, format=iter):
         '''

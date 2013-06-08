@@ -41,29 +41,11 @@ class ReadContainer (object):
         @param record_container (RecordContainer)
         '''
         
-        # -------------------------------- Sorting CDSs ---------------------------- #
-
-        '''
-        start = time.time()
-
-        # Sort cdss of each record by start
-        for record in record_container.record_repository.itervalues():
-            if (not record):
-                continue
-
-            # Is this slow, calculating key each time?
-            record.cdss.sort(key = lambda c : Location.from_location_str(c.location).start)
-
-        end = time.time()
-        elapsed_time = end - start
-        print ("Sorting CDSs - elapsed time: %.2f" % elapsed_time)
-        '''
-
-        # ---------------------------------------------------------------------------- #
-
         for read in self.fetch_all_reads(format=iter):
             for read_alignment in read.get_alignments(format=iter):
-                read_alignment.determine_coding_seqs_optimal(record_container)
+                record = record_container.fetch_existing_record(
+                    read_alignment.nucleotide_accession)
+                read_alignment.determine_coding_seqs_optimal(record)
 
     
     def fetch_read (self, read_id):
@@ -75,6 +57,22 @@ class ReadContainer (object):
 
     def fetch_all_reads (self, format=iter):
         return format(self.read_repository.values())
+    
+    def fetch_all_reads_versions(self):
+        '''
+        Returns an iterator returning all versions of all reads in this
+        container
+        
+        .. note::
+            Duplicate values are not filtered out
+            
+        :returns: iterator returning versions of reads
+        '''
+        reads = self.fetch_all_reads(format=iter)
+        for read in reads:
+            for read_alignment in read.get_alignments(format=iter):
+                yield read_alignment.nucleotide_accession
+        
     
     def _add_read_from_str (self, read_str):
         read = Read.from_read_str(read_str)

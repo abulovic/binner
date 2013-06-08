@@ -13,6 +13,9 @@ from formats.xml_output     import *
 import logging
 import time
 
+from statistics.ComparisonData import ComparisonData
+from statistics.solutiondata import loadOrganismData
+
 class Solver (object):
 
     """ Solver uses other components (determineHost,
@@ -38,50 +41,37 @@ class Solver (object):
 
     # Here should go some User Interface methods like getXML(), solve() and similar
 
-    def generateSolutionXML(self, alignment_file, dataset_xml_file, output_solution_filename, stats_dir):
+    def generateSolutionXML(self, read_container, record_container,
+                            dataset_xml_file, output_solution_filename,
+                            stats_dir=None, solution_file=None):
         ''' Main UI method.
             Generates XML file containing solution.
-            @param (String) alignment_file  Filepath to file containing read alignments.
+            @param (ReadContainer) read_container Container with all the reads
+            @param (RecordContainer) record_container Container with all the 
+                records that will be used in the processing
             @param (String) dataset_xml_file  Filepath to dataset xml file
             @param (String) output_solution_filename  Filepath where xml output is stored.
-            @param (String) stats_dir  Path to directory where statistics will be stored.
+            @param (String) stats_dir  Path to directory where statistics and comparison with solution
+                                       will be stored.
                                        Path must be specified without / at the end.
                                        If directory does not exist, it will be created.
+                                       If None, statistics are not stored.
+            @param (String) solution_file  Path to file containing solution xml.
+                                           If given, all phases will be compared to solution.
         '''
         # Create holder for statistical data
         stats = SolverStatistics()
 
+        # load solution file
+        if (solution_file is not None):
+            solution_data = loadOrganismData(solution_file)
+
         # Initialize containers
-        read_container = ReadContainer()
-        record_container = RecordContainer()
         cds_aln_container = CdsAlnContainer()
         # create taxonomy tree
         tax_tree = TaxTree()
         # Create database access
         db_access = DbQuery()
-        record_container.set_db_access(db_access)
-
-        # --------------------------- #
-        start = time.time()
-
-        # Populate read container - NOT NOW NEEDED
-        read_container.populate_from_aln_file (alignment_file)
-        self.log.info("Read container populated!")
-
-        end = time.time()
-        elapsed_time = end - start
-        print ("Populate read container - \telapsed time: %.2f" % elapsed_time)
-        
-        # --------------------------- #
-        start = time.time()
-
-        # Extract all records from database
-        record_container.populate(read_container)
-        self.log.info("Record container populated!")
-
-        end = time.time()
-        elapsed_time = end - start
-        print ("Populate record container - \telapsed time: %.2f" % elapsed_time)
 
         # --------------------------- #
         start = time.time()
@@ -107,13 +97,18 @@ class Solver (object):
 
         stats.collectPhaseData(1, record_container, read_container)
 
+        if (solution_file is not None):
+            compData = ComparisonData(solution_data, record_container, read_container)
+            print compData.cds_comparison
+
+
         # --------------------------- #
         start = time.time()
 
         # Determine host - updates read container (remove/mark host alignments etc.) - DOES NOT
         # EXIST YET
-        (host_taxid, host_read_cnt, read_container) = self.determine_host(read_container)
-        self.log.info("host_taxid:%s host_read_cnt:%s", str(host_taxid), str(host_read_cnt))
+        (host_taxid, host_read_count) = self.determine_host(read_container)
+        self.log.info("host_taxid:%s host_read_count:%s", str(host_taxid), str(host_read_count))
         if host_taxid:
             self.log.info("Host identified: %d!", (int(host_taxid)))
 
@@ -125,7 +120,7 @@ class Solver (object):
         start = time.time()
 
         # Populate CDS container 
-        cds_aln_container.populate(read_container)
+        cds_aln_container.populate(read_container.fetch_all_reads())
         self.log.info("Cds Aln Container populated!")
 
         end = time.time()
@@ -135,6 +130,10 @@ class Solver (object):
         # --------------------------- #
 
         stats.collectPhaseData(2, record_container, read_container, cds_aln_container)
+
+        if (solution_file is not None):
+            compData = ComparisonData(solution_data, record_container, read_container, cds_aln_container)
+            print compData.cds_comparison
 
         # --------------------------- #
         start = time.time()
@@ -169,7 +168,7 @@ class Solver (object):
         start = time.time()
 
         # Generate XML file
-        self.generateXML (host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree, dataset_xml_file, output_solution_filename)
+        self.generateXML (host_taxid, host_read_count, read_cnt, taxid2cdss, cds_aln_container, db_access, tax_tree, dataset_xml_file, output_solution_filename)
 
         end = time.time()
         elapsed_time = end - start
@@ -181,23 +180,24 @@ class Solver (object):
         
         self.log.info("Proba 0: funkcija generateXML prosla!")
 
-        # --------------------------- #
-        start = time.time()
-
         print stats
-        # Write stats to files
-        stats.writeToFiles(stats_dir)
-
-        end = time.time()
-        elapsed_time = end - start
-        print ("Write stats to file - \t\telapsed time: %.2f" % elapsed_time)
-
         # --------------------------- #
+        if (stats_dir is not None):
+            start = time.time()
+
+            # Write stats to files
+            stats.writeToFiles(stats_dir)
+
+            end = time.time()
+            elapsed_time = end - start
+            print ("Write stats to file - \t\telapsed time: %.2f" % elapsed_time)
+        # --------------------------- #
+
         pass
 
 
 
-    def generateXML (self, host_taxid, host_read_cnt, read_cnt, taxid2cdss, cds_aln_container,  db_access, tax_tree, dataset_xml_file, output_solution_filename):
+    def generateXML (self, host_taxid, host_read_count, read_cnt, taxid2cdss, cds_aln_container,  db_access, tax_tree, dataset_xml_file, output_solution_filename):
 
 #        tax_tree     = TaxTree()
 
@@ -206,8 +206,8 @@ class Solver (object):
         all_organisms = []
 
         #-------------------------------- HOST -------------------------------#
-        host_relative_amount = float(host_read_cnt)/read_cnt
-        host = Organism (host_read_cnt, host_relative_amount, None, None, "Host",
+        host_relative_amount = float(host_read_count)/read_cnt
+        host = Organism (host_read_count, host_relative_amount, None, None, "Host",
                  None, None, [], [], [], is_host=True)
         all_organisms.append(host)
 
@@ -260,97 +260,4 @@ class Solver (object):
         xml = XMLOutput(dataset, all_organisms, output_solution_filename) 
         xml.xml_output();
 
-
-
-
-
-    def cds_to_species(cds):
-        """ Map given cds to the species it belongs to.
-
-            Each cds has the record_id of record it belongs to, and each record
-            has gi which leads us to taxid (ncbitax database). 
-            By knowing taxid we can easily determine species by looking into
-            ncbitax database.
-            
-            Conclusion procedure:
-                CDS -> record_id -> RECORD -> gi -> taxid -> 
-                
-
-            @param (cds)cds     input CDS
-            @return (string)    the species to which given cds belongs to.
-
-
-        """
-
-    # -------------------------------------------- The following code will not be here ------------------------------------------ #
-    
-    # Determines reads which belong to the host and identifies it.
-    # Removes host reads from the ReadContainer - they are not needed in the
-    # following phases.
-    #
-    # Precondition:     ReadContainer is populated
-    # Postcondition:    Host reads are removed from ReadContainer
-    #
-    # @return   Host, not defined yet how - just string with name, or object
-    #                                       with some additional data?
-    #
-    def determineHost():
-
-        # Implementation idea: 
-        #
-        # GI (genome index) of reads that belong to host directs us to
-        # eukaryotes - as host is guarranteed to be an animal (by Innocentive),
-        # this is the right way to determine host reads.
-        # 
-        # Pseudocode:
-        #
-        # for read in allReads:
-        #   if (read.GI) is Eukaryote - not sure how to do this step, some
-        #                               database should be queried with this read.GI
-        #
-        #       remember which Eukaryote - so we can determine host
-        #
-        #       remove read from readContainer
-        #
-    
-        pass
-        
-    # Determines proteins (products) which are produced from CDSs of non-host reads.
-    # 
-    # Precondition: CdsAlnContainer is populated (or this is done in this method as
-    #               a first thing)
-    #   
-    # @return   List of products (objects, strings or sth)
-    #
-    def determineProducts():
-
-        # Implementation idea:
-        #
-        # Firstly, for each CDSAln is calculated its score (e.g. coverage)
-        # Then, the following procedure is repeated:
-        #
-        #   REPEAT:
-        #       bestCDS = getBestCDS()
-        #       updateCDSs(bestCDS)
-        #
-        #   UNTIL all reads are "used" - each is assigned to one CDS
-
-        pass
-
-    # Gets currenly best CDS from CdsAlnContainer
-    #
-    def getBestCDS():
-        pass
-
-    # Updates all other CDSs after the best CDS is acquired:
-    #   Remove reads from bestCDS from all other CDSs
-    #   Update value (e.g coverage) for each CDS
-    #
-    def updateCDSs(bestCDS):
-        pass
-
-    # Removes reads from bestCDS from all other CdsAlns
-    #
-    def removeReadsFromAll(bestCDS):
-        pass
 
