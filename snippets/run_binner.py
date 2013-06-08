@@ -77,8 +77,6 @@ def parse_input_parameters():
     if error:
         exit(-1)
     
-    print args
-    exit(1)
     return args
 
 if __name__ == '__main__':

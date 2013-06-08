@@ -1,5 +1,7 @@
 import statistics as stats
+from ComparisonData import ComparisonData
 import cPickle as pickle
+from datetime import datetime
 import os
 
 
@@ -26,14 +28,11 @@ class StatData:
     with no active aligned regions.
     (int) num_cds_alns  Only in phases 2, 3, 4.
     Number of active aligned regions in all cdss.
-    (dict) taxid2cdss  Only in phase 4.
-                       Output of taxonomy solver.
-                       Key is referent taxid, value is list of CdsAlignment that map to that taxid.
     """
     
 
     def __init__(self):
-        self.time                   = None    # TODO: should set itself automatically in this line.
+        self.time                   = datetime.time(datetime.now())
 
         self.num_missing_records    = None
         self.num_reads              = None
@@ -48,20 +47,18 @@ class StatData:
         self.num_cdss_with_no_alns  = None
         self.num_cds_alns           = None
 
-        self.taxid2cdss             = None
-
     def shortStr(self):
         """ Returns string representation containing only simple sttributes,
         which can be easily read.
         """
         res = ""
-        for attr in ["num_reads", "num_reads_with_no_alns", 
+        for attr in ["time", "num_reads", "num_reads_with_no_alns", 
                      "num_read_alns", "num_host_read_alns",
                      "num_cdss", "num_cdss_with_no_alns",
                      "num_cds_alns", "num_missing_records"]:
             if getattr(self, attr) != None:
                 res += attr + ": " + str(getattr(self, attr)) + "\n"
-        for attr in ["proteins", "taxid2cdss"]:
+        for attr in ["proteins"]:
             if getattr(self, attr) != None:
                 res += "num_" + attr + ": " + str(len(getattr(self, attr))) + "\n"
         return res
@@ -84,6 +81,8 @@ class SolverStatistics:
     """ Stores statistical data about solver, for different phases (5 of them).
     (dict) phaseData  Dictionary where key is phase number(int) and value is (StatData). 
                       phaseData[i] contains statistical data from phase i.
+    (dict) comparison_data  Dictionary where key is phase number(int) and 
+                            value is (ComparisonData). 
     """
     phaseDescr = ("after preprocess", "after determine host", "after Read2cdsSolver", 
                   "after TaxonomySolver", "after generating xml output")
@@ -94,14 +93,15 @@ class SolverStatistics:
         """
         if (filepath == None):
             self.phaseData = dict()
+            self.comparison_data = dict()
         else:
             infile = open(filepath, 'r')
-            self.phaseData = pickle.load(infile)
-         
+            self.phaseData, self.comparison_data = pickle.load(infile)
+            
 
 
     def collectPhaseData(self, phase, record_cont, read_cont, cds_aln_cont=None,
-                         taxid2cdss=None):
+                         taxid2cdss=None, solution_data=None):
         """ Collects statistical data specific for certain phase in Solver.
         Data for specific phase is stored in .phaseData[phase].
         There are 5 phases, which means that this functions should be called 5 times during Solver.
@@ -116,6 +116,9 @@ class SolverStatistics:
         @param (ReadContainer) read_cont
         @param (CdsAlnContainer) cds_aln_cont  Should and can be None for phase 1.
         @param (dict) taxid2cdss  Only in phase 4.
+        @param ([Organism]) solution_data  Data to be compared against.
+                                           Comparison will be stored in comparison_data.
+
         """        
         if (cds_aln_cont == None and phase != 1):
             raise ValueError("cds_aln_container can be None only for phase 1!")
@@ -138,34 +141,40 @@ class SolverStatistics:
             statData.num_cdss = stats.num_cdss(cds_aln_cont)
             statData.num_cdss_with_no_alns = stats.num_cdss_with_no_alns(cds_aln_cont)
             statData.num_cds_alns = stats.num_active_aligned_regions(cds_aln_cont)
-        if phase == 4:
-            statData.taxid2cdss = taxid2cdss
 
         self.phaseData[phase] = statData
 
+        if solution_data is not None:
+            self.comparison_data[phase] = ComparisonData(solution_data, record_cont, 
+                                                         read_cont, cds_aln_cont, taxid2cdss)
 
 
-    def toFile(self, filepath):
+    def toFile(self, filepath, directory=""):
         """ Statistical data is saved to file using pickle.
         It can be reconstructed from that file if filepath
         is passed to constructor.
         @param (string) filepath
+        @param (string) directory  Path to directory, no delimiter at end.
         """
+        if directory != "":
+            if not os.path.isdir(directory):
+                os.makedirs(directory)
+            filepath = directory + "/" + filepath
         outfile = open(filepath, 'w')
-        pickle.dump(self.phaseData, outfile)
+        pickle.dump((self.phaseData, self.comparison_data), outfile)
 
     def __str__(self):
         res = ""
         for (phase, statData) in self.phaseData.items():
             res += "Phase " + str(phase) + " (" + SolverStatistics.phaseDescr[phase-1] + "):\n"
             res += statData.shortStr()
+            if phase in self.comparison_data:
+                res += self.comparison_data[phase].shortStr()
         return res
 
     def writeToFiles(self, stats_dir):
         """ Creates a directory and in it one file for each phase.
         In each file statistic data for that phase is written in human readable format.
-        Also creates file solver_stats.pickled in that directory whose filepath can 
-        then be passed to constructor of SolverStatistics.
         @param (String) stats_dir Directory name (Can be path).
         """
         if not os.path.isdir(stats_dir):
@@ -174,5 +183,3 @@ class SolverStatistics:
             txt_file = open(stats_dir + "/phase_" + str(phase) + ".txt", "w")
             txt_file.write(str(statData))
             txt_file.close()
-        self.toFile(stats_dir + "/solver_stats.pickled")
-
