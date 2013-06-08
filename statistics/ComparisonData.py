@@ -26,32 +26,26 @@ class ComparisonData (object):
 
         # ----------------------------- Read stats for every organism ----------------------------- #
 
-        self.db_query = DbQuery()
+        db_query = DbQuery()
         # For every organism
             # Store total number of reported reads
             # For every read reported in solution XML:
                 # If we potentially reported it -> counter ++
 
         organism_read_stats = {};
-        total_reads_in_sol            = 0;
-        total_reads_from_sol_we_found = 0;
-
         for organism in solution_data:
 
             total_reported_reads_in_organism = len(organism.reads)
             reads_we_found = 0
 
             for read_id in organism.reads:
-                gis     = [ read_aln.genome_index for read_cont.read_repository[read_id] ]
+                gis     = [ read_aln.genome_index for read_aln in read_cont.read_repository[read_id].alignment_locations ]
                 tax_ids = db_query.get_taxids(gis, list)
 
                 if organism.taxon_id in tax_ids:
                     reads_we_found += 1
 
             organism_read_stats[organism.taxon_id] =  [total_reported_reads_in_organism, reads_we_found]
-
-            total_reads_in_sol            += total_reported_reads_in_organism
-            total_reads_from_sol_we_found += reads_we_found
 
         self.read_comparison = organism_read_stats
 
@@ -147,7 +141,15 @@ class ComparisonData (object):
         for o, t in self.cds_comparison.values():
             overlap += o
             total += t
-        return "Cds overlap: " + str(overlap) + "/" + str(total) + "\n"
+        ret = "Cds overlap: " + str(overlap) + "/" + str(total) + "\n"
+
+        overlap, total = 0, 0
+        for o, t in self.read_comparison.values():
+            overlap += o
+            total += t
+        ret = "Read overlap: " + str(overlap) + "/" + str(total) + "\n"
+
+        return ret
                 
             
     
