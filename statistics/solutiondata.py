@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-import sys,os 
+import sys,os
 sys.path.append(os.getcwd())
 
 from   utils import enum
@@ -11,9 +11,9 @@ class Organism (object):
     http://commondatastorage.googleapis.com/solverfiles/Organisms_XML_Schema_overview.pdf
     '''
 
-    organismType = enum(GENUS='genus', 
-                        GENUS_SPECIES='genus_species', 
-                        GENUS_SPECIES_STRAIN='genus_species_strain', 
+    organismType = enum(GENUS='genus',
+                        GENUS_SPECIES='genus_species',
+                        GENUS_SPECIES_STRAIN='genus_species_strain',
                         ORGANISM_NAME='organism_name',
                         NEAREST_NEIGHBOR='nearest_neighbor'
                         )
@@ -27,7 +27,7 @@ class Organism (object):
         :param taxonomy: list of taxonomical node names (lineage)
         :param type:  (str) level of taxonomic assignment (check organismType)
         :param reads: list of read IDs or None for Host
-        :param genes: list of gene objects mapped to this organism or None 
+        :param genes: list of gene objects mapped to this organism or None
                       if there are no reported genes
         '''
 
@@ -60,7 +60,7 @@ class Organism (object):
                 species, strain, nearest_neighbor, reads, genes)
         return organism
 
-        
+
     @classmethod
     def determine_taxonomy(org, organism_node):
         '''
@@ -70,7 +70,11 @@ class Organism (object):
         :rtype: tuple(tax_id(int), taxonomy(list))
         '''
         taxonomy_node = organism_node.find('taxonomy')
-        taxon_id = eval(taxonomy_node.attrib['taxon_id'])
+        try:
+            taxon_id = eval(taxonomy_node.attrib['taxon_id'])
+        except KeyError:
+            # so it is a nearest neighbor node
+            log.info('No taxon ID info for organism with taxonomy %s' % taxonomy_node.text)
         taxonomy_str = taxonomy_node.text
         if taxonomy_str.endswith('.'):
             taxonomy_str = taxonomy_str[0:-1]
@@ -123,7 +127,7 @@ class Organism (object):
         * genus, species, strain
 
         :param organism_node: xml.etree.ElementTree.Element intance
-        :rtype: tuple(organism_type, names). Organism type is value from 
+        :rtype: tuple(organism_type, names). Organism type is value from
                 organismType enum, and names is dictionary with
                 string keys: 'nearestNeighbor', 'organismName', 'strain',
                 'species', 'genus'
@@ -136,8 +140,8 @@ class Organism (object):
         nearest_neighbor = None
         organism_name    = None
         strain           = None
-        species          = None 
-        genus            = None 
+        species          = None
+        genus            = None
 
         # ruzne sifrice
         if neighbor_node is not None:
@@ -158,7 +162,7 @@ class Organism (object):
                         organism_type = org.organismType.GENUS
                     else:
                         organism_type = org.organismType.ORGANISM_NAME
-        names = {'nearestNeighbor':nearest_neighbor, 'organismName':organism_name, 
+        names = {'nearestNeighbor':nearest_neighbor, 'organismName':organism_name,
                 'strain': strain, 'species':species, 'genus':genus}
         return (organism_type, names)
 
@@ -173,7 +177,7 @@ class Gene (object):
     http://commondatastorage.googleapis.com/solverfiles/Organisms_XML_Schema_overview.pdf
     '''
 
-    attributes = ['protein_id', 
+    attributes = ['protein_id',
                   'locus_tag',
                   'product',
                   'ref_name',
