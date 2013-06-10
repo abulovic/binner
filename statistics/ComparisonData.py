@@ -12,8 +12,7 @@ class ComparisonData (object):
         one of solver phases.
     """
 
-    def __init__(self, solution_data, record_cont, read_cont, cds_aln_cont=None,
-                 taxid2cdss=None):
+    def __init__(self, solution_data, record_cont=None, read_cont=None, cds_aln_cont=None, taxid2cdss=None, solver_data = None):
         """ Takes solution data and data that represents current state of solver,
         compares them and stores comparison result in self.
         @param ([Organism]) solution_data  Contains solution data.
@@ -25,42 +24,55 @@ class ComparisonData (object):
 
         # Ovdje izracunati rezultate usporedbe i pospremiti u atribute.
         # One koji se ne mogu izracunati jer fale podaci postavi se na None.
-        self.organism_comparison = None
+        self.taxid2cdss_comparison = None
+        self.cds_comparison = None
+        self.taxid2reads_comparison = None
+        self.read_comparison = None
 
-        # ----------------------------- Read stats for every organism ----------------------------- #
+        if read_cont is not None:
+            # ----------------------------- Read stats for every organism ----------------------------- #
 
-        db_query = DbQuery()
-        # For every organism
-            # Store total number of reported reads
-            # For every read reported in solution XML:
-                # If we potentially reported it -> counter ++
+            db_query = DbQuery()
+            # For every organism
+                # Store total number of reported reads
+                # For every read reported in solution XML:
+                    # If we potentially reported it -> counter ++
 
-        organism_read_stats = {};
-        for organism in solution_data:
+            organism_read_stats = {};
+            for organism in solution_data:
 
-            total_reported_reads_in_organism = len(organism.reads)
-            reads_we_found = 0
+                total_reported_reads_in_organism = len(organism.reads)
+                reads_we_found = 0
 
-            for read_id in organism.reads:
-                gis     = [ read_aln.genome_index for read_aln in read_cont.read_repository[read_id].alignment_locations ]
-                tax_ids = db_query.get_taxids(gis, list)
+                for read_id in organism.reads:
+                    gis     = [ read_aln.genome_index for read_aln in read_cont.read_repository[read_id].alignment_locations ]
+                    tax_ids = db_query.get_taxids(gis, list)
 
-                if organism.taxon_id in tax_ids:
-                    reads_we_found += 1
+                    if organism.taxon_id in tax_ids:
+                        reads_we_found += 1
 
-            organism_read_stats[organism.taxon_id] =  [reads_we_found, total_reported_reads_in_organism]
+                organism_read_stats[organism.taxon_id] =  [reads_we_found, total_reported_reads_in_organism]
 
-        self.read_comparison = organism_read_stats
+            self.read_comparison = organism_read_stats
 
         # ---------------------------------------------------------------------------------------- #
 
+        if (cds_aln_cont is not None) or (read_cont is not None):
+            self.cds_comparison = ComparisonData.cds_comparison(solution_data, cds_aln_cont, read_cont)
 
-        self.cds_comparison = ComparisonData.cds_comparison(solution_data, cds_aln_cont, read_cont)
+        if taxid2cdss is not None:
+            self.taxid2cdss_comparison = ComparisonData.taxid2cdss_comparison(solution_data, taxid2cdss)
+
+        if solver_data is not None:
+            self.taxid2cdss_comparison = ComparisonData.taxid2cdss_orgs_vs_orgs(solution_data, solver_data)
+
 
     @classmethod
     def taxid2cdss_comparison(cls, solution_data, taxid2cdss):
-        """
-        TO BE IMPLEMENTED
+        """ Does comparison of taxid2cdss mappings (final result of solver).
+        @return (dict) Key: taxon_id (Which means each entry is one organism).
+                       Value: [num_cds_in_solution, num_cds_that_we_reported,
+                               overlap].
         """
         #---- Transform solution_data to be suitable for searching ----#
         # Dictionary where each entry represents one gene:
@@ -77,16 +89,41 @@ class ComparisonData (object):
 
         # This is what we will calculate.
         # Key is taxon_id, value is [number of cds in solution,
+        # num of cds that we reported,
         # num of cds that we reported for that organism that are in solution]
-        org_stats = dict() 
+        org_stats = dict() # contains data about union of organisms from our solution and correct solution
         for org in solution_data:
-            org_stats[org.taxon_id] = [len(org.genes), 0]
+            if org.taxon_id in org_stats:
+                org_stats[org.taxon_id][0] = len(org.genes)
+            else:
+                org_stats[org.taxon_id] = [len(org.genes), 0, 0]
+        for taxon_id, cds_alns in taxid2cdss.items():
+            if taxon_id in org_stats:
+                org_stats[taxon_id][1] = len(cds_alns)
+            else:
+                org_stats[taxon_id] = [0, len(cds_alns), 0]
 
 
-        for taxid, cdss in taxid2cdss.items():
+        for taxon_id, cdss in taxid2cdss.items():
             genes_found = set()
-            for cds in cdss:
-                pass
+            for cds_aln in cds_alns:
+                cds = cds_aln.cds
+                gene_taxon_id, gene = None, None
+                # find gene for which cds.product == gene.product
+                #                     or cds.gene == gene.name
+                if cds.product in gene_product2org:
+                    gene_taxon_id, gene = gene_product2org[cds.product]
+                if cds.gene    in gene_name2org:
+                    gene_taxon_id, gene = gene_name2org[cds.gene]
+                if gene_taxon_id == taxon_id:
+                    if gene in genes_found:
+                        log.info("In solution comparison: CDS was matched to already matched gene.")
+                        pass
+                    else:
+                        genes_found.add(gene)
+                        org_stats[taxon_id][2] += 1
+
+        return org_stats
                 
             
 
@@ -128,12 +165,12 @@ class ComparisonData (object):
         # then from read_cont).
         cdss = []
         # Fetch active cdss from cds aln container.
-        if (cds_aln_cont is not None):
+        if cds_aln_cont is not None:
             for cds_aln in cds_aln_cont.cds_repository.values():
                 if cds_aln.is_active():
                     cdss.append(cds_aln.cds)
         # Or fetch all cdss from read container.
-        elif (read_cont is not None):
+        elif read_cont is not None:
             for read in read_cont.read_repository.values():
                 for read_aln in read.alignment_locations:
                     for cds_loc in read_aln.aligned_cdss:
@@ -151,7 +188,7 @@ class ComparisonData (object):
                 taxon_id, gene = gene_product2org[cds.product]
             if cds.gene    in gene_name2org:
                 taxon_id, gene = gene_name2org[cds.gene]
-            if not (taxon_id is None):
+            if taxon_id is not None:
                 if gene in genes_found:
                     log.info("In solution comparison: CDS was matched to already matched gene.")
                     pass
@@ -172,18 +209,80 @@ class ComparisonData (object):
         """
         return cds.product == gene.product or cds.gene == gene.name
         
-    def shortStr(self):
-        overlap, total = 0, 0
-        for o, t in self.cds_comparison.values():
-            overlap += o
-            total += t
-        ret = "Cds overlap: " + str(overlap) + "/" + str(total) + "\n"
 
-        overlap, total = 0, 0
-        for o, t in self.read_comparison.values():
-            overlap += o
-            total += t
-        ret += "Read overlap: " + str(overlap) + "/" + str(total) + "\n"
+    @classmethod
+    def taxid2cdss_orgs_vs_orgs(cls, solution_data, solver_data):
+        #---- Transform solution_data to be suitable for searching ----#
+        # Dictionary where each entry represents one gene:
+        # Key is gene.product, value is (org.taxon_id, gene)
+        gene_product2org = dict() 
+        # Dictionary where each entry represents one gene:
+        # Key is gene.name, value is (org.taxon_id, gene)
+        gene_name2org = dict()
+        for org in solution_data:
+            for gene in org.genes:
+                gene_product2org[gene.product]  = (org.taxon_id, gene)
+                gene_name2org[gene.name] = (org.taxon_id, gene)
+        #--------------------------------------------------------------#
+
+        # This is what we will calculate.
+        # Key is taxon_id, value is [number of cds in solution,
+        # num of cds that we reported,
+        # num of cds that we reported for that organism that are in solution]
+        org_stats = dict() # contains data about union of organisms from our solution and correct solution
+        for org in solution_data:
+            if org.taxon_id in org_stats:
+                org_stats[org.taxon_id][0] = len(org.genes)
+            else:
+                org_stats[org.taxon_id] = [len(org.genes), 0, 0]
+        for org in solver_data:
+            if org.taxon_id in org_stats:
+                org_stats[org.taxon_id][1] = len(org.genes)
+            else:
+                org_stats[org.taxon_id] = [0, len(org.genes), 0]
+
+        for org in solver_data:
+            taxon_id = org.taxon_id
+            genes_found = set()
+            for gene in org.genes:
+                solution_taxon_id, solution_gene = None, None
+                # find gene for which gene.product == gene.product
+                #                     or gene.name == gene.name
+                if gene.product in gene_product2org:
+                    solution_taxon_id, solution_gene = gene_product2org[gene.product]
+                if gene.name    in gene_name2org:
+                    solution_taxon_id, solution_gene = gene_name2org[gene.name]
+                if solution_taxon_id == taxon_id:
+                    if solution_gene in genes_found:
+                        log.info("In solution comparison: CDS was matched to already matched gene.")
+                        pass
+                    else:
+                        genes_found.add(solution_gene)
+                        org_stats[taxon_id][2] += 1
+
+        return org_stats
+
+
+    def shortStr(self):
+        ret = ""
+        if self.cds_comparison is not None:
+            overlap, total = 0, 0
+            for o, t in self.cds_comparison.values():
+                overlap += o
+                total += t
+            ret += "Cds overlap: " + str(overlap) + "/" + str(total) + "\n"
+
+        if self.read_comparison is not None:
+            overlap, total = 0, 0
+            for o, t in self.read_comparison.values():
+                overlap += o
+                total += t
+            ret += "Read overlap: " + str(overlap) + "/" + str(total) + "\n"
+
+        if self.taxid2cdss_comparison is not None:
+            ret += "taxid2cdss: \n"
+            for taxon_id, comp_data in self.taxid2cdss_comparison.items():
+                ret += "    " + str(taxon_id) + ":  " + str(comp_data) + "\n"
 
         return ret
                 
