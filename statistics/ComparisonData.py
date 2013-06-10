@@ -12,7 +12,7 @@ class ComparisonData (object):
         one of solver phases.
     """
 
-    def __init__(self, solution_data, record_cont=None, read_cont=None, cds_aln_cont=None, taxid2cdss=None, solver_data = None):
+    def __init__(self):
         """ Takes solution data and data that represents current state of solver,
         compares them and stores comparison result in self.
         @param ([Organism]) solution_data  Contains solution data.
@@ -29,43 +29,7 @@ class ComparisonData (object):
         self.taxid2reads_comparison = None
         self.read_comparison = None
 
-        if read_cont is not None:
-            # ----------------------------- Read stats for every organism ----------------------------- #
-
-            db_query = DbQuery()
-            # For every organism
-                # Store total number of reported reads
-                # For every read reported in solution XML:
-                    # If we potentially reported it -> counter ++
-
-            organism_read_stats = {};
-            for organism in solution_data:
-
-                total_reported_reads_in_organism = len(organism.reads)
-                reads_we_found = 0
-
-                for read_id in organism.reads:
-                    gis     = [ read_aln.genome_index for read_aln in read_cont.read_repository[read_id].alignment_locations ]
-                    tax_ids = db_query.get_taxids(gis, list)
-
-                    if organism.taxon_id in tax_ids:
-                        reads_we_found += 1
-
-                organism_read_stats[organism.taxon_id] =  [reads_we_found, total_reported_reads_in_organism]
-
-            self.read_comparison = organism_read_stats
-
-        # ---------------------------------------------------------------------------------------- #
-
-        if (cds_aln_cont is not None) or (read_cont is not None):
-            self.cds_comparison = ComparisonData.cds_comparison(solution_data, cds_aln_cont, read_cont)
-
-        if taxid2cdss is not None:
-            self.taxid2cdss_comparison = ComparisonData.taxid2cdss_comparison(solution_data, taxid2cdss)
-
-        if solver_data is not None:
-            self.taxid2cdss_comparison = ComparisonData.taxid2cdss_orgs_vs_orgs(solution_data, solver_data)
-
+        
 
     @classmethod
     def taxid2cdss_comparison(cls, solution_data, taxid2cdss):
@@ -125,6 +89,32 @@ class ComparisonData (object):
 
         return org_stats
                 
+    @classmethod
+    def read_comparison(cls, solution_data, read_cont):
+        """
+        """
+        db_query = DbQuery()
+        # For every organism
+        # Store total number of reported reads
+        # For every read reported in solution XML:
+        # If we potentially reported it -> counter ++
+
+        organism_read_stats = {};
+        for organism in solution_data:
+
+            total_reported_reads_in_organism = len(organism.reads)
+            reads_we_found = 0
+
+            for read_id in organism.reads:
+                gis     = [ read_aln.genome_index for read_aln in read_cont.read_repository[read_id].alignment_locations ]
+                tax_ids = db_query.get_taxids(gis, list)
+
+                if organism.taxon_id in tax_ids:
+                    reads_we_found += 1
+
+            organism_read_stats[organism.taxon_id] =  [reads_we_found, total_reported_reads_in_organism]
+
+        return organism_read_stats
             
 
     @classmethod
@@ -263,6 +253,28 @@ class ComparisonData (object):
         return org_stats
 
 
+    @classmethod
+    def solution_data_vs_solution_data(cls, solution_data1, solution_data2):
+        cd = ComparisonData()
+        
+        cd.taxid2cdss_comparison = ComparisonData.taxid2cdss_orgs_vs_orgs(solution_data1, solution_data2)
+
+        return cd
+
+
+    @classmethod
+    def solution_data_vs_solver(cls, solution_data, record_cont, read_cont, 
+                                cds_aln_cont=None, taxid2cdss=None):
+        cd = ComparisonData()
+
+        cd.read_comparison = ComparisonData.read_comparison(solution_data, read_cont)
+        cd.cds_comparison = ComparisonData.cds_comparison(solution_data, cds_aln_cont, read_cont)
+        if taxid2cdss is not None:
+            cd.taxid2cdss_comparison = ComparisonData.taxid2cdss_comparison(solution_data, taxid2cdss)
+
+        return cd
+
+
     def shortStr(self):
         ret = ""
         if self.cds_comparison is not None:
@@ -286,5 +298,7 @@ class ComparisonData (object):
 
         return ret
                 
+    def __str__(self):
+        return self.shortStr()
             
     

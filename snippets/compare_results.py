@@ -38,6 +38,6 @@ if __name__ == '__main__':
     solution_data = loadOrganismData(args.solution_xml)
     solver_data = loadOrganismData(args.solver_xml)
 
-    cd = ComparisonData(solution_data=solution_data, solver_data=solver_data)
+    cd = ComparisonData.solution_data_vs_solution_data(solution_data, solver_data)
 
     print cd.shortStr()

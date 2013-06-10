@@ -66,7 +66,7 @@ class StatData:
 
     def __str__(self):
         res = self.shortStr()
-        for attr in ["proteins", "taxid2cdss"]:
+        for attr in ["proteins"]:
             if getattr(self, attr) != None:
                 res += attr + ": " + str(getattr(self, attr)) + "\n"
         res += "\n// ---------------------- Number of alignments to each record -------------------- //\n\n"
@@ -145,8 +145,7 @@ class SolverStatistics:
         self.phaseData[phase] = statData
 
         if solution_data is not None:
-            self.comparison_data[phase] = ComparisonData(solution_data, record_cont, 
-                                                         read_cont, cds_aln_cont, taxid2cdss)
+            self.comparison_data[phase] = ComparisonData.solution_data_vs_solver(solution_data, record_cont, read_cont, cds_aln_cont, taxid2cdss)
 
 
     def toFile(self, filepath, directory=""):
@@ -183,4 +182,7 @@ class SolverStatistics:
         for (phase, statData) in self.phaseData.items():
             txt_file = open(stats_dir + "/phase_" + str(phase) + ".txt", "w")
             txt_file.write(str(statData))
+            if phase in self.comparison_data:
+                txt_file.write("---- Comparison data ----\n")
+                txt_file.write(str(self.comparison_data[phase]))
             txt_file.close()
