@@ -22,11 +22,11 @@ class ComparisonData (object):
         @param (dict) taxid2cdss  Result of TaxonomySolver
         """
 
-        self.taxid2cdss_comparison = None
-        self.cds_comparison = None
+        self.taxid2cdss_comparison  = None
+        self.cds_comparison         = None
         self.taxid2reads_comparison = None
-        self.read_comparison = None
-
+        self.read_comparison        = None
+        self.taxid_comparison       = None
         
 
     @classmethod
@@ -110,7 +110,7 @@ class ComparisonData (object):
                 if organism.taxon_id in tax_ids:
                     reads_we_found += 1
 
-            organism_read_stats[organism.taxon_id] =  [reads_we_found, total_reported_reads_in_organism]
+            organism_read_stats[organism.taxon_id] =  [total_reported_reads_in_organism, reads_we_found]
 
         return organism_read_stats
             
@@ -348,20 +348,20 @@ class ComparisonData (object):
         ret = ""
         if self.cds_comparison is not None:
             overlap, total = 0, 0
-            for o, t in self.cds_comparison.values():
+            for t, o in self.cds_comparison.values():
                 overlap += o
                 total += t
-            ret += "Cdss: (matched, total in solution)" + str(overlap) + "/" + str(total) + "\n"
+            ret += "Cdss (matched, total in solution): " + str(overlap) + "/" + str(total) + "\n"
 
         if self.read_comparison is not None:
             overlap, total = 0, 0
-            for o, t in self.read_comparison.values():
+            for t, o in self.read_comparison.values():
                 overlap += o
                 total += t
-            ret += "Reads: (matched, total in solution) " + str(overlap) + "/" + str(total) + "\n"
+            ret += "Reads (matched, total in solution): " + str(overlap) + "/" + str(total) + "\n"
 
         if self.taxid2reads_comparison is not None:
-            ret += """taxid2reads:  taxid: 
+            ret += """taxid2reads:  taxid, 
                 (# reads in solution,
                  # reads in solver output,
                  # reads from solver that have match in solution under same organism, 
@@ -371,7 +371,7 @@ class ComparisonData (object):
                 ret += "    " + str(taxon_id) + ":  " + str(comp_data) + "\n"
 
         if self.taxid2cdss_comparison is not None:
-            ret += """taxid2cdss:  taxid: 
+            ret += """taxid2cdss:  taxid, 
                 (# cdss in solution,
                  # cdss in solver output,
                  # cdss from solver that have match in solution under same organism, 
@@ -381,7 +381,7 @@ class ComparisonData (object):
                 ret += "    " + str(taxon_id) + ":  " + str(comp_data) + "\n"
 
         if self.taxid_comparison is not None:
-            ret += "Organisms: (# orgs in solution, # orgs in solver output, # orgs that are in both)\n" + str(self.taxid_comparison) + "\n"
+            ret += "Organisms (# orgs in solution, # orgs in solver output, # orgs that are in both): " + str(self.taxid_comparison) + "\n"
 
         return ret
                 
