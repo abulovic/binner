@@ -22,8 +22,6 @@ class ComparisonData (object):
         @param (dict) taxid2cdss  Result of TaxonomySolver
         """
 
-        # Ovdje izracunati rezultate usporedbe i pospremiti u atribute.
-        # One koji se ne mogu izracunati jer fale podaci postavi se na None.
         self.taxid2cdss_comparison = None
         self.cds_comparison = None
         self.taxid2reads_comparison = None
@@ -218,18 +216,20 @@ class ComparisonData (object):
         # This is what we will calculate.
         # Key is taxon_id, value is [number of cds in solution,
         # num of cds that we reported,
-        # num of cds that we reported for that organism that are in solution]
+        # num of cds that we totally correctly reported,
+        # num of cds that we reported correctly but to wrong taxon_id,
+        # num of cds that we reported wrong]
         org_stats = dict() # contains data about union of organisms from our solution and correct solution
         for org in solution_data:
             if org.taxon_id in org_stats:
                 org_stats[org.taxon_id][0] = len(org.genes)
             else:
-                org_stats[org.taxon_id] = [len(org.genes), 0, 0]
+                org_stats[org.taxon_id] = [len(org.genes), 0, 0, 0, 0]
         for org in solver_data:
             if org.taxon_id in org_stats:
                 org_stats[org.taxon_id][1] = len(org.genes)
             else:
-                org_stats[org.taxon_id] = [0, len(org.genes), 0]
+                org_stats[org.taxon_id] = [0, len(org.genes), 0, 0, 0]
 
         for org in solver_data:
             taxon_id = org.taxon_id
@@ -242,22 +242,91 @@ class ComparisonData (object):
                     solution_taxon_id, solution_gene = gene_product2org[gene.product]
                 if gene.name    in gene_name2org:
                     solution_taxon_id, solution_gene = gene_name2org[gene.name]
-                if solution_taxon_id == taxon_id:
+                if solution_taxon_id is not None:
                     if solution_gene in genes_found:
                         log.info("In solution comparison: CDS was matched to already matched gene.")
                         pass
                     else:
                         genes_found.add(solution_gene)
-                        org_stats[taxon_id][2] += 1
+                        if solution_taxon_id == taxon_id:
+                            org_stats[taxon_id][2] += 1
+                        else:
+                            org_stats[taxon_id][3] += 1
+                else:
+                    org_stats[taxon_id][4] += 1
 
         return org_stats
 
 
     @classmethod
-    def solution_data_vs_solution_data(cls, solution_data1, solution_data2):
+    def taxid_orgs_vs_orgs(cls, solution_data, solver_data):
+        """
+        @return [num of taxids in solution,
+                 num of taxids solver found,
+                 num of taxids solver found correctly]
+        """
+        solution_taxon_ids = set()
+        for org in solution_data:
+            solution_taxon_ids.add(org.taxon_id)
+
+        correct_taxon_ids = set()
+        for org in solver_data:
+            if org.taxon_id in solution_taxon_ids:
+                correct_taxon_ids.add(org.taxon_id)
+
+        return [len(solution_data), len(solver_data), len(correct_taxon_ids)]
+                
+
+    @classmethod
+    def reads_orgs_vs_orgs(cls, solution_data, solver_data):
+        """
+        @return (dict) Key: taxon_id of organism.
+                       Value: [num of reads from solution,
+                               num of reads solver reported,
+                               num of reads solver totally correctly reported,
+                               num of reads solver correctly reported but missed organism,
+                               num of reads solver reported wrong]
+        """
+        taxid2reads_comparison = dict()
+        for org in solution_data:
+            num_reads = 0 if org.reads is None else len(org.reads)
+            taxid2reads_comparison[org.taxon_id] = [num_reads, 0, 0, 0, 0]
+        for org in solver_data:
+            num_reads = 0 if org.reads is None else len(org.reads)
+            if org.taxon_id in taxid2reads_comparison:
+                taxid2reads_comparison[org.taxon_id][1] = num_reads
+            else:
+                taxid2reads_comparison[org.taxon_id][1] = [0, num_reads, 0, 0, 0]
+
+        solution_reads = dict()
+        for org in solution_data:
+            if org.reads is not None:
+                for read_id in org.reads:
+                    solution_reads[read_id] = org.taxon_id
+
+        for org in solver_data:
+            if org.reads is not None:
+                for read_id in org.reads:
+                    if read_id in solution_reads:
+                        if org.taxon_id == solution_reads[read_id]:
+                            taxid2reads_comparison[org.taxon_id][2] += 1
+                        else:
+                            taxid2reads_comparison[org.taxon_id][3] += 1
+                    else:
+                        taxid2reads_comparison[org.taxon_id][4] += 1
+                        
+        return taxid2reads_comparison
+
+
+    @classmethod
+    def solution_data_vs_solver_data(cls, solution_data, solver_data):
         cd = ComparisonData()
         
-        cd.taxid2cdss_comparison = ComparisonData.taxid2cdss_orgs_vs_orgs(solution_data1, solution_data2)
+        cd.taxid2cdss_comparison = ComparisonData.taxid2cdss_orgs_vs_orgs(solution_data, solver_data)
+
+        cd.taxid_comparison = ComparisonData.taxid_orgs_vs_orgs(solution_data, solver_data )
+
+        cd.taxid2reads_comparison = ComparisonData.reads_orgs_vs_orgs(solution_data, solver_data)
 
         return cd
 
@@ -291,10 +360,18 @@ class ComparisonData (object):
                 total += t
             ret += "Read overlap: " + str(overlap) + "/" + str(total) + "\n"
 
+        if self.taxid2reads_comparison is not None:
+            ret += "taxid2reads: \n"
+            for taxon_id, comp_data in self.taxid2reads_comparison.items():
+                ret += "    " + str(taxon_id) + ":  " + str(comp_data) + "\n"
+
         if self.taxid2cdss_comparison is not None:
             ret += "taxid2cdss: \n"
             for taxon_id, comp_data in self.taxid2cdss_comparison.items():
                 ret += "    " + str(taxon_id) + ":  " + str(comp_data) + "\n"
+
+        if self.taxid_comparison is not None:
+            ret += "Organisms: " + str(self.taxid_comparison) + "\n"
 
         return ret
                 
