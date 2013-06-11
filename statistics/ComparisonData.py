@@ -351,27 +351,37 @@ class ComparisonData (object):
             for o, t in self.cds_comparison.values():
                 overlap += o
                 total += t
-            ret += "Cds overlap: " + str(overlap) + "/" + str(total) + "\n"
+            ret += "Cdss: (matched, total in solution)" + str(overlap) + "/" + str(total) + "\n"
 
         if self.read_comparison is not None:
             overlap, total = 0, 0
             for o, t in self.read_comparison.values():
                 overlap += o
                 total += t
-            ret += "Read overlap: " + str(overlap) + "/" + str(total) + "\n"
+            ret += "Reads: (matched, total in solution) " + str(overlap) + "/" + str(total) + "\n"
 
         if self.taxid2reads_comparison is not None:
-            ret += "taxid2reads: \n"
+            ret += """taxid2reads:  taxid: 
+                (# reads in solution,
+                 # reads in solver output,
+                 # reads from solver that have match in solution under same organism, 
+                 # reads from solver that have match in solution under another organism,
+                 # reads from solver that have no match in solution)\n"""
             for taxon_id, comp_data in self.taxid2reads_comparison.items():
                 ret += "    " + str(taxon_id) + ":  " + str(comp_data) + "\n"
 
         if self.taxid2cdss_comparison is not None:
-            ret += "taxid2cdss: \n"
+            ret += """taxid2cdss:  taxid: 
+                (# cdss in solution,
+                 # cdss in solver output,
+                 # cdss from solver that have match in solution under same organism, 
+                 # cdss from solver that have match in solution under another organism,
+                 # cdss from solver that have no match in solution)\n"""
             for taxon_id, comp_data in self.taxid2cdss_comparison.items():
                 ret += "    " + str(taxon_id) + ":  " + str(comp_data) + "\n"
 
         if self.taxid_comparison is not None:
-            ret += "Organisms: " + str(self.taxid_comparison) + "\n"
+            ret += "Organisms: (# orgs in solution, # orgs in solver output, # orgs that are in both)\n" + str(self.taxid_comparison) + "\n"
 
         return ret
                 
