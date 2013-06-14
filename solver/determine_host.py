@@ -30,7 +30,7 @@ def _mark_host_reads (reads, tax_tree, gi2taxid):
         best_aln = sorted_alignments[0]
         try:
             best_aln_taxid = gi2taxid [best_aln.genome_index]
-            if (tax_tree.get_relevant_taxid(best_aln_taxid) == tax_tree.animalia):
+            if (tax_tree.get_relevant_taxid(best_aln_taxid) in tax_tree.potential_hosts):
                 # del read_container.read_repository[read.id]
                 read.set_host_status(True)
                 host_read_count += 1
@@ -46,11 +46,7 @@ def _mark_host_reads (reads, tax_tree, gi2taxid):
                 continue
 
             taxid = gi2taxid [read_aln.genome_index]
-            is_microbe=False
-            for microbe_taxid in tax_tree.microbes:
-                if tax_tree.is_child(taxid, microbe_taxid):
-                    is_microbe=True
-            if not is_microbe:
+            if tax_tree.get_relevant_taxid(taxid) not in tax_tree.microbes:
                 read_aln.set_active(False)
                 read_aln.set_potential_host_status(True)
 
@@ -69,6 +65,11 @@ def _count_reported_taxids (reads, db_query):
     # calculate how many times each taxid is reported
     for (gi, taxid) in gi2taxid.items():
         taxids_container[taxid] += gis_container[gi]
+
+    f = open('taxid_count.txt', 'w')
+    for taxid, count in taxids_container.items():
+        f.write("%d %d\n" % (int(taxid), int(count)))
+    f.close()
     return (gi2taxid, taxids_container)
 
 
@@ -87,7 +88,8 @@ class HostDeterminator(object):
             @param (iterator) reads (loaded with read data)
             @return (host_taxid, host_read_cnt) (int, int)
         '''
-   
+         
+        reads = list(reads)
         # how many times each taxid has been reported
         (gi2taxid, taxids_container)  = _count_reported_taxids(reads, self.dbquery)
         # deactivate reads that map to potential host
@@ -98,7 +100,7 @@ class HostDeterminator(object):
         # sort taxids by occurence 
         sorted_taxid_cnt = sorted (taxids_container.items(), key= lambda x: x[1], reverse=True)
         for (taxid, cnt)  in sorted_taxid_cnt:
-            if self.tax_tree.is_child(taxid, self.tax_tree.animalia):
+            if self.tax_tree.get_relevant_taxid(taxid) in self.tax_tree.potential_hosts:
                 host_taxid = taxid
                 break
     
