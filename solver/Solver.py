@@ -125,7 +125,6 @@ class Solver (object):
         # --------------------------- #
 
         stats.collectPhaseData(2, record_container, read_container, cds_aln_container, solution_data=solution_data)
-        stats.writeToFiles(stats_dir)
 
         # --------------------------- #
         start = time.time()
