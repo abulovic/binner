@@ -10,6 +10,7 @@ from statistics.SolverStatistics import SolverStatistics
 from formats.xml_output     import *
 import logging
 import time
+import operator
 
 from statistics.ComparisonData import ComparisonData
 from statistics.solutiondata import loadOrganismData
@@ -246,7 +247,7 @@ class Solver (object):
                  org_species, org_genus, organism_genes, [], organism_reads, is_host=False)
             all_organisms.append(organism)
 
-
+            all_organisms.sort(key=operator.attrgetter("amount_count"), reverse=True)
 
 
         xml = XMLOutput(dataset, all_organisms, output_solution_filename) 
