@@ -296,7 +296,7 @@ class ComparisonData (object):
             if org.taxon_id in taxid2reads_comparison:
                 taxid2reads_comparison[org.taxon_id][1] = num_reads
             else:
-                taxid2reads_comparison[org.taxon_id][1] = [0, num_reads, 0, 0, 0]
+                taxid2reads_comparison[org.taxon_id] = [0, num_reads, 0, 0, 0]
 
         solution_reads = dict()
         for org in solution_data:
