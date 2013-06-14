@@ -4,6 +4,7 @@ import logging
 
 from solutiondata           import *
 from ncbi.db.access         import DbQuery
+from ncbi.taxonomy.tree     import TaxTree
 
 log = logging.getLogger(__name__)
 
@@ -89,9 +90,12 @@ class ComparisonData (object):
                 
     @classmethod
     def read_comparison(cls, solution_data, read_cont):
-        """
+        """ For each organism store 2 numbers:
+            1. Number of reported reads in xml solution
+            2. Number of those reads for which we have found at least one alignment to this organism
         """
         db_query = DbQuery()
+        tax_tree = TaxTree()
         # For every organism
         # Store total number of reported reads
         # For every read reported in solution XML:
@@ -107,8 +111,15 @@ class ComparisonData (object):
                 gis     = [ read_aln.genome_index for read_aln in read_cont.read_repository[read_id].alignment_locations ]
                 tax_ids = db_query.get_taxids(gis, list)
 
+                status = 0
                 if organism.taxon_id in tax_ids:
-                    reads_we_found += 1
+                    status = 1
+
+                for tax_id in tax_ids:
+                    if tax_tree.is_child(tax_id, organism.taxon_id):
+                        status = 1
+
+                reads_we_found += status
 
             organism_read_stats[organism.taxon_id] =  [total_reported_reads_in_organism, reads_we_found]
 
