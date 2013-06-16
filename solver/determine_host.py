@@ -49,6 +49,8 @@ def _mark_host_reads (reads, tax_tree, gi2taxid):
             if tax_tree.get_relevant_taxid(taxid) not in tax_tree.microbes:
                 read_aln.set_active(False)
                 read_aln.set_potential_host_status(True)
+            else:
+                read_aln.set_potential_host_status(False)
 
     return host_read_count
 
