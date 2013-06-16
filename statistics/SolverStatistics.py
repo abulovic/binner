@@ -46,6 +46,7 @@ class StatData:
         self.num_cdss               = None
         self.num_cdss_with_no_alns  = None
         self.num_cds_alns           = None
+        self.active_records_ids     = None
 
     def shortStr(self):
         """ Returns string representation containing only simple sttributes,
@@ -58,7 +59,7 @@ class StatData:
                      "num_cds_alns", "num_missing_records"]:
             if getattr(self, attr) != None:
                 res += attr + ": " + str(getattr(self, attr)) + "\n"
-        for attr in ["proteins"]:
+        for attr in ["proteins", "active_records_ids"]:
             if getattr(self, attr) != None:
                 res += "num_" + attr + ": " + str(len(getattr(self, attr))) + "\n"
         return res
@@ -131,6 +132,7 @@ class SolverStatistics:
         #statData.taxs                  = NIJE IMPLEMENTIRANO
         statData.num_read_alns          = stats.num_read_alns(read_cont)
         statData.num_alns_to_record_and_cds      = stats.count_alns_to_record_and_cds(read_cont)
+        statData.active_records_ids              = stats.get_active_records_ids(cds_aln_cont)
 
         if phase == 1:
             statData.num_missing_records = record_cont.get_num_missing_records_stats()

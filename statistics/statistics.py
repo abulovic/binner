@@ -201,12 +201,14 @@ def num_cdss_with_no_alns(cds_aln_container):
     return num_cds
         
 
+# ------------------- Count alignments to each existing record and cds -------------------- #
+
 
 class RecordStats (object):
     ''' Holds data for the record:
             record_id
             aln_count
-            {cds_id: cds_aln_count}
+            {cds_id: cds_aln_count} - for each CDS in record count number of alignments to it
     '''
     def __init__(self, record_id):
         self.record_id = record_id
@@ -240,7 +242,7 @@ def count_alns_to_record_and_cds(read_container):
         Also, for each CDS in a record is counted the same thing.
 
         @param (ReadContainer) read_container
-        @return {record_id : RecordStats }
+        @return {record_id : RecordStats}
     '''
     records_stats = {}
 
@@ -260,7 +262,23 @@ def count_alns_to_record_and_cds(read_container):
                 
     return records_stats
 
+def get_active_records_ids(cds_aln_container):
+    ''' Returns all records who have at least one CDS to which 
+        is aligned some active read alignment.
 
+        @param (CdsAlnContainer)    cds_aln_container
+        @return [Record]            List of active records
+    '''
+    if not cds_aln_container:
+        return None
+
+    active_cdss         = cds_aln_container.fetch_all_active_cds_alns().keys()
+    active_records_ids  = [ cds.record_id for cds in active_cdss ]
+
+    # Remove duplicates from list
+    active_records_ids  = list(set(active_records_ids))
+    
+    return active_records_ids
 
 
 
