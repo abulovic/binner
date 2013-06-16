@@ -118,8 +118,7 @@ class TaxTree ():
         return lineage_org_names
 
     def get_relevant_taxid (self, tax_id):
-        return self.tax2relevantTax[tax_id]
-        
+        return self.tax2relevantTax.get(tax_id, -1)
 
     def _h_get_tax_nodes        (self, nodes_file):
         '''Loads the taxonomy nodes in a dictionary
