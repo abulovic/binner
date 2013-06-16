@@ -102,8 +102,19 @@ class AlignmentData (object):
                                                      self.stop, self.strand)
             
         
-    
-        
-     
-    
-        
+def main():
+    argparser = argparse.ArgumentParser() 
+    argparser.add_argument('BlastAlnFile', help='Blast alignment file generated using outfmt 6-10', type=str)
+    argparser.add_argument('BinnerAlnFile', help='Binner input alignment file. Format specified in Binner Docs.')
+    argparser.add_argument('-f', '--format', help='Blast format specification', type=str,
+                           default='qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore')
+
+    args = argparser.parse_args()
+    parser = BLASTParser()
+    parser.convert_file(args.BlastAlnFile, args.BinnerAlnFile)
+
+
+
+if __name__ == '__main__':
+    import sys, argparse
+    main()
