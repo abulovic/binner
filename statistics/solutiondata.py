@@ -5,6 +5,8 @@ sys.path.append(os.getcwd())
 from   utils import enum
 from utils.autoassign import autoassign
 
+MISSING_TAXID = -1
+
 class Organism (object):
     '''
     Placeholder for organism data from XML as described here:
@@ -15,7 +17,8 @@ class Organism (object):
                         GENUS_SPECIES='genus_species',
                         GENUS_SPECIES_STRAIN='genus_species_strain',
                         ORGANISM_NAME='organism_name',
-                        NEAREST_NEIGHBOR='nearest_neighbor'
+                        NEAREST_NEIGHBOR='nearest_neighbor',
+                        MISSING_TAXID_ORG='missing_taxid_org'
                         )
     @autoassign
     def __init__(self, relativeAmount, count, taxon_id, taxonomy, type, organismName=None, genus=None,
@@ -38,7 +41,6 @@ class Organism (object):
         :param organism_node: xml.etree.ElementTree.Element instance
         '''
         # determine organism count
-        print type(organism_node)
         relative_amount_node = organism_node.find('relativeAmount')
         relative_amount = eval(relative_amount_node.text)
         count = eval(relative_amount_node.attrib['count'])
@@ -46,12 +48,14 @@ class Organism (object):
         (taxon_id, taxonomy) = Organism.determine_taxonomy(organism_node)
         # determine organism type and available naming
         (organism_type, names) = Organism.determine_org_type (organism_node)
+        if taxon_id == MISSING_TAXID:
+            organims_type = Organism.organismType.MISSING_TAXID_ORG
+
         nearest_neighbor = names['nearestNeighbor']
         org_name         = names['organismName']
         strain           = names['strain']
         species          = names['species']
         genus            = names['genus']
-        print organism_type, names
         # fetch genes and reads
         genes = Organism.get_genes(organism_node)
         reads = Organism.get_reads(organism_node)
@@ -75,6 +79,7 @@ class Organism (object):
         except KeyError:
             # so it is a nearest neighbor node
             log.info('No taxon ID info for organism with taxonomy %s' % taxonomy_node.text)
+            return (MISSING_TAXID, [])
         taxonomy_str = taxonomy_node.text
         if taxonomy_str.endswith('.'):
             taxonomy_str = taxonomy_str[0:-1]
