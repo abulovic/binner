@@ -110,7 +110,7 @@ def main():
                            default='qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore')
 
     args = argparser.parse_args()
-    parser = BLASTParser()
+    parser = BLASTParser(args.format)
     parser.convert_file(args.BlastAlnFile, args.BinnerAlnFile)
 
 
